@@ -896,6 +896,69 @@ p {
   margin-top: 0;
 }
 
+/* ── New-to-UK ICP section ──────────────────────────────── */
+.icp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 36px;
+}
+
+.icp-block {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(16, 35, 63, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.icp-icon {
+  font-size: 2rem;
+  line-height: 1;
+  display: block;
+}
+
+.icp-block h3 {
+  margin: 0;
+  font-size: 1.08rem;
+  color: var(--navy-950);
+}
+
+.icp-block p {
+  margin: 0;
+  font-size: 0.97rem;
+  color: var(--navy-900);
+  line-height: 1.6;
+}
+
+.icp-subheading {
+  font-weight: 600;
+  color: var(--navy-950);
+  margin-top: 4px;
+}
+
+.icp-close {
+  text-align: center;
+  color: var(--navy-700, #4a5568);
+  font-size: 0.97rem;
+  margin-top: 36px;
+  margin-bottom: 0;
+}
+
+.icp-cta {
+  text-align: center;
+  margin-top: 28px;
+}
+
+@media (max-width: 680px) {
+  .icp-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Annual fee cards ───────────────────────────────────── */
 .fee-grid {
   display: grid;
