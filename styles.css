@@ -1384,3 +1384,49 @@ p {
     border-radius: 22px;
   }
 }
+
+/* ── Floating WhatsApp button ───────────────────────────── */
+.wa-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+  text-decoration: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.wa-float:hover {
+  background: #1ebe5d;
+  transform: scale(1.08);
+}
+
+@media (max-width: 480px) {
+  .wa-float {
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* ── "Or WhatsApp Jothi" inline text link ───────────────── */
+.cta-wa-link {
+  font-size: 0.9rem;
+  color: #25d366;
+  text-decoration: none;
+  white-space: nowrap;
+  align-self: center;
+}
+
+.cta-wa-link:hover {
+  text-decoration: underline;
+}
