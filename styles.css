@@ -1747,3 +1747,39 @@ p {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Live Lesson Supervision section ─────────────────────── */
+.supervision-placeholder {
+  aspect-ratio: 16 / 9;
+  background: var(--ivory-100);
+  border: 2px dashed var(--ivory-200);
+  border-radius: var(--radius-md);
+  display: grid;
+  place-items: center;
+  margin: 32px auto;
+  max-width: 680px;
+  color: var(--slate-500);
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px;
+}
+
+.supervision-placeholder p {
+  margin: 0;
+}
+
+.supervision-closing {
+  font-style: italic;
+  color: var(--slate-500);
+  text-align: center;
+  margin: 32px auto 0;
+  max-width: 540px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.supervision-cta {
+  text-align: center;
+  margin-top: 32px;
+}
