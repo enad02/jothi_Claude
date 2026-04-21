@@ -1600,3 +1600,65 @@ p {
 .cta-wa-link:hover {
   text-decoration: underline;
 }
+
+/* ── Framework Diagrams (Trifecta + 4T Engine) ───────────── */
+.framework-diagrams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 28px;
+}
+
+.framework-block {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.framework-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--navy-950);
+  margin: 0 0 14px;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.venn-svg,
+.engine-svg {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  display: block;
+}
+
+.framework-captions {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  width: 100%;
+  max-width: 420px;
+}
+
+.framework-captions li {
+  font-size: 0.8rem;
+  color: var(--slate-700);
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+  line-height: 1.5;
+}
+
+.framework-captions strong {
+  color: var(--navy-950);
+}
+
+@media (max-width: 560px) {
+  .framework-diagrams {
+    flex-direction: column;
+    align-items: center;
+  }
+  .framework-block {
+    width: 100%;
+  }
+}
