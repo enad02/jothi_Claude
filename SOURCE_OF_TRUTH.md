@@ -124,6 +124,19 @@ The site should feel especially resonant for:
 - parents who value certainty, discipline, and visible progress
 - families who often prefer fast, direct communication
 
+## Locked intake geography
+
+Our programmes are designed around the England curriculum and exam-board context. Public-facing copy should reflect this.
+
+- Focus public positioning on students in England
+- Do not use broad UK-wide wording ("across the UK", "UK families", "nationwide") in public copy without explicit approval
+- Avoid positioning that suggests routine intake from Scotland, Wales, or Northern Ireland
+- Where geography is mentioned in public copy, prefer:
+  - "for students across England"
+  - "supporting families across England"
+  - "100+ families across England"
+- Keep exam-board detail internal unless it is genuinely needed on a specific page. Do not turn curriculum specifics into general homepage copy.
+
 ## Locked design guidance
 
 - Use the existing navy / ivory / muted gold system
