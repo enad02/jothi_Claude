@@ -59,6 +59,15 @@ a {
   text-decoration: none;
 }
 
+a:focus-visible,
+.button:focus-visible,
+.nav-toggle:focus-visible,
+.wa-float:focus-visible {
+  outline: 3px solid var(--gold-400);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(16, 35, 63, 0.18);
+}
+
 button,
 input,
 textarea,
