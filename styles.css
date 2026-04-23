@@ -1069,7 +1069,7 @@ p {
 
 .inclusions-grid li::before {
   content: "✓";
-  color: #25d366;
+  color: var(--gold-500);
   font-weight: 700;
   flex-shrink: 0;
   margin-top: 1px;
@@ -1341,9 +1341,9 @@ p {
 }
 
 .form-status[data-state="success"] {
-  background: rgba(199, 227, 214, 0.55);
-  border-color: rgba(44, 106, 77, 0.18);
-  color: #234d3c;
+  background: rgba(194, 163, 95, 0.08);
+  border-color: rgba(16, 35, 63, 0.08);
+  color: var(--navy-900);
 }
 
 .form-status[data-state="error"] {
