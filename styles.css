@@ -1694,10 +1694,16 @@ p {
   text-align: center;
 }
 
+.gateway-intro-panel {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 36px;
+}
+
 .gateway-hero h1 {
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   color: var(--navy-950);
-  margin: 8px 0 20px;
+  margin: 8px 0 14px;
 }
 
 .gateway-intro {
@@ -1708,11 +1714,18 @@ p {
   line-height: 1.7;
 }
 
+.gateway-support-line {
+  margin: 14px 0 0;
+  color: var(--navy-900);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
 .gateway-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  margin-top: 44px;
+  margin-top: 28px;
   text-align: left;
   max-width: 720px;
   margin-left: auto;
@@ -1725,22 +1738,29 @@ p {
   flex-direction: column;
   padding: 28px 32px;
   background: rgba(255, 251, 245, 0.9);
-  border: 1px solid var(--line);
+  border: 1px solid rgba(16, 35, 63, 0.12);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-soft);
   text-decoration: none;
   color: var(--navy-950);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .gateway-card:hover {
   transform: translateY(-3px);
-  box-shadow: var(--shadow-soft);
+  box-shadow: var(--shadow-card);
+  border-color: rgba(194, 163, 95, 0.3);
+}
+
+.gateway-card-inactive {
+  background: rgba(255, 255, 255, 0.72);
+  border-style: dashed;
+  box-shadow: none;
 }
 
 .gateway-card-inactive:hover {
   transform: none;
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
   cursor: default;
 }
 
@@ -1754,21 +1774,26 @@ p {
 }
 
 .gateway-card-title {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   font-weight: 700;
   color: var(--navy-950);
   margin: 0;
-  padding-right: 24px;
+  padding-right: 28px;
+  line-height: 1.35;
 }
 
 .gateway-note {
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   color: var(--slate-500);
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   line-height: 1.55;
 }
 
 @media (max-width: 560px) {
+  .gateway-intro-panel {
+    padding: 24px;
+  }
+
   .gateway-grid {
     grid-template-columns: 1fr;
   }
