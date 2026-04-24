@@ -2252,6 +2252,40 @@ p {
   gap: 12px;
   margin: 28px 0 32px;
 }
+.google-reviews-link {
+  border-color: transparent;
+  background: transparent;
+  color: var(--navy-900);
+}
+.google-reviews-link-leave {
+  text-decoration: underline;
+  text-decoration-color: rgba(40,70,109,0.3);
+  text-underline-offset: 3px;
+}
+.google-reviews-link-read {
+  border-color: rgba(16, 35, 63, 0.2);
+  background: rgba(255, 255, 255, 0.65);
+}
+.google-reviews-actions:has(.google-reviews-link-leave:hover) .google-reviews-link-leave,
+.google-reviews-actions:has(.google-reviews-link-leave:focus-visible) .google-reviews-link-leave {
+  border-color: rgba(16, 35, 63, 0.2);
+  background: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+}
+.google-reviews-actions:has(.google-reviews-link-leave:hover) .google-reviews-link-read,
+.google-reviews-actions:has(.google-reviews-link-leave:focus-visible) .google-reviews-link-read {
+  border-color: transparent;
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-color: rgba(40,70,109,0.3);
+  text-underline-offset: 3px;
+}
+.google-reviews-link-read:hover,
+.google-reviews-link-read:focus-visible {
+  border-color: rgba(16, 35, 63, 0.2);
+  background: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+}
 .flagship-card-wrap { max-width: 560px; margin: 36px auto 0; }
 .flagship-card-wrap .detail-list { margin-top: 16px; }
 .flagship-card-wrap .pricing-follow-on { text-align: center; border-top: none; padding-top: 0; margin-top: 24px; }
