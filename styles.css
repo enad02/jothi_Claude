@@ -2010,6 +2010,10 @@ p {
   margin-top: 32px;
   padding-inline: 18px;
 }
+.results-page #reviews .results-carousel-wrap {
+  padding-inline: 0;
+  background: transparent;
+}
 .results-carousel-nav { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
 .results-page #messages .results-carousel-nav,
 .results-page #ukmt .results-carousel-nav,
@@ -2212,7 +2216,12 @@ p {
 .mock-table th { color: var(--navy-950); font-weight: 600; background: rgba(16,35,63,0.03); }
 .mock-table tr:last-child td { border-bottom: none; }
 .google-review-card { min-height: 0; justify-content: flex-start; gap: 14px; }
-.results-review-card { padding: 24px 24px 22px; min-height: 100%; }
+.results-review-card {
+  padding: 24px 24px 22px;
+  min-height: 100%;
+  background: rgba(255,255,255,0.92);
+  box-shadow: var(--shadow-soft);
+}
 .results-message-card .message-bubble {
   flex: 1 1 auto;
   min-height: 0;
