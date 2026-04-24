@@ -1947,6 +1947,12 @@ p {
 .results-page-hero { padding-top: 64px; }
 .results-page-hero h1 { max-width: none; font-size: clamp(2.2rem, 4vw, 3.6rem); text-align: center; }
 .section-outro { font-style: italic; color: var(--slate-500); text-align: center; font-size: 0.9rem; line-height: 1.6; margin: 24px auto 0; max-width: 620px; }
+#gcse .section-intro {
+  max-width: 62ch;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
 .results-proof-support { text-align: center; color: var(--slate-500); font-size: 0.82rem; margin-top: 22px; letter-spacing: 0.02em; }
 .stat-band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
 .stat-band-card { background: rgba(255,255,255,0.76); border: 1px solid rgba(16,35,63,0.08); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 36px 28px; text-align: center; }
