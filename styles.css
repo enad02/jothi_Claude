@@ -2171,11 +2171,17 @@ p {
 .results-message-card {
   scroll-snap-align: start;
   flex: 0 0 auto;
-  width: calc((100% - 40px) / 3);
-  min-width: calc((100% - 40px) / 3);
+  width: calc((100% - 60px) / 4);
+  min-width: calc((100% - 60px) / 4);
   display: flex;
   flex-direction: column;
   text-align: center;
+  min-height: 100%;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid rgba(16,35,63,0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 30px 24px 26px;
 }
 .results-review-track .results-review-card {
   width: calc((100% - 40px) / 3);
@@ -2201,11 +2207,21 @@ p {
 .results-message-card .message-bubble {
   min-height: 100%;
   margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
   text-align: center;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 .results-message-card .message-bubble-attribution {
+  color: var(--slate-500);
   text-align: center;
   padding-left: 0;
+  margin-top: auto;
+  padding-top: 16px;
 }
 .google-review-card .review-quote { margin-bottom: 0; }
 .results-review-card { text-align: center; }
@@ -2238,9 +2254,14 @@ p {
 }
 @media (max-width: 860px) { .stat-band { grid-template-columns: 1fr; } }
 @media (max-width: 680px) {
+  .results-message-card {
+    width: 78%;
+    min-width: 78%;
+  }
+}
+@media (max-width: 680px) {
   .results-proof-track .results-proof-card,
   .results-review-track .results-review-card,
-  .results-message-card,
   .results-cert-track .results-cert-card {
     width: 82%;
     min-width: 82%;
