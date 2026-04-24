@@ -1948,7 +1948,7 @@ p {
 .results-page-hero h1 { max-width: none; font-size: clamp(2.2rem, 4vw, 3.6rem); text-align: center; }
 .results-proof-kicker-block { margin-bottom: 0; }
 .results-proof-kicker-block .section-kicker { margin-bottom: 0; }
-.results-proof-carousel-wrap { margin-top: 24px; }
+.results-proof-carousel-wrap { margin-top: 16px; }
 .results-proof-summary { margin-top: 36px; }
 .results-page .section-heading.centered-heading {
   align-items: center;
@@ -1963,7 +1963,7 @@ p {
   text-align: center;
 }
 .section-outro { font-style: italic; color: var(--slate-500); text-align: center; font-size: 0.9rem; line-height: 1.6; margin: 24px auto 0; max-width: 620px; }
-.results-proof-support { text-align: center; color: var(--slate-500); font-size: 0.82rem; margin-top: 22px; letter-spacing: 0.02em; }
+.results-proof-support { text-align: center; color: var(--slate-500); font-size: 0.82rem; margin-top: 14px; letter-spacing: 0.02em; }
 .stat-band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
 .stat-band-card { background: rgba(255,255,255,0.76); border: 1px solid rgba(16,35,63,0.08); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 36px 28px; text-align: center; }
 .stat-band-number { display: block; font-family: var(--font-serif-current); font-size: clamp(2.8rem, 5vw, 4rem); color: var(--navy-950); margin-bottom: 12px; line-height: 1; }
@@ -1991,6 +1991,24 @@ p {
   padding-bottom: 6px;
 }
 .results-carousel-track::-webkit-scrollbar { display: none; }
+.results-proof-carousel-wrap { position: relative; }
+.results-proof-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(16,35,63,0.12);
+  color: var(--navy-900);
+  box-shadow: none;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+.results-proof-control-prev { left: -8px; }
+.results-proof-control-next { right: -8px; }
 .cert-gallery,
 .results-proof-track,
 .results-review-track,
@@ -2080,6 +2098,7 @@ p {
     width: 78%;
     min-width: 78%;
   }
+  .results-proof-control { display: none; }
   .results-proof-summary { margin-top: 30px; }
   .results-proof-icon {
     width: 44px;
