@@ -1533,6 +1533,11 @@ p {
     width: 100%;
   }
 
+  .hero-image,
+  .hero-image-frame {
+    min-height: 260px;
+  }
+
   .brand {
     gap: 12px;
   }
@@ -1601,10 +1606,11 @@ p {
 
 @media (max-width: 480px) {
   .wa-float {
-    bottom: 16px;
-    right: 16px;
-    width: 48px;
-    height: 48px;
+    bottom: 12px;
+    right: 12px;
+    width: 46px;
+    height: 46px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.18);
   }
 }
 
