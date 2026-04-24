@@ -1946,6 +1946,31 @@ p {
 /* ── Results page rebuild ─────────────────────────────────── */
 .results-page-hero { padding-top: 64px; }
 .results-page-hero h1 { max-width: none; font-size: clamp(2.2rem, 4vw, 3.6rem); text-align: center; }
+.results-page #gcse { background: transparent; }
+.results-page #messages {
+  background: linear-gradient(180deg, rgba(16,35,63,0.96), rgba(24,49,83,0.92));
+  border-top: 1px solid rgba(194,163,95,0.14);
+  border-bottom: 1px solid rgba(194,163,95,0.14);
+}
+.results-page #messages .section-kicker { color: var(--gold-400); }
+.results-page #messages h2,
+.results-page #messages .section-intro,
+.results-page #messages .section-outro { color: var(--ivory-100); }
+.results-page #messages .section-outro:last-of-type { color: rgba(255,248,238,0.78); }
+.results-page #messages .message-bubble-attribution { color: rgba(255,248,238,0.82); }
+.results-page #improvement,
+.results-page #alevel,
+.results-page #consultation {
+  background: var(--white);
+  border-top: 1px solid rgba(16,35,63,0.05);
+  border-bottom: 1px solid rgba(16,35,63,0.05);
+}
+.results-page #ukmt,
+.results-page #reviews {
+  background: var(--ivory-100);
+  border-top: 1px solid rgba(16,35,63,0.04);
+  border-bottom: 1px solid rgba(16,35,63,0.04);
+}
 .results-proof-kicker-block { margin-bottom: 0; }
 .results-proof-kicker-block .section-kicker { margin-bottom: 0; }
 .results-proof-carousel-wrap { margin-top: 16px; }
@@ -1979,7 +2004,43 @@ p {
 .message-bubble-attribution { margin-top: 10px; font-size: 0.82rem; color: var(--slate-500); padding-left: 4px; }
 .featured-statement { text-align: center; margin: 36px auto; max-width: 620px; padding: 36px 40px; background: rgba(194,163,95,0.08); border: 1px solid rgba(194,163,95,0.3); border-radius: var(--radius-md); font-family: var(--font-serif-current); font-size: clamp(1.4rem, 2.8vw, 2rem); color: var(--navy-950); line-height: 1.35; }
 .results-carousel-wrap { position: relative; }
+.results-page #messages .results-carousel-wrap,
+.results-page #ukmt .results-carousel-wrap,
+.results-page #reviews .results-carousel-wrap {
+  margin-top: 32px;
+  padding-inline: 18px;
+}
 .results-carousel-nav { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
+.results-page #messages .results-carousel-nav,
+.results-page #ukmt .results-carousel-nav,
+.results-page #reviews .results-carousel-nav {
+  position: absolute;
+  inset: 50% 0 auto;
+  transform: translateY(-50%);
+  justify-content: space-between;
+  margin: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.results-page #messages .results-carousel-nav .tutor-strip-btn,
+.results-page #ukmt .results-carousel-nav .tutor-strip-btn,
+.results-page #reviews .results-carousel-nav .tutor-strip-btn,
+.results-proof-control {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(16,35,63,0.12);
+  color: var(--navy-900);
+  box-shadow: none;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+.results-page #messages .results-carousel-nav .tutor-strip-btn,
+.results-page #ukmt .results-carousel-nav .tutor-strip-btn,
+.results-page #reviews .results-carousel-nav .tutor-strip-btn {
+  pointer-events: auto;
+}
 .results-carousel-track {
   display: flex;
   gap: 20px;
@@ -1997,22 +2058,14 @@ p {
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.88);
-  border: 1px solid rgba(16,35,63,0.12);
-  color: var(--navy-900);
-  box-shadow: none;
-  font-size: 1.45rem;
-  line-height: 1;
 }
 .results-proof-control-prev { left: -8px; }
 .results-proof-control-next { right: -8px; }
 .cert-gallery,
 .results-proof-track,
 .results-review-track,
-.results-cert-track { margin-top: 36px; }
+.results-cert-track,
+.results-message-track { margin-top: 0; }
 .results-proof-card,
 .results-review-card,
 .results-cert-card {
@@ -2097,6 +2150,11 @@ p {
   .results-proof-track .results-proof-card {
     width: 78%;
     min-width: 78%;
+  }
+  .results-page #messages .results-carousel-wrap,
+  .results-page #ukmt .results-carousel-wrap,
+  .results-page #reviews .results-carousel-wrap {
+    padding-inline: 0;
   }
   .results-proof-control { display: none; }
   .results-proof-summary { margin-top: 30px; }
