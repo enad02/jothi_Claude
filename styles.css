@@ -856,20 +856,54 @@ p {
   padding: 28px;
 }
 
+.about-values-shell {
+  padding-top: 52px;
+  padding-bottom: 52px;
+}
+
+.about-values-shell .section-heading {
+  max-width: 760px;
+  margin-bottom: 36px;
+}
+
+.about-values-shell .section-intro {
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .about-values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
   align-items: stretch;
 }
 
 .about-values-card {
   display: grid;
   align-content: start;
-  gap: 14px;
+  gap: 18px;
+  padding: 36px 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 251, 245, 0.96)),
+    rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(16, 35, 63, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+  text-align: center;
 }
 
-.about-values-card h3 {
+.about-values-card .card-tag {
+  justify-self: center;
+  margin-bottom: 2px;
+}
+
+.about-values-statement {
   margin: 0;
-  font-size: 1.18rem;
-  line-height: 1.45;
+  font-family: var(--font-serif-current);
+  font-size: clamp(1.32rem, 2.2vw, 1.9rem);
+  line-height: 1.42;
+  color: var(--navy-950);
 }
 
 .team-card h3 {
@@ -1486,6 +1520,10 @@ p {
   .statement-grid,
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-values-grid {
+    grid-template-columns: 1fr;
   }
 
   .hero-grid,
