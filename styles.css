@@ -2175,6 +2175,8 @@ p {
   min-width: calc((100% - 60px) / 4);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
   text-align: center;
   min-height: 100%;
   background: rgba(255,255,255,0.92);
@@ -2229,7 +2231,7 @@ p {
   text-align: center;
   padding-left: 0;
   margin: 0;
-  padding-top: 16px;
+  padding-top: 0;
   width: 100%;
 }
 .google-review-card .review-quote { margin-bottom: 0; }
