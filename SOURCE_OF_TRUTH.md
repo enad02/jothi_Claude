@@ -1,12 +1,13 @@
-# Source of Truth — Jothi Learning Website
+# Source of Truth - Jothi Learning Website
 
-Last updated: 22 April 2026
+Last updated: 24 April 2026
 
 This file holds locked facts and decisions for the website build.
+It should contain only stable decisions, not working-state notes.
 
 ## Locked business description
 
-Jothi Learning is a UK-based online tutoring company helping students in Years 7–13 with a strong emphasis on Maths and GCSE Science.
+Jothi Learning is a UK-based online tutoring company helping students in Years 7–13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
 
 The site should present the business as warm, nurturing, premium, and serious.
 
@@ -24,22 +25,36 @@ WhatsApp
 Primary URL:
 `https://wa.me/447985588975`
 
-### Secondary CTA
-Free 45-minute Diagnostic + Parent Consultation
+### Primary consultation CTA wording
+Use:
+`Start with a consultation`
 
 Primary destination:
 `/contact.html#contact-form`
+
+### Diagnostic CTA rule
+`Book a free 45-min diagnostic` may be used only where the surrounding section explicitly explains the diagnostic.
 
 ## Locked public-copy rules
 
 - Use first-person voice: `we`, `our`
 - Speak to the parent and their child directly
 - Keep public-facing copy tool-agnostic
-- Do not mention supplier names in visible labels on public pages unless explicitly approved
+- Do not mention supplier names in visible public copy unless explicitly approved
+- Supplier domains in `href` are allowed
+- Google reviews may be named in visible proof copy
 - Keep wording direct, specific, and calm
 - Avoid vague consultancy language
 - Avoid tech-bro or startup-style tone
 - Use British English spellings
+
+## Locked public naming rules
+
+- Visible WhatsApp CTA wording:
+  - `WhatsApp us`
+  - `Or WhatsApp us`
+- Do not expose supplier/tool names in visible labels on public pages
+- Student and tutor gateway pages should remain practical access pages, not full marketing pages
 
 ## Locked pricing
 
@@ -59,7 +74,7 @@ These annualised fees apply to students joining at the normal start of the acade
 - WhatsApp support
 - Live lesson supervision
 
-### Flagship programme — 10-Month A-Level Maths Crash Course
+### Flagship programme - 10-Month A-Level Maths Crash Course
 The 10-Month A-Level Maths Crash Course is a separate flagship offer and does not follow the same pricing structure as the standard annual programmes.
 
 - Full-course fee: £3,500
@@ -81,7 +96,7 @@ For students joining mid-term or later in the year, pricing is confirmed after c
 For mid-year and late-entry students, the fee is based on the support plan agreed from their current academic position. That plan may include catch-up planning, extra 1:1 support, or more than one lesson per week where the student's situation makes this appropriate. Fees are confirmed after consultation, once that support plan has been agreed.
 
 ### Public-facing pricing rule
-Do not use “pricing after consultation” as a blanket statement across the whole site.
+Do not use `pricing after consultation` as a blanket statement across the whole site.
 
 Use transparent annual pricing for the standard annual programmes.
 
@@ -124,26 +139,34 @@ The site should feel especially resonant for:
 - parents who value certainty, discipline, and visible progress
 - families who often prefer fast, direct communication
 
-## Locked intake geography
+## Locked curriculum and geography guidance
 
-Our programmes are designed around the England curriculum and exam-board context. Public-facing copy should reflect this.
+Our public copy should reflect that our core academic offer is built around the England GCSE and A-Level system.
 
-- Focus public positioning on students in England
-- Do not use broad UK-wide wording ("across the UK", "UK families", "nationwide") in public copy without explicit approval
+- Focus public positioning on students in England when curriculum context matters
+- Do not use broad UK-wide wording without explicit approval
 - Avoid positioning that suggests routine intake from Scotland, Wales, or Northern Ireland
 - Where geography is mentioned in public copy, prefer:
-  - "for students across England"
-  - "supporting families across England"
-  - "100+ families across England"
-- Keep exam-board detail internal unless it is genuinely needed on a specific page. Do not turn curriculum specifics into general homepage copy.
+  - `for students across England`
+  - `supporting families across England`
+  - `100+ families across England`
 
 ## Locked design guidance
 
 - Use the existing navy / ivory / muted gold system
 - Preserve calm spacing and editorial restraint
 - Reuse shared classes before inventing new ones
-- Keep WhatsApp green reserved for WhatsApp CTAs
+- Keep WhatsApp green reserved for WhatsApp UI only
 - Avoid bright, flashy, startup-style visuals
+
+## Locked launch/indexing rule
+
+- Public pages should remain `noindex,follow` until launch approval is explicitly given
+
+## Locked About-page rule
+
+- Vision / Mission / Purpose statements exist
+- Their final About-page placement is not yet locked
 
 ## Do not change without explicit approval
 
@@ -155,3 +178,4 @@ Our programmes are designed around the England curriculum and exam-board context
 - Core proof numbers
 - Brand tone
 - Tool-agnostic public copy rule
+- Launch indexing policy
