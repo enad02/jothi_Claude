@@ -39,19 +39,57 @@ if (navToggle && siteNav) {
   });
 }
 
-const heroImage = document.querySelector(".hero-image");
+(function () {
+  const track = document.getElementById("heroCarouselTrack");
+  if (!track) return;
+  const dots = Array.from(document.querySelectorAll(".hero-carousel-dot"));
+  let current = 0;
+  let timer;
 
-if (heroImage?.dataset.heroImages) {
-  const heroImages = heroImage.dataset.heroImages
-    .split("|")
-    .map((imagePath) => imagePath.trim())
-    .filter(Boolean);
-
-  if (heroImages.length > 1) {
-    const randomIndex = Math.floor(Math.random() * heroImages.length);
-    heroImage.src = heroImages[randomIndex];
+  function goTo(idx) {
+    current = idx;
+    track.style.transform = "translateX(-" + idx * 100 + "%)";
+    dots.forEach(function (d, i) {
+      d.classList.toggle("is-active", i === idx);
+      d.setAttribute("aria-selected", i === idx ? "true" : "false");
+    });
   }
-}
+
+  function startTimer() {
+    clearInterval(timer);
+    timer = setInterval(function () {
+      goTo((current + 1) % dots.length);
+    }, 4000);
+  }
+
+  dots.forEach(function (dot) {
+    dot.addEventListener("click", function () {
+      goTo(Number(dot.dataset.idx));
+      startTimer();
+    });
+  });
+
+  startTimer();
+})();
+
+(function () {
+  const track = document.getElementById("tutorTrack");
+  const prevBtn = document.getElementById("tutorPrev");
+  const nextBtn = document.getElementById("tutorNext");
+  if (!track || !prevBtn || !nextBtn) return;
+
+  function cardWidth() {
+    const card = track.querySelector(".tutor-strip-card");
+    return card ? card.offsetWidth + 18 : 0;
+  }
+
+  prevBtn.addEventListener("click", function () {
+    track.scrollBy({ left: -cardWidth(), behavior: "smooth" });
+  });
+  nextBtn.addEventListener("click", function () {
+    track.scrollBy({ left: cardWidth(), behavior: "smooth" });
+  });
+})();
 
 if (contactForm && accessKeyField && formStatus) {
   const defaultSubmitLabel = contactSubmitButton?.textContent ?? "Send enquiry";
