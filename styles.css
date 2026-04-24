@@ -1946,16 +1946,19 @@ p {
 /* ── Results page rebuild ─────────────────────────────────── */
 .results-page-hero { padding-top: 64px; }
 .results-page-hero h1 { max-width: none; font-size: clamp(2.2rem, 4vw, 3.6rem); text-align: center; }
-.section-outro { font-style: italic; color: var(--slate-500); text-align: center; font-size: 0.9rem; line-height: 1.6; margin: 24px auto 0; max-width: 620px; }
-#gcse .section-heading {
+.results-page .section-heading.centered-heading {
   align-items: center;
+  text-align: center;
 }
-#gcse .section-intro {
+.results-page .section-heading.centered-heading .section-intro,
+.results-page #improvement > .wrap > .section-intro,
+.results-page #alevel > .wrap > .section-intro {
   max-width: 62ch;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
+.section-outro { font-style: italic; color: var(--slate-500); text-align: center; font-size: 0.9rem; line-height: 1.6; margin: 24px auto 0; max-width: 620px; }
 .results-proof-support { text-align: center; color: var(--slate-500); font-size: 0.82rem; margin-top: 22px; letter-spacing: 0.02em; }
 .stat-band { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
 .stat-band-card { background: rgba(255,255,255,0.76); border: 1px solid rgba(16,35,63,0.08); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft); padding: 36px 28px; text-align: center; }
@@ -2090,6 +2093,7 @@ p {
   min-width: calc((100% - 40px) / 3);
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 .results-review-track .results-review-card {
   width: calc((100% - 40px) / 3);
@@ -2115,8 +2119,19 @@ p {
 .results-message-card .message-bubble {
   min-height: 100%;
   margin: 0;
+  text-align: center;
+}
+.results-message-card .message-bubble-attribution {
+  text-align: center;
+  padding-left: 0;
 }
 .google-review-card .review-quote { margin-bottom: 0; }
+.results-review-card { text-align: center; }
+.results-review-card .google-review-header { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.results-review-card .google-review-header > div:last-child { text-align: left; }
+.results-review-card .review-quote,
+.results-review-card .review-meta,
+.results-cert-card .cert-caption { text-align: center; }
 .google-review-header { display: flex; align-items: center; gap: 12px; }
 .review-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--navy-800); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
 .google-stars { color: var(--gold-400); font-size: 0.88rem; letter-spacing: 2px; line-height: 1; margin: 0 0 2px; }
