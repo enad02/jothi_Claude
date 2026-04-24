@@ -2182,6 +2182,12 @@ p {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 30px 24px 26px;
+  transform: none;
+  transition: none;
+}
+.results-message-card:hover,
+.results-message-card:focus-within {
+  transform: none;
 }
 .results-review-track .results-review-card {
   width: calc((100% - 40px) / 3);
@@ -2213,8 +2219,8 @@ p {
   box-shadow: none;
   padding: 0;
   text-align: center;
-  font-size: 1rem;
-  line-height: 1.7;
+  font-size: 1.04rem;
+  line-height: 1.78;
 }
 .results-message-card .message-bubble-attribution {
   color: var(--slate-500);
@@ -2222,6 +2228,7 @@ p {
   padding-left: 0;
   margin-top: auto;
   padding-top: 16px;
+  width: 100%;
 }
 .google-review-card .review-quote { margin-bottom: 0; }
 .results-review-card { text-align: center; }
@@ -2257,6 +2264,10 @@ p {
   .results-message-card {
     width: 78%;
     min-width: 78%;
+  }
+  .results-message-card .message-bubble {
+    font-size: 1.06rem;
+    line-height: 1.82;
   }
 }
 @media (max-width: 680px) {
