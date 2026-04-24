@@ -73,22 +73,28 @@ if (navToggle && siteNav) {
 })();
 
 (function () {
-  const track = document.getElementById("tutorTrack");
-  const prevBtn = document.getElementById("tutorPrev");
-  const nextBtn = document.getElementById("tutorNext");
-  if (!track || !prevBtn || !nextBtn) return;
+  function initScrollCarousel(trackId, prevId, nextId, cardSelector, fallbackFraction, fallbackGap) {
+    const track = document.getElementById(trackId);
+    const prevBtn = document.getElementById(prevId);
+    const nextBtn = document.getElementById(nextId);
+    if (!track || !prevBtn || !nextBtn) return;
 
-  function cardWidth() {
-    const card = track.querySelector(".tutor-strip-card");
-    return card ? card.offsetWidth + 18 : 0;
+    function cardWidth() {
+      const card = track.querySelector(cardSelector);
+      return card ? card.offsetWidth + fallbackGap : track.clientWidth * fallbackFraction;
+    }
+
+    prevBtn.addEventListener("click", function () {
+      track.scrollBy({ left: -cardWidth(), behavior: "smooth" });
+    });
+    nextBtn.addEventListener("click", function () {
+      track.scrollBy({ left: cardWidth(), behavior: "smooth" });
+    });
   }
 
-  prevBtn.addEventListener("click", function () {
-    track.scrollBy({ left: -cardWidth(), behavior: "smooth" });
-  });
-  nextBtn.addEventListener("click", function () {
-    track.scrollBy({ left: cardWidth(), behavior: "smooth" });
-  });
+  initScrollCarousel("tutorTrack", "tutorPrev", "tutorNext", ".tutor-strip-card", 0.8, 18);
+  initScrollCarousel("reviewTrack", "reviewPrev", "reviewNext", ".results-review-card", 0.9, 20);
+  initScrollCarousel("certTrack", "certPrev", "certNext", ".results-cert-card", 0.9, 20);
 })();
 
 if (contactForm && accessKeyField && formStatus) {

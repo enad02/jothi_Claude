@@ -1961,18 +1961,48 @@ p {
 .message-bubble p { margin: 0; }
 .message-bubble-attribution { margin-top: 10px; font-size: 0.82rem; color: var(--slate-500); padding-left: 4px; }
 .featured-statement { text-align: center; margin: 36px auto; max-width: 620px; padding: 36px 40px; background: rgba(194,163,95,0.08); border: 1px solid rgba(194,163,95,0.3); border-radius: var(--radius-md); font-family: var(--font-serif-current); font-size: clamp(1.4rem, 2.8vw, 2rem); color: var(--navy-950); line-height: 1.35; }
-.cert-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 36px; }
+.results-carousel-wrap { position: relative; }
+.results-carousel-nav { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
+.results-carousel-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 6px;
+}
+.results-carousel-track::-webkit-scrollbar { display: none; }
+.cert-gallery,
+.results-review-track,
+.results-cert-track { margin-top: 36px; }
+.results-review-card,
+.results-cert-card {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+.results-review-track .results-review-card {
+  width: calc((100% - 40px) / 3);
+  min-width: calc((100% - 40px) / 3);
+}
+.results-cert-track .results-cert-card {
+  width: calc((100% - 20px) / 2);
+  min-width: calc((100% - 20px) / 2);
+}
+.results-cert-card { display: grid; gap: 10px; }
 .cert-slot { aspect-ratio: 25 / 18; background: var(--ivory-100); border-radius: var(--radius-md); box-shadow: var(--shadow-card); display: grid; }
 .cert-slot > * { grid-area: 1 / 1; }
 .cert-slot img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: inherit; }
 .cert-placeholder { display: none; place-items: center; border: 2px dashed var(--ivory-200); border-radius: inherit; color: var(--slate-500); font-style: italic; font-size: 0.88rem; text-align: center; padding: 20px; }
 .cert-placeholder p { margin: 0; }
-.cert-caption { text-align: center; font-size: 0.82rem; color: var(--slate-500); margin-top: 10px; }
+.cert-caption { text-align: center; font-size: 0.82rem; color: var(--slate-500); margin: 0; }
 .mock-table { width: 100%; border-collapse: collapse; margin-top: 28px; font-size: 0.95rem; }
 .mock-table th, .mock-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--line); color: var(--navy-900); }
 .mock-table th { color: var(--navy-950); font-weight: 600; background: rgba(16,35,63,0.03); }
 .mock-table tr:last-child td { border-bottom: none; }
 .google-review-card { min-height: 0; justify-content: flex-start; gap: 14px; }
+.results-review-card { padding: 24px 24px 22px; min-height: 100%; }
 .google-review-card .review-quote { margin-bottom: 0; }
 .google-review-header { display: flex; align-items: center; gap: 12px; }
 .review-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--navy-800); color: var(--white); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
@@ -1985,8 +2015,22 @@ p {
 .flagship-card-wrap { max-width: 560px; margin: 36px auto 0; }
 .flagship-card-wrap .detail-list { margin-top: 16px; }
 .flagship-card-wrap .pricing-follow-on { text-align: center; border-top: none; padding-top: 0; margin-top: 24px; }
+@media (max-width: 960px) {
+  .results-review-track .results-review-card {
+    width: calc((100% - 20px) / 2);
+    min-width: calc((100% - 20px) / 2);
+  }
+}
 @media (max-width: 860px) { .stat-band { grid-template-columns: 1fr; } }
-@media (max-width: 599px) { .cert-gallery { grid-template-columns: 1fr; } .featured-statement { padding: 24px 20px; } }
+@media (max-width: 680px) {
+  .results-review-track .results-review-card,
+  .results-cert-track .results-cert-card {
+    width: 82%;
+    min-width: 82%;
+  }
+  .results-carousel-nav { display: none; }
+}
+@media (max-width: 599px) { .featured-statement { padding: 24px 20px; } }
 
 /* ── Hero proof carousel ─────────────────────────────────── */
 .hero-carousel-panel {

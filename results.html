@@ -213,8 +213,13 @@
           <p class="section-intro">The UK Maths Trust challenges (Junior, Intermediate, and Senior Maths Challenges, plus the Kangaroo rounds) are how the most mathematically able students in the country are identified. Our students consistently earn medals and certificates across all levels &mdash; including Gold at the Senior Maths Challenge, Silver and Bronze at the IMC, and Gold at the Junior Maths Challenge.</p>
         </div>
 
-        <div class="cert-gallery">
-          <div>
+        <div class="results-carousel-wrap results-cert-carousel-wrap">
+          <div class="results-carousel-nav">
+            <button class="tutor-strip-btn" id="certPrev" aria-label="Previous certificates">&larr;</button>
+            <button class="tutor-strip-btn" id="certNext" aria-label="Next certificates">&rarr;</button>
+          </div>
+          <div class="results-carousel-track results-cert-track" id="certTrack">
+          <div class="results-cert-card">
             <div class="cert-slot">
               <img
                 src="/assets/img/ukmt/cert-senior-gold-2023.webp"
@@ -226,7 +231,7 @@
             </div>
             <p class="cert-caption">Senior Maths Challenge Gold, 2023</p>
           </div>
-          <div>
+          <div class="results-cert-card">
             <div class="cert-slot">
               <img
                 src="/assets/img/ukmt/cert-imc-silver-2023.webp"
@@ -238,7 +243,7 @@
             </div>
             <p class="cert-caption">IMC Silver, 2023</p>
           </div>
-          <div>
+          <div class="results-cert-card">
             <div class="cert-slot">
               <img
                 src="/assets/img/ukmt/cert-jmc-gold-2024.webp"
@@ -250,7 +255,7 @@
             </div>
             <p class="cert-caption">JMC Gold, 2024</p>
           </div>
-          <div>
+          <div class="results-cert-card">
             <div class="cert-slot">
               <img
                 src="/assets/img/ukmt/cert-imc-bronze-2025.webp"
@@ -261,6 +266,7 @@
               <div class="cert-placeholder" style="display:none"><p>Certificate image unavailable</p></div>
             </div>
             <p class="cert-caption">IMC Bronze, 2025</p>
+          </div>
           </div>
         </div>
 
@@ -316,8 +322,13 @@
           <p class="section-intro">Google reviews are public, verified, and we&rsquo;ve never deleted one. Below are four short excerpts from recent reviews. The full list &mdash; with context and names &mdash; is on our Google Business profile.</p>
         </div>
 
-        <div class="proof-grid">
-          <article class="review-card google-review-card">
+        <div class="results-carousel-wrap">
+          <div class="results-carousel-nav">
+            <button class="tutor-strip-btn" id="reviewPrev" aria-label="Previous reviews">&larr;</button>
+            <button class="tutor-strip-btn" id="reviewNext" aria-label="Next reviews">&rarr;</button>
+          </div>
+          <div class="results-carousel-track results-review-track" id="reviewTrack">
+          <article class="review-card google-review-card results-review-card">
             <div class="google-review-header">
               <div class="review-avatar" aria-hidden="true">A</div>
               <div>
@@ -329,7 +340,7 @@
             <p class="review-meta">&mdash; Dr. A.P., parent</p>
           </article>
 
-          <article class="review-card google-review-card">
+          <article class="review-card google-review-card results-review-card">
             <div class="google-review-header">
               <div class="review-avatar" aria-hidden="true">L</div>
               <div>
@@ -341,7 +352,7 @@
             <p class="review-meta">&mdash; L.R., student</p>
           </article>
 
-          <article class="review-card google-review-card">
+          <article class="review-card google-review-card results-review-card">
             <div class="google-review-header">
               <div class="review-avatar" aria-hidden="true">A</div>
               <div>
@@ -353,7 +364,7 @@
             <p class="review-meta">&mdash; A.P., A-Level student</p>
           </article>
 
-          <article class="review-card google-review-card">
+          <article class="review-card google-review-card results-review-card">
             <div class="google-review-header">
               <div class="review-avatar" aria-hidden="true">R</div>
               <div>
@@ -364,6 +375,7 @@
             <p class="review-quote">&ldquo;My son has been attending Jothi Learning for the past two years, and I couldn&rsquo;t be more pleased. Lessons are well-structured, pitched at the right level, and delivered with real care and patience. My son has grown noticeably in confidence and understanding since joining.&rdquo;</p>
             <p class="review-meta">&mdash; Mr. R.S., parent</p>
           </article>
+          </div>
         </div>
 
         <div class="google-reviews-cta">
