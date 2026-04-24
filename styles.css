@@ -2013,6 +2013,8 @@ p {
 .results-page #reviews .results-carousel-wrap {
   padding-inline: 0;
   background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 .results-carousel-nav { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 16px; }
 .results-page #messages .results-carousel-nav,
@@ -2056,6 +2058,11 @@ p {
   padding-bottom: 6px;
 }
 .results-carousel-track::-webkit-scrollbar { display: none; }
+.results-page #reviews .results-review-track {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
 .results-proof-carousel-wrap { position: relative; }
 .results-proof-control {
   position: absolute;
@@ -2220,7 +2227,10 @@ p {
   padding: 24px 24px 22px;
   min-height: 100%;
   background: rgba(255,255,255,0.92);
-  box-shadow: var(--shadow-soft);
+  box-shadow:
+    var(--shadow-card),
+    var(--shadow-soft),
+    0 0 26px rgba(16, 35, 63, 0.06);
 }
 .results-message-card .message-bubble {
   flex: 1 1 auto;
