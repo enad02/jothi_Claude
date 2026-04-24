@@ -1,35 +1,54 @@
-# A fresh pair of eyes — Jothi Learning
+# Jothi Design Eye Brief
 
-**Site:** https://jothi-claude.vercel.app
-**Time I'm hoping for:** an hour, ish
-**Format:** honestly, whatever suits you — Loom, voice note, annotated screenshots, a few WhatsApp messages. I just want your real reaction.
+A short taste brief for future premium website work.
+
+## Brand feel
+
+Warm. Nurturing. Premium.
+
+The site should feel closer to a calm private-school prospectus than a generic tutoring marketplace or AI-generated education site.
 
 ## What the business is
 
-Jothi Learning — online Maths and GCSE Science tutoring for UK students in Years 7–13. Five years in, 500+ students taught, 100+ families active. Flagship product is a 10-month A-Level Maths crash course.
+Jothi Learning is a UK-based online tutoring company helping students in Years 7–13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
 
-## Who the parent is
+## What strong design should achieve
 
-First-generation UK professional. Doctor, engineer, software lead. Indian or African diaspora. Aged 35–55. Anxious about grades, willing to pay for certainty, WhatsApps everything.
+- Immediate trust
+- Clear premium feel
+- Calm visual confidence
+- Parent-facing seriousness without coldness
+- A more distinctive wow factor without becoming flashy
 
-## What we want to feel
+## Current design evidence
 
-Warm. Nurturing. Premium. Closer to a private school prospectus than an edtech startup.
+- AI-looking imagery damages trust.
+- The site feels organised and modern, but still lacks a distinct visual signature.
+- Long-scroll fatigue is real, which is why homepage section-jump navigation now exists.
+- Student and tutor gateway pages should feel premium, but remain practical access pages.
+- The About page Vision / Mission / Purpose section exists, but still needs stronger hero-level prominence in the future.
+- Random green should not appear outside WhatsApp UI.
 
-## Where I need your eye
+## Design guardrails
 
-- Does it feel warm-premium, or AI-generic?
-- Does it pass the 5-second test on desktop AND mobile?
-- What's the single most distinctive visual move for wow factor?
-- Typography / colour / spacing / imagery direction?
-- Mobile: floating WhatsApp button, nav, tap targets
+- Use only the existing navy, ivory, muted gold, and slate system.
+- Keep WhatsApp green reserved for WhatsApp UI only.
+- Do not expose supplier names in visible public-facing design.
+- Keep layouts restrained, calm, and editorial.
+- Premium should come from hierarchy, typography, spacing, contrast, and composition - not clutter.
 
-## Please skip — already on my list
+## Best questions to ask when reviewing a page
 
-Real photos, results numbers, named testimonials, founder photo, "coming soon" placeholders.
+- Does this feel premium or just tidy?
+- Does this feel human and trustworthy, or AI-generic?
+- What is the strongest visual moment on the page?
+- Is the hierarchy obvious within five seconds?
+- Is there any section that feels too long, flat, or repetitive?
+- Does mobile still feel intentional rather than compressed?
 
-## How I'll use your feedback
+## Current design priorities
 
-Every change you suggest that I accept ships within minutes — edits flow through Claude Code → GitHub → Vercel auto-deploy. Your input becomes the live site same-day.
-
-— Prakash
+1. Strengthen the About page into a more defining premium page.
+2. Keep improving imagery quality and trust.
+3. Increase distinctiveness without adding noise.
+4. Preserve practical usability on gateway and mobile flows.
