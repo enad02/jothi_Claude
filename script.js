@@ -93,6 +93,7 @@ if (navToggle && siteNav) {
   }
 
   initScrollCarousel("tutorTrack", "tutorPrev", "tutorNext", ".tutor-strip-card", 0.8, 18);
+  initScrollCarousel("messageTrack", "messagePrev", "messageNext", ".results-message-card", 0.9, 20);
   initScrollCarousel("reviewTrack", "reviewPrev", "reviewNext", ".results-review-card", 0.9, 20);
   initScrollCarousel("certTrack", "certPrev", "certNext", ".results-cert-card", 0.9, 20);
 })();
