@@ -2211,7 +2211,7 @@ p {
 .cert-placeholder { display: none; place-items: center; border: 2px dashed var(--ivory-200); border-radius: inherit; color: var(--slate-500); font-style: italic; font-size: 0.88rem; text-align: center; padding: 20px; }
 .cert-placeholder p { margin: 0; }
 .cert-caption { text-align: center; font-size: 0.82rem; color: var(--slate-500); margin: 0; }
-.mock-table { width: 100%; border-collapse: collapse; margin-top: 28px; font-size: 0.95rem; }
+.mock-table { width: min(100%, 760px); border-collapse: collapse; margin: 28px auto 0; font-size: 0.95rem; }
 .mock-table th, .mock-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--line); color: var(--navy-900); }
 .mock-table th { color: var(--navy-950); font-weight: 600; background: rgba(16,35,63,0.03); }
 .mock-table tr:last-child td { border-bottom: none; }
