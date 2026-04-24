@@ -2102,9 +2102,9 @@ p {
 .google-review-card.results-review-card {
   border: 1px solid rgba(194, 163, 95, 0.24);
   border-radius: var(--radius-lg);
-  box-shadow:
-    0 14px 28px rgba(194, 163, 95, 0.10),
-    0 8px 18px rgba(11, 23, 48, 0.05);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 251, 245, 0.94));
+  box-shadow: 0 10px 24px rgba(11, 23, 48, 0.07);
 }
 .results-proof-icon {
   width: 48px;
