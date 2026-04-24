@@ -1,31 +1,60 @@
-# Jothi 2026 Website Starter Pack
+# Jothi Learning Website
 
-This pack is designed as a small, static fallback website for Jothi Learning.
+This repository contains the public-facing Jothi Learning website.
 
-## Files included
-- index.html
-- privacy.html
-- cookies.html
-- terms.html
-- styles.css
-- script.js
-- robots.txt
-- sitemap.xml
+## Overview
 
-## Before public launch
-1. Upload `Logo 2026.png` with the same filename, or rename the image reference in all HTML files.
-2. Replace `prakash@jothi.uk` with `admissions@jothi.uk` once the alias or mailbox is created.
-3. Replace the demo form action with a real form backend.
-4. Add the final ICO registration reference.
-5. Replace the review summaries with approved direct quotes if desired.
-6. Update canonical URLs and sitemap when the final domain is ready.
+Jothi Learning is a UK-based online tutoring company helping students in Years 7–13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
 
-## Form options
-You can connect the form to Web3Forms or Formspree later. Until then, the form stays in demo mode.
+The site is a static website build and is intentionally simple to maintain.
 
+## Stack
 
-## Latest content update
-- Public contact inbox switched to admissions@jothi.uk
-- Homepage review cards updated from recent parent reviews
-- ICO registration reference added: ZC121472
-- Private WhatsApp praise intentionally not published yet
+- Static HTML
+- CSS
+- Vanilla JavaScript
+- GitHub for version control
+- Vercel for deployment
+
+## Deployment workflow
+
+1. Edit files locally
+2. Review changes
+3. Commit to `main`
+4. Push to GitHub
+5. Vercel auto-deploys the latest version
+
+## Core files
+
+### Public pages
+- `index.html` — homepage
+- `programmes.html` — programmes and pricing
+- `results.html` — outcomes, reviews, and proof
+- `about.html` — company background and About-page positioning
+- `team.html` — tutor and team credibility
+- `contact.html` — enquiry form and contact routes
+- `students.html` — student gateway page
+- `tutors.html` — tutor gateway page
+- `privacy.html` — privacy notice
+- `cookies.html` — cookies notice
+- `terms.html` — terms and conditions
+
+### Shared files
+- `styles.css` — shared design system and page styling
+- `script.js` — navigation and lightweight interactions
+- `assets/` — images and supporting assets
+- `robots.txt`
+- `sitemap.xml`
+
+## Project documents
+
+- `SOURCE_OF_TRUTH.md` — locked facts and decisions
+- `CURRENT_STATE.md` — current working snapshot
+- `CLAUDE.md` — operating notes for Claude Code
+- `docs/Jothi_Design_Eye_Brief_Short.md` — design taste brief
+
+## Contributor note
+
+This repo is for a live business website, not a sandbox.
+
+Treat all changes as production changes. Keep changes controlled, protect factual accuracy, and avoid drifting away from the locked decisions in `SOURCE_OF_TRUTH.md`.
