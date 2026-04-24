@@ -1946,6 +1946,10 @@ p {
 /* ── Results page rebuild ─────────────────────────────────── */
 .results-page-hero { padding-top: 64px; }
 .results-page-hero h1 { max-width: none; font-size: clamp(2.2rem, 4vw, 3.6rem); text-align: center; }
+.results-proof-kicker-block { margin-bottom: 0; }
+.results-proof-kicker-block .section-kicker { margin-bottom: 0; }
+.results-proof-carousel-wrap { margin-top: 24px; }
+.results-proof-summary { margin-top: 36px; }
 .results-page .section-heading.centered-heading {
   align-items: center;
   text-align: center;
@@ -2076,6 +2080,7 @@ p {
     width: 78%;
     min-width: 78%;
   }
+  .results-proof-summary { margin-top: 30px; }
   .results-proof-icon {
     width: 44px;
     height: 44px;
