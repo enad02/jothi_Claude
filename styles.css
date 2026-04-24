@@ -308,6 +308,15 @@ h3 {
   padding: 44px 0;
 }
 
+#programmes,
+#system,
+#new-to-uk,
+#tutors,
+#results,
+#pricing {
+  scroll-margin-top: 120px;
+}
+
 .hero-section {
   padding-top: 64px;
 }
@@ -973,6 +982,46 @@ p {
   margin-top: 28px;
 }
 
+.section-jump-shell {
+  padding-top: 20px;
+  padding-bottom: 8px;
+}
+
+.section-jump-wrap {
+  display: grid;
+  gap: 14px;
+}
+
+.section-jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.section-jump-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid rgba(16, 35, 63, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-soft);
+  color: var(--navy-900);
+  font-size: 0.94rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+}
+
+.section-jump-nav a:hover,
+.section-jump-nav a:focus-visible {
+  background: rgba(255, 251, 245, 0.96);
+  border-color: rgba(194, 163, 95, 0.3);
+  color: var(--navy-950);
+  transform: translateY(-1px);
+}
+
 @media (max-width: 680px) {
   .icp-grid {
     grid-template-columns: 1fr;
@@ -1531,6 +1580,11 @@ p {
 
   .button {
     width: 100%;
+  }
+
+  .section-jump-nav a {
+    width: 100%;
+    justify-content: center;
   }
 
   .hero-image,
