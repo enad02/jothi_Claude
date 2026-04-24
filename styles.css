@@ -856,6 +856,22 @@ p {
   padding: 28px;
 }
 
+.about-values-grid {
+  align-items: stretch;
+}
+
+.about-values-card {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.about-values-card h3 {
+  margin: 0;
+  font-size: 1.18rem;
+  line-height: 1.45;
+}
+
 .team-card h3 {
   margin-top: 18px;
 }
