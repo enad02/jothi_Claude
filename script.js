@@ -73,6 +73,121 @@ if (navToggle && siteNav) {
 })();
 
 (function () {
+  const carousels = Array.from(document.querySelectorAll("[data-hero-proof-carousel]"));
+  if (!carousels.length) return;
+
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const intervalMs = 5500;
+
+  function loadImage(src) {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve(src);
+      image.onerror = () => resolve(null);
+      image.src = src;
+    });
+  }
+
+  function createSlide(src, index) {
+    const figure = document.createElement("figure");
+    const image = document.createElement("img");
+
+    figure.className = "hero-proof-slide";
+    image.className = "hero-proof-image";
+    image.src = src;
+    image.alt = "Additional annotated live lesson work example " + index;
+    image.loading = "lazy";
+    image.decoding = "async";
+
+    figure.appendChild(image);
+    return figure;
+  }
+
+  function initCarousel(carousel) {
+    const dots = carousel.parentElement?.querySelector(".hero-proof-dots");
+    const slides = Array.from(carousel.querySelectorAll(".hero-proof-slide"));
+    let current = 0;
+    let timer;
+
+    carousel.dataset.slideCount = String(slides.length);
+
+    if (slides.length <= 1) {
+      slides[0]?.classList.add("is-active");
+      if (dots) dots.hidden = true;
+      return;
+    }
+
+    if (dots) {
+      dots.hidden = false;
+      dots.innerHTML = "";
+      slides.forEach((_, index) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "hero-proof-dot";
+        dot.setAttribute("aria-label", "Show live lesson proof " + (index + 1));
+        dot.addEventListener("click", () => {
+          goTo(index);
+          restart();
+        });
+        dots.appendChild(dot);
+      });
+    }
+
+    const dotButtons = dots ? Array.from(dots.querySelectorAll(".hero-proof-dot")) : [];
+
+    function goTo(index) {
+      current = index;
+      slides.forEach((slide, slideIndex) => {
+        slide.classList.toggle("is-active", slideIndex === current);
+      });
+      dotButtons.forEach((dot, dotIndex) => {
+        dot.classList.toggle("is-active", dotIndex === current);
+        dot.setAttribute("aria-current", dotIndex === current ? "true" : "false");
+      });
+    }
+
+    function start() {
+      if (prefersReducedMotion) return;
+      window.clearInterval(timer);
+      timer = window.setInterval(() => {
+        goTo((current + 1) % slides.length);
+      }, intervalMs);
+    }
+
+    function stop() {
+      window.clearInterval(timer);
+    }
+
+    function restart() {
+      stop();
+      start();
+    }
+
+    goTo(0);
+    start();
+
+    const pauseTarget = carousel.closest(".hero-proof-stage") || carousel;
+
+    pauseTarget.addEventListener("mouseenter", stop);
+    pauseTarget.addEventListener("mouseleave", start);
+    pauseTarget.addEventListener("focusin", stop);
+    pauseTarget.addEventListener("focusout", start);
+  }
+
+  carousels.forEach((carousel) => {
+    const extraSrcs = (carousel.dataset.extraSrcs || "").split("|").filter(Boolean);
+
+    Promise.all(extraSrcs.map(loadImage)).then((loadedSrcs) => {
+      loadedSrcs.filter(Boolean).forEach((src, index) => {
+        carousel.appendChild(createSlide(src, index + 2));
+      });
+
+      initCarousel(carousel);
+    });
+  });
+})();
+
+(function () {
   function initScrollCarousel(trackId, prevId, nextId, cardSelector, fallbackFraction, fallbackGap) {
     const track = document.getElementById(trackId);
     const prevBtn = document.getElementById(prevId);
