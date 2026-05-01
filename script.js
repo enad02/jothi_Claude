@@ -212,6 +212,7 @@ if (navToggle && siteNav) {
   initScrollCarousel("messageTrack", "messagePrev", "messageNext", ".results-message-card", 0.9, 20);
   initScrollCarousel("reviewTrack", "reviewPrev", "reviewNext", ".results-review-card", 0.9, 20);
   initScrollCarousel("certTrack", "certPrev", "certNext", ".results-cert-card", 0.9, 20);
+  initScrollCarousel("homeReviewTrack", "homeReviewPrev", "homeReviewNext", ".home-google-review-card", 0.85, 22);
 })();
 
 if (contactForm && accessKeyField && formStatus) {
