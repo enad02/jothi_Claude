@@ -1,13 +1,13 @@
 # Source of Truth - Jothi Learning Website
 
-Last updated: 24 April 2026
+Last updated: 1 May 2026
 
 This file holds locked facts and decisions for the website build.
 It should contain only stable decisions, not working-state notes.
 
 ## Locked business description
 
-Jothi Learning is a UK-based online tutoring company helping students in Years 7–13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
+Jothi Learning is a UK-based online tutoring company helping students in Years 7-13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
 
 The site should present the business as warm, nurturing, premium, and serious.
 
@@ -58,55 +58,74 @@ Primary destination:
 
 ## Locked pricing
 
-### Standard annual programme fees
-These annualised fees apply to students joining at the normal start of the academic cycle and following the standard lesson rhythm.
+The public pricing model is monthly programme-cycle pricing.
 
-- KS3 (Years 7–8): £1,000 per subject per year
-- Years 9–10: £1,250 per subject per year
-- Year 11: £1,500 per subject per year
+Do not show programme totals in public copy.
+Do not describe pricing as hourly tuition.
+Do not lead with the previous crash-course-first model as the future-facing public A-Level offer.
 
-### Included in standard annual programmes
-- 40 structured weekly lessons across the academic year
-- 8 topic tests
-- End-of-year assessment
-- Termly parent consultations
-- Resource support
-- WhatsApp support
-- Live lesson supervision
+### Programme format
 
-### Flagship programme - 10-Month A-Level Maths Crash Course
-The 10-Month A-Level Maths Crash Course is a separate flagship offer and does not follow the same pricing structure as the standard annual programmes.
+- Standard programmes are live small-group lessons.
+- Batches have up to four students.
+- Groups are matched by level, confidence, ambition, and regular test performance.
+- One-to-one support is primarily used for the Diagnostic Bridge where closer assessment is needed before placement.
 
-- Full-course fee: £3,500
-- Covers the full AS + A-Level Maths pathway in an intensive 10-month format
-- Main intake: annual
-- Start point: August
-- Admission: after consultation only
+### Monthly programme-cycle fees
 
-### Mid-year and late-entry pricing policy
-The annualised fees above apply to students joining at the normal start of the academic cycle and following the standard lesson rhythm across the academic year.
+#### KS3 Years 7-8
+- Programme cycle: September-July
+- 1 subject / standard pathway: £80/month
+- 2-session pathway: £160/month
+- Full Core Foundations: £220/month
 
-For students joining mid-term or later in the year, pricing is confirmed after consultation. This is because we may need to agree:
+#### Years 9-10 GCSE preparation
+- Programme cycle: September-July
+- 1 subject: £100/month
+- 2-subject pathway: £200/month
+- GCSE Full Core: £275/month
 
-- whether the student joins from the current point onward
-- whether missed content should be caught up
-- whether extra lessons are needed beyond the normal one-hour-per-week rhythm
-- how much additional testing, catch-up teaching, and support is required
+#### Year 11 GCSE exam year
+- Programme cycle: September-April
+- 1 subject: £125/month
+- 2-subject pathway: £250/month
+- Full Core Exam Programme: £325/month
 
-For mid-year and late-entry students, the fee is based on the support plan agreed from their current academic position. That plan may include catch-up planning, extra 1:1 support, or more than one lesson per week where the student's situation makes this appropriate. Fees are confirmed after consultation, once that support plan has been agreed.
+#### AS / Year 12 Maths
+- Programme cycle: September-May
+- AS / Year 12 Maths: £150/month
+
+#### A-Level / Year 13 Maths
+- Programme cycle: September-May
+- Year 13 A-Level Maths: £225/month
+
+### Specialist A-Level routes
+
+University admissions preparation and accelerated A-Level Maths are discussed after consultation.
+Do not present the previous crash-course-first model as the main future-facing A-Level offer.
+
+### Diagnostic Bridge
+
+The Diagnostic Bridge is a short one-to-one entry pathway for students joining part-way through the year or needing closer assessment before placement.
+
+- Usually up to four sessions
+- Normally no longer than four weeks
+- Used to assess level, identify gaps, observe how the student learns, rebuild confidence, and recommend the right pathway
+- Public pages should not show Diagnostic Bridge pricing
+- If further one-to-one catch-up is needed after the Diagnostic Bridge, discuss the plan and cost with parents before adding anything extra
 
 ### Public-facing pricing rule
-Do not use `pricing after consultation` as a blanket statement across the whole site.
 
-Use transparent annual pricing for the standard annual programmes.
+Homepage pricing should stay light. Do not show a full pricing table on the homepage.
 
-Use consultation-based wording only where it is genuinely true:
-- the 10-Month A-Level Maths Crash Course
-- mid-year joiners
-- late-entry students
-- cases where catch-up provision changes the lesson volume or support plan
+Homepage pricing should use these `from` prices:
+- KS3 from £80/month
+- GCSE Prep from £100/month
+- Year 11 from £125/month
+- A-Level Maths from £150/month
 
-When writing public-facing copy for mid-year or late-entry cases, frame this as tailored academic support confirmed after a short consultation. Do not describe it as hourly tuition. Do not let the mid-year note become a blanket pricing disclaimer across the whole page.
+The Programmes page should show stage-based monthly pricing by pathway.
+Explain that each monthly payment contributes to the full academic programme: teaching, testing, progress tracking, parent communication, and pathway guidance.
 
 ## Locked public positioning points
 
@@ -123,7 +142,7 @@ These are central to the public story and should remain visible in some form acr
 Use these carefully and consistently. Update only when verified and intentionally approved.
 
 - 76% of recent GCSE cohort achieved average Grade 7+ across Maths, Chemistry, and Physics
-- 4.9★ across 101 verified Google reviews
+- 4.9 stars across 101 verified Google reviews
 - Around 90% year-on-year family retention
 - Operating since September 2020
 - 500+ students taught
@@ -170,8 +189,9 @@ Our public copy should reflect that our core academic offer is built around the 
 
 ## Do not change without explicit approval
 
-- Standard annual programme pricing
-- Flagship A-Level crash course pricing position
+- Monthly programme-cycle pricing
+- Programme format and Diagnostic Bridge rules
+- Specialist A-Level route positioning
 - CTA hierarchy
 - WhatsApp destination
 - Diagnostic consultation destination
