@@ -63,6 +63,9 @@ The public pricing model is monthly programme-cycle pricing.
 Do not show programme totals in public copy.
 Do not describe pricing as hourly tuition.
 Do not lead with the previous crash-course-first model as the future-facing public A-Level offer.
+Do not use annual-only pricing on the homepage.
+Do not invent further pricing breakdowns unless Prakash provides them.
+If old annual figures remain anywhere, flag them for review rather than silently mixing them with the monthly model.
 
 ### Programme format
 
@@ -117,6 +120,7 @@ The Diagnostic Bridge is a short one-to-one entry pathway for students joining p
 ### Public-facing pricing rule
 
 Homepage pricing should stay light. Do not show a full pricing table on the homepage.
+Homepage pricing should use monthly parent-facing figures.
 
 Homepage pricing should use these `from` prices:
 - KS3 from £80/month
@@ -125,6 +129,7 @@ Homepage pricing should use these `from` prices:
 - A-Level Maths from £150/month
 
 The Programmes page should show stage-based monthly pricing by pathway.
+Programme detail pages may explain pathway details, but pricing must not contradict the monthly model.
 Explain that each monthly payment contributes to the full academic programme: teaching, testing, progress tracking, parent communication, and pathway guidance.
 
 ## Locked public positioning points

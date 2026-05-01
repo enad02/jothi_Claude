@@ -48,10 +48,13 @@ The site is a static website build and is intentionally simple to maintain.
 
 ## Project documents
 
+- `AGENTS.md` — coding-agent operating rules
 - `SOURCE_OF_TRUTH.md` — locked facts and decisions
 - `CURRENT_STATE.md` — current working snapshot
-- `CLAUDE.md` — operating notes for Claude Code
+- `CLAUDE.md` — legacy Claude Code notes
 - `docs/Jothi_Design_Eye_Brief_Short.md` — design taste brief
+
+Coding agents should read `AGENTS.md` first, then `SOURCE_OF_TRUTH.md`, then `CURRENT_STATE.md` before editing.
 
 ## Contributor note
 

@@ -2,7 +2,17 @@
 
 Last updated: 1 May 2026
 
-This file is the live working snapshot for future Claude Code website work.
+This file is the live working snapshot for future website work.
+
+## Current working workflow
+
+- Codex = coding executor
+- ChatGPT thread = strategy / copy / decision support
+- `SOURCE_OF_TRUTH.md` = locked business facts
+- `AGENTS.md` = coding-agent operating rules
+- `CURRENT_STATE.md` = live/pending status
+
+Older Claude-specific references should not control current implementation if they conflict with `AGENTS.md`, `SOURCE_OF_TRUTH.md`, or the latest user instructions.
 
 ## What is true right now
 
@@ -56,5 +66,6 @@ This file is the live working snapshot for future Claude Code website work.
 
 - Use this file for the current working snapshot only.
 - Use `SOURCE_OF_TRUTH.md` for locked facts and decisions.
-- Use `CLAUDE.md` for Claude Code operating rules.
+- Use `AGENTS.md` for coding-agent operating rules.
+- Treat `CLAUDE.md` as legacy Claude-specific context unless explicitly referenced.
 - Do not duplicate locked pricing, CTA hierarchy, or proof rules here unless the current implementation has diverged.

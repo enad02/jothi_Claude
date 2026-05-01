@@ -1,4 +1,7 @@
 # CLAUDE.md
+
+Legacy note: This file was originally written for Claude Code. The current preferred agent-neutral instruction file is AGENTS.md. If there is a conflict: current user chat instructions win first, SOURCE_OF_TRUTH.md wins for locked business facts, AGENTS.md wins for agent workflow, and this CLAUDE.md file is historical unless explicitly referenced.
+
 ### Operating notes for Claude Code on this repo
 
 Last updated: 24 April 2026
