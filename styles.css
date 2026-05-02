@@ -1177,6 +1177,91 @@ p {
   color: var(--navy-950);
 }
 
+.about-framework-section .section-heading {
+  max-width: 860px;
+}
+
+.about-framework-section .section-intro {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-framework-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+}
+
+.about-framework-card {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.about-framework-card h3 {
+  margin: 0;
+  font-size: clamp(1.55rem, 2.3vw, 2rem);
+}
+
+.about-framework-card > p:not(.card-tag) {
+  margin: 0;
+  color: var(--slate-700);
+}
+
+.about-framework-points,
+.about-engine-steps {
+  display: grid;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.about-framework-points section,
+.about-engine-steps section {
+  padding: 18px;
+  border: 1px solid rgba(194, 163, 95, 0.24);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 251, 245, 0.78);
+}
+
+.about-framework-points h4,
+.about-engine-steps h4 {
+  margin: 0 0 6px;
+  color: var(--navy-950);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.about-framework-points p,
+.about-engine-steps p {
+  margin: 0;
+  color: var(--slate-700);
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.about-engine-steps {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.about-engine-steps span {
+  display: inline-flex;
+  margin-bottom: 10px;
+  color: var(--gold-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.about-system-note {
+  max-width: 880px;
+  margin: 24px auto 0;
+}
+
+.about-system-note h2 {
+  font-size: clamp(1.7rem, 2.6vw, 2.35rem);
+}
+
 .team-card h3 {
   margin-top: 18px;
 }
@@ -3435,7 +3520,7 @@ p {
 
 .hero-proof-panel {
   display: grid;
-  gap: 0;
+  gap: 18px;
   align-content: stretch;
   padding: 0;
   border: 0;
@@ -3592,6 +3677,43 @@ p {
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.55;
+}
+
+.hero-founder-card {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  border: 1px solid rgba(194, 163, 95, 0.28);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(circle at 16% 0%, rgba(194, 163, 95, 0.14), transparent 34%),
+    rgba(255, 251, 245, 0.96);
+  box-shadow: 0 18px 42px rgba(11, 23, 48, 0.08);
+}
+
+.hero-founder-card h2 {
+  margin: 0;
+  color: var(--navy-950);
+  font-size: clamp(1.45rem, 2vw, 1.85rem);
+  line-height: 1.14;
+}
+
+.hero-founder-card p {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: 0.96rem;
+  line-height: 1.56;
+}
+
+.hero-founder-card .detail-list {
+  margin-top: 4px;
+  gap: 9px;
+}
+
+.hero-founder-card .detail-list li {
+  color: var(--slate-700);
+  font-size: 0.92rem;
+  line-height: 1.45;
 }
 
 .proof-visual-board {
@@ -3948,6 +4070,11 @@ p {
   margin-top: 38px;
 }
 
+.compact-method-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .home-method-panel {
   display: grid;
   grid-template-rows: minmax(172px, auto) 1fr;
@@ -3958,6 +4085,41 @@ p {
   border: 1px solid rgba(194, 163, 95, 0.3);
   border-radius: var(--radius-md);
   box-shadow: none;
+}
+
+.compact-method-grid .home-method-panel {
+  grid-template-rows: auto;
+  align-content: start;
+  gap: 12px;
+  min-height: 210px;
+  padding: 26px 22px;
+}
+
+.compact-method-grid .home-method-panel h3 {
+  margin: 0;
+  color: var(--navy-950);
+  font-size: 1.2rem;
+  line-height: 1.22;
+}
+
+.compact-method-grid .home-method-panel p:last-child {
+  margin: 0;
+  color: var(--slate-700);
+  font-size: 0.95rem;
+  line-height: 1.56;
+}
+
+.home-method-link {
+  margin: 28px 0 0;
+  text-align: center;
+}
+
+.home-method-link a {
+  color: var(--navy-700);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(40, 70, 109, 0.3);
+  text-underline-offset: 3px;
 }
 
 .home-method-copy {
@@ -4179,6 +4341,80 @@ p {
   border-bottom: 1px solid rgba(194, 163, 95, 0.12);
 }
 
+.proof-gallery-shell {
+  background: var(--white);
+  border-top: 1px solid rgba(194, 163, 95, 0.12);
+  border-bottom: 1px solid rgba(194, 163, 95, 0.12);
+}
+
+.proof-gallery-shell .section-heading {
+  max-width: 800px;
+}
+
+.proof-gallery-shell .section-intro {
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--slate-700);
+}
+
+.proof-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 34px;
+}
+
+.proof-placeholder-card {
+  display: grid;
+  gap: 14px;
+  min-height: 100%;
+  padding: 22px;
+  border: 1px dashed rgba(194, 163, 95, 0.56);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, rgba(255, 251, 245, 0.92), rgba(245, 239, 227, 0.58)),
+    var(--ivory-50);
+}
+
+.proof-placeholder-frame {
+  display: grid;
+  place-items: center;
+  min-height: 150px;
+  border: 1px solid rgba(16, 35, 63, 0.1);
+  border-radius: var(--radius-sm);
+  background:
+    linear-gradient(135deg, rgba(16, 35, 63, 0.06) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(16, 35, 63, 0.06) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(16, 35, 63, 0.06) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(16, 35, 63, 0.06) 25%, transparent 25%),
+    rgba(255, 255, 255, 0.74);
+  background-position: 14px 0, 14px 0, 0 0, 0 0;
+  background-size: 28px 28px;
+}
+
+.proof-placeholder-frame::after {
+  content: "Real image slot";
+  color: var(--slate-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.proof-placeholder-card h3 {
+  margin: 0;
+  color: var(--navy-950);
+  font-size: 1.18rem;
+  line-height: 1.2;
+}
+
+.proof-placeholder-card p:last-child {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: 0.95rem;
+  line-height: 1.56;
+}
+
 .live-supervision-board {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(220px, 0.38fr);
@@ -4333,7 +4569,9 @@ p {
 @media (max-width: 1120px) {
   .compact-card-grid.card-grid-four,
   .proof-stat-grid.trust-inner,
-  .pricing-snapshot-grid {
+  .pricing-snapshot-grid,
+  .compact-method-grid,
+  .proof-gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -4406,6 +4644,10 @@ p {
     min-width: 0;
   }
 
+  .compact-method-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .home-method-panel {
     display: flex;
     flex-direction: column;
@@ -4448,7 +4690,9 @@ p {
 
   .compact-card-grid.card-grid-four,
   .proof-stat-grid.trust-inner,
-  .live-supervision-board {
+  .live-supervision-board,
+  .proof-gallery-grid,
+  .about-framework-grid {
     grid-template-columns: 1fr;
   }
 
@@ -4509,6 +4753,11 @@ p {
   }
 
   .pricing-snapshot-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-method-grid,
+  .about-engine-steps {
     grid-template-columns: 1fr;
   }
 
