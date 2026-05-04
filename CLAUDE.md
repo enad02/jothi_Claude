@@ -4,7 +4,7 @@ Legacy note: This file was originally written for Claude Code. The current prefe
 
 ### Operating notes for Claude Code on this repo
 
-Last updated: 24 April 2026
+Last updated: 3 May 2026
 
 This file should stay short.
 Use it for working behaviour and repo-specific operating guidance.
@@ -56,6 +56,13 @@ Use `CURRENT_STATE.md` for the current working snapshot.
 
 - Public pages remain `noindex,follow` until launch approval is explicitly given
 
+## Current homepage state
+
+- `index.html` is the live homepage and uses the promoted Variant D design.
+- `index-hero-proof-variant-d.html` remains as a reference backup only.
+- Global typography uses self-hosted Playfair Display for headings and Lato for body copy.
+- Keep homepage edits small and scoped.
+- Ask before touching global CSS, script behaviour, sitemap/robots, assets, or unrelated pages.
 ## About-page note
 
 - Vision / Mission / Purpose statements exist

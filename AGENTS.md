@@ -38,6 +38,15 @@ If documents conflict, follow the order above. If pricing, proof numbers, names,
 - Do not redesign unrelated sections while completing a scoped task.
 - Keep public pages `noindex,follow` until launch indexing is explicitly approved.
 
+## Current Homepage State
+
+- `index.html` is the live homepage and uses the promoted Variant D design.
+- `index-hero-proof-variant-d.html` remains as a reference backup only.
+- Global typography uses self-hosted Playfair Display for headings and Lato for body copy.
+- Do not edit `styles.css`, `script.js`, sitemap/robots, assets, or unrelated pages unless explicitly approved.
+- Do not run a full repo audit for targeted visual fixes.
+- Do not read unrelated files when a task names one target file.
+
 ## Safety Rules
 
 - Treat this as a live business website, not a sandbox.
