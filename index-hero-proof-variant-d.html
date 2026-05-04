@@ -141,7 +141,7 @@
 
     .vd-hero-overlay {
       position: absolute;
-      inset: 0;
+      inset: -4%;
       background: rgba(252, 248, 240, 0.82);
       display: flex;
       align-items: center;
@@ -213,8 +213,18 @@
     /* --- Stats band --- */
 
     .vd-stats-band {
-      padding: clamp(28px, 4.5vw, 52px) 0;
-      background: var(--ivory-50, #faf7f1);
+      --stat-patch-size: clamp(112px, 11vw, 154px);
+      --stat-number-size: clamp(1.58rem, 2.25vw, 2.16rem);
+      --stat-visual-height: clamp(116px, 10vw, 154px);
+      --stat-caption-gap: clamp(6px, 0.8vw, 10px);
+      --stat-number-offset: clamp(-5px, -0.35vw, -3px);
+      padding: clamp(24px, 3.8vw, 44px) 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 42%),
+        var(--ivory-100, #f4efe7);
+      box-shadow:
+        inset 0 18px 36px rgba(255, 255, 255, 0.58),
+        inset 0 -24px 42px rgba(16, 35, 63, 0.035);
     }
 
     .vd-stats-grid {
@@ -223,26 +233,37 @@
     }
 
     .vd-stat-item {
-      position: relative;
       display: grid;
       justify-items: center;
       align-content: start;
-      gap: 20px;
-      padding: clamp(18px, 2.5vw, 28px) clamp(12px, 1.8vw, 22px);
+      gap: var(--stat-caption-gap);
+      padding: clamp(12px, 1.8vw, 22px) clamp(12px, 1.8vw, 22px);
       text-align: center;
       overflow: hidden;
     }
 
-    .vd-stat-item::before {
+    .vd-stat-visual {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: min(100%, var(--stat-patch-size));
+      min-height: var(--stat-visual-height);
+      aspect-ratio: 1 / 1;
+    }
+
+    .vd-stat-visual::before {
       content: '';
       position: absolute;
-      top: 50%;
       left: 50%;
-      width: 108%;
-      height: 108%;
-      transform: translate(-50%, -56%);
-      background: url('Logo%202026.png') center / contain no-repeat;
-      opacity: 0.05;
+      top: 50%;
+      width: 116%;
+      height: 116%;
+      transform: translate(-50%, -50%);
+      background-image: url("Logo%202026.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      opacity: 0.07;
       pointer-events: none;
     }
 
@@ -252,14 +273,15 @@
       z-index: 1;
       color: var(--navy-950, #10233f);
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(1.76rem, 3vw, 2.42rem);
+      font-size: var(--stat-number-size);
       font-weight: 700;
       line-height: 1.1;
-      margin-top: 12px;
+      margin: var(--stat-number-offset) 0 0;
+      align-self: center;
     }
 
     .vd-stat-copy {
-      margin: 10px 0 0;
+      margin: 0;
       position: relative;
       z-index: 1;
       color: var(--slate-700, #4a5568);
@@ -772,19 +794,27 @@
       <div class="wrap">
         <div class="vd-stats-grid">
           <article class="vd-stat-item">
-            <strong class="vd-stat-number">500+</strong>
+            <div class="vd-stat-visual">
+              <strong class="vd-stat-number">500+</strong>
+            </div>
             <p class="vd-stat-copy">students taught since September 2020</p>
           </article>
           <article class="vd-stat-item">
-            <strong class="vd-stat-number">4.9/5</strong>
+            <div class="vd-stat-visual">
+              <strong class="vd-stat-number">4.9/5</strong>
+            </div>
             <p class="vd-stat-copy">across 101 verified Google reviews</p>
           </article>
           <article class="vd-stat-item">
-            <strong class="vd-stat-number">76%</strong>
+            <div class="vd-stat-visual">
+              <strong class="vd-stat-number">76%</strong>
+            </div>
             <p class="vd-stat-copy">of recent GCSE cohort achieved average Grade 7+ across Maths, Chemistry and Physics</p>
           </article>
           <article class="vd-stat-item">
-            <strong class="vd-stat-number">~90%</strong>
+            <div class="vd-stat-visual">
+              <strong class="vd-stat-number">~90%</strong>
+            </div>
             <p class="vd-stat-copy">year-on-year family retention</p>
           </article>
         </div>
