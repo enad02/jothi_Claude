@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jothi Learning | Hero Variant D Experiment</title>
+  <meta
+    name="description"
+    content="Maths and Science programmes for Years 7-13 with live teaching, regular testing, clear parent feedback, and visible progress."
+  />
+  <meta name="robots" content="noindex,follow" />
+  <meta name="theme-color" content="#10233f" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Hero Variant D experiment */
+
+    /* --- Header --- */
+
+    .vd-hdr {
+      background: var(--white, #fff);
+    }
+
+    .vd-hdr-brand {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(6px, 1vw, 12px) clamp(16px, 4vw, 40px);
+    }
+
+    .vd-hdr-brand .brand {
+      display: flex;
+      align-items: center;
+      gap: clamp(6px, 0.95vw, 11px);
+      text-decoration: none;
+    }
+
+    .vd-hdr-brand .brand img {
+      width: clamp(97px, 9.35vw, 134px);
+      height: auto;
+    }
+
+    .vd-hdr-brand .brand-lockup {
+      display: grid;
+      gap: 3px;
+      justify-items: center;
+      transform: translateY(-1px);
+    }
+
+    .vd-hdr-brand .brand-name {
+      color: var(--navy-950, #10233f);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.42rem, 2.9vw, 2.28rem);
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: 0.15em;
+    }
+
+    .vd-hdr-brand .brand-subline {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      color: var(--gold-500, #c2a35f);
+      font-size: clamp(0.5rem, 0.82vw, 0.72rem);
+      font-weight: 800;
+      letter-spacing: 0.32em;
+      line-height: 1;
+    }
+
+    .vd-hdr-brand .brand-tag {
+      color: var(--navy-900, #152744);
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(0.9rem, 1.2vw, 1.12rem);
+      font-weight: 600;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .vd-hdr-brand .brand-subline::before,
+    .vd-hdr-brand .brand-subline::after {
+      content: '';
+      width: clamp(16px, 2vw, 26px);
+      border-top: 1px solid rgba(194, 163, 95, 0.8);
+    }
+
+    .vd-nav-bar {
+      background: linear-gradient(
+        to bottom,
+        #10233f 0,
+        #10233f calc(100% - 6px),
+        #c8a95a calc(100% - 6px),
+        #c8a95a 100%
+      );
+    }
+
+    .vd-nav-bar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 clamp(16px, 4vw, 40px);
+      display: flex;
+      justify-content: center;
+    }
+
+    .vd-nav-bar nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .vd-nav-bar nav a {
+      display: inline-block;
+      padding: 13px clamp(11px, 1.8vw, 22px) 21px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color 150ms;
+    }
+
+    .vd-nav-bar nav a:hover {
+      color: var(--gold-500, #c2a35f);
+    }
+
+    /* --- Hero band --- */
+
+    .vd-hero {
+      position: relative;
+      height: clamp(320px, 44vw, 480px);
+      background-image: url('assets/img/home/hero/Hero%20tutor.png');
+      background-size: cover;
+      background-position: center 34%;
+      overflow: hidden;
+    }
+
+    .vd-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(252, 248, 240, 0.82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(24px, 4vw, 48px) clamp(16px, 4vw, 40px);
+    }
+
+    .vd-hero-inner {
+      width: 100%;
+      max-width: none;
+      display: grid;
+      gap: clamp(18px, 2.8vw, 28px);
+      align-content: center;
+      justify-items: center;
+      text-align: center;
+      transform: translate(0, 8px);
+    }
+
+    .vd-hero-text {
+      display: grid;
+      gap: 14px;
+      width: 100%;
+      max-width: 720px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .vd-hero-text h1 {
+      margin: 0;
+      max-width: 20ch;
+      margin-inline: auto;
+      color: var(--navy-950, #10233f);
+      font-size: clamp(1.8rem, 2.65vw, 2.65rem);
+      line-height: 1.08;
+      letter-spacing: 0.03em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .vd-hero-text h1 span {
+      display: block;
+      white-space: nowrap;
+    }
+
+    .vd-hero-text h1 .vd-hero-mobile-only {
+      display: none;
+    }
+
+    .vd-hero-body {
+      margin: 0;
+      color: var(--navy-900, #152744);
+      font-size: clamp(0.93rem, 1.4vw, 1.04rem);
+      line-height: 1.62;
+      max-width: 580px;
+      justify-self: center;
+      text-align: center;
+    }
+
+    .vd-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: fit-content;
+      justify-self: center;
+      justify-content: center;
+      margin-inline: auto;
+    }
+
+    /* --- Stats band --- */
+
+    .vd-stats-band {
+      padding: clamp(28px, 4.5vw, 52px) 0;
+      background: var(--ivory-50, #faf7f1);
+    }
+
+    .vd-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .vd-stat-item {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 20px;
+      padding: clamp(18px, 2.5vw, 28px) clamp(12px, 1.8vw, 22px);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .vd-stat-item::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 108%;
+      height: 108%;
+      transform: translate(-50%, -56%);
+      background: url('Logo%202026.png') center / contain no-repeat;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    .vd-stat-number {
+      display: block;
+      position: relative;
+      z-index: 1;
+      color: var(--navy-950, #10233f);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.76rem, 3vw, 2.42rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-top: 12px;
+    }
+
+    .vd-stat-copy {
+      margin: 10px 0 0;
+      position: relative;
+      z-index: 1;
+      color: var(--slate-700, #4a5568);
+      font-family: 'Lato', sans-serif;
+      font-size: 0.86rem;
+      line-height: 1.45;
+      max-width: 24ch;
+    }
+
+    @media (max-width: 860px) {
+      .vd-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* --- Proof module (Variant D: Asset Resting Stylus) --- */
+
+    .vd-proof-section {
+      padding: clamp(48px, 7vw, 88px) 0 clamp(56px, 8vw, 100px);
+      background: var(--ivory-50, #faf7f1);
+    }
+
+    .vd-proof-inner {
+      display: grid;
+      gap: clamp(28px, 4.5vw, 48px);
+      justify-items: center;
+    }
+
+    .proof-sync-card {
+      display: grid;
+      gap: 16px;
+      padding: clamp(16px, 2vw, 24px);
+      border: 1px solid rgba(194, 163, 95, 0.26);
+      border-radius: var(--radius-lg, 16px);
+      background:
+        radial-gradient(circle at 12% 0%, rgba(194, 163, 95, 0.14), transparent 32%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 239, 227, 0.64)),
+        var(--ivory-50, #faf7f1);
+      box-shadow: 0 18px 38px rgba(11, 23, 48, 0.075);
+      width: 100%;
+      max-width: 820px;
+      min-width: 0;
+    }
+
+    .proof-sync-title {
+      display: grid;
+      gap: 7px;
+      max-width: 620px;
+    }
+
+    .proof-sync-title span,
+    .proof-sync-slide-count {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(194, 163, 95, 0.12);
+      color: var(--gold-500, #c2a35f);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .proof-sync-title strong {
+      color: var(--navy-950, #10233f);
+      font-family: var(--font-serif-current, 'Playfair Display', Georgia, serif);
+      font-size: clamp(1.38rem, 2.4vw, 1.9rem);
+      line-height: 1.15;
+    }
+
+    .proof-sync-subline {
+      margin: 0;
+      color: var(--slate-700, #4a5568);
+      font-size: 0.96rem;
+      line-height: 1.45;
+    }
+
+    .proof-sync-device {
+      position: relative;
+      padding: clamp(6px, 1vw, 10px);
+      margin-top: clamp(-18px, -1.8vw, -12px);
+      border: 1px solid transparent;
+      border-radius: 26px;
+      background: transparent;
+      min-width: 0;
+    }
+
+    .proof-sync-screen {
+      position: relative;
+      min-height: clamp(390px, 50vw, 590px);
+      border: 1px solid transparent;
+      border-radius: 20px;
+      background: transparent;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .proof-sync-visual {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      place-items: center;
+      padding: clamp(4px, 0.8vw, 8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+    }
+
+    .proof-sync-visual.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .proof-sync-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transform: scale(1.14);
+      filter:
+        drop-shadow(0 5px 6px rgba(11, 23, 48, 0.12))
+        drop-shadow(0 10px 12px rgba(11, 23, 48, 0.08));
+    }
+
+    .proof-sync-stylus-asset {
+      position: absolute;
+      z-index: 4;
+      right: clamp(58px, 9vw, 110px);
+      bottom: clamp(-36px, -3vw, -24px);
+      width: clamp(320px, 73%, 600px);
+      height: auto;
+      filter:
+        drop-shadow(0 2px 3px rgba(11, 23, 48, 0.2))
+        drop-shadow(0 9px 14px rgba(11, 23, 48, 0.1));
+      opacity: 0.96;
+      transform: rotate(-2deg);
+      pointer-events: none;
+    }
+
+    .proof-sync-placeholder {
+      display: grid;
+      gap: 16px;
+      width: min(100%, 520px);
+      padding: clamp(20px, 3vw, 34px);
+      border: 1px solid rgba(194, 163, 95, 0.26);
+      border-radius: var(--radius-md, 12px);
+      background:
+        linear-gradient(180deg, rgba(251, 248, 241, 0.98), rgba(255, 255, 255, 0.94)),
+        var(--white, #fff);
+      box-shadow: 0 14px 26px rgba(11, 23, 48, 0.06);
+    }
+
+    .proof-sync-placeholder span {
+      display: block;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(16, 35, 63, 0.16), rgba(194, 163, 95, 0.32));
+    }
+
+    .proof-sync-placeholder span:nth-child(2) { width: 82%; }
+    .proof-sync-placeholder span:nth-child(3) { width: 66%; }
+    .proof-sync-placeholder span:nth-child(4) { width: 74%; }
+
+    .proof-sync-placeholder-label {
+      color: var(--navy-950, #10233f);
+      font-family: var(--font-serif-current, 'Playfair Display', Georgia, serif);
+      font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+      line-height: 1.18;
+    }
+
+    .proof-sync-content {
+      display: grid;
+      gap: 12px;
+      padding: 22px;
+      border: 1px solid rgba(194, 163, 95, 0.24);
+      border-radius: var(--radius-md, 12px);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(194, 163, 95, 0.12), transparent 34%),
+        rgba(255, 251, 245, 0.96);
+      box-shadow: 0 12px 24px rgba(11, 23, 48, 0.055);
+      min-width: 0;
+    }
+
+    .proof-sync-panel {
+      display: none;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .proof-sync-panel.is-active {
+      display: grid;
+    }
+
+    .proof-sync-panel h3 {
+      margin: 0;
+      color: var(--navy-950, #10233f);
+      font-size: clamp(1.35rem, 2vw, 1.75rem);
+      line-height: 1.18;
+    }
+
+    .proof-sync-panel p {
+      margin: 0;
+      color: var(--navy-900, #152744);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    .proof-sync-panel strong {
+      color: var(--navy-950, #10233f);
+    }
+
+    .proof-sync-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 2px;
+    }
+
+    .proof-sync-control {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(16, 35, 63, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--navy-900, #152744);
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .proof-sync-control.is-active {
+      border-color: rgba(194, 163, 95, 0.62);
+      background: rgba(194, 163, 95, 0.16);
+      color: var(--navy-950, #10233f);
+    }
+
+    /* --- Typography experiment --- */
+
+    body {
+      font-family: 'Lato', sans-serif;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    /* --- Mobile breakpoints --- */
+
+    @media (max-width: 720px) {
+      .proof-sync-screen {
+        min-height: 330px;
+      }
+
+      .proof-sync-subline,
+      .proof-sync-panel p {
+        overflow-wrap: break-word;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .vd-hdr-brand {
+        padding: 5px 14px;
+      }
+
+      .vd-hdr-brand .brand {
+        gap: 6px;
+      }
+
+      .vd-hdr-brand .brand img {
+        width: clamp(79px, 23vw, 97px);
+      }
+
+      .vd-hdr-brand .brand-lockup {
+        gap: 2px;
+        transform: translateY(0);
+      }
+
+      .vd-hdr-brand .brand-name {
+        font-size: clamp(1.22rem, 5.5vw, 1.5rem);
+        letter-spacing: 0.125em;
+      }
+
+      .vd-hdr-brand .brand-subline {
+        gap: 6px;
+        font-size: clamp(0.44rem, 1.95vw, 0.56rem);
+        letter-spacing: 0.22em;
+      }
+
+      .vd-hdr-brand .brand-tag {
+        font-size: clamp(0.78rem, 3.2vw, 0.92rem);
+      }
+
+      .vd-hdr-brand .brand-subline::before,
+      .vd-hdr-brand .brand-subline::after {
+        width: 12px;
+      }
+
+      .vd-nav-bar-inner {
+        padding: 0 8px;
+        overflow: hidden;
+      }
+
+      .vd-nav-bar nav {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+        gap: 0;
+      }
+
+      .vd-nav-bar nav a {
+        flex: 0 1 auto;
+        padding: 9px 3px 17px;
+        font-size: 0.58rem;
+        letter-spacing: 0.045em;
+        white-space: nowrap;
+      }
+
+      .vd-hero {
+        height: auto;
+        min-height: 430px;
+      }
+
+      .vd-hero-overlay {
+        padding: 28px 16px 34px;
+      }
+
+      .vd-hero-inner {
+        max-width: min(100%, calc(100vw - 32px));
+        gap: 16px;
+      }
+
+      .vd-hero-text {
+        max-width: min(100%, 22rem);
+        gap: 12px;
+      }
+
+      .vd-hero-inner {
+        transform: translate(0, 0);
+      }
+
+      .vd-hero-text h1 {
+        max-width: min(92vw, 360px);
+        margin-inline: auto;
+        font-size: clamp(1.45rem, 7vw, 1.95rem);
+        line-height: 1.05;
+        letter-spacing: 0.04em;
+        overflow-wrap: normal;
+        text-wrap: balance;
+      }
+
+      .vd-hero-text h1 span {
+        white-space: normal;
+      }
+
+      .vd-hero-text h1 .vd-hero-desktop-only {
+        display: none;
+      }
+
+      .vd-hero-text h1 .vd-hero-mobile-only {
+        display: block;
+      }
+
+      .vd-hero-text h1 .vd-hero-mobile-only span {
+        display: block;
+        white-space: nowrap;
+      }
+
+      .vd-hero-body {
+        max-width: min(30ch, calc(100vw - 40px));
+      }
+
+      .vd-hero-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-inline: auto;
+      }
+
+      .vd-hero-actions .button {
+        width: fit-content;
+        min-width: 240px;
+        max-width: calc(100vw - 40px);
+        min-height: 52px;
+        padding-inline: 24px;
+        box-sizing: border-box;
+        border-radius: 999px;
+        justify-content: center;
+        white-space: nowrap;
+        margin-inline: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .proof-sync-card,
+      .proof-sync-device,
+      .proof-sync-screen,
+      .proof-sync-content {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .proof-sync-card {
+        overflow: hidden;
+        justify-self: center;
+        padding: 2px 10px 14px;
+      }
+
+      .proof-sync-device {
+        padding: 0;
+        margin-top: -24px;
+      }
+
+      .proof-sync-screen {
+        min-height: clamp(392px, 100vw, 452px);
+      }
+
+      .proof-sync-visual {
+        padding: 0;
+      }
+
+      .proof-sync-visual img {
+        transform: scale(1.28);
+        object-position: center bottom;
+      }
+
+      .proof-sync-stylus-asset {
+        right: clamp(24px, 7.2vw, 34px);
+        bottom: clamp(-2px, -0.5vw, 0px);
+        width: clamp(228px, 73%, 300px);
+      }
+
+      .proof-sync-content,
+      .proof-sync-panel,
+      .proof-sync-panel h3,
+      .proof-sync-panel p {
+        text-align: center;
+      }
+
+      .proof-sync-slide-count {
+        justify-self: center;
+      }
+
+      .proof-sync-controls {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="vd-hdr" id="top">
+    <div class="vd-hdr-brand">
+      <a class="brand" href="index.html" aria-label="Jothi Learning home">
+        <img src="Logo%202026.png" alt="Jothi Learning logo" width="90" height="90" />
+        <span class="brand-lockup">
+          <span class="brand-name">JOTHI</span>
+          <span class="brand-subline">LEARNING</span>
+          <span class="brand-tag">Serious teaching. Visible progress.</span>
+        </span>
+      </a>
+    </div>
+    <div class="vd-nav-bar">
+      <div class="vd-nav-bar-inner">
+        <nav aria-label="Primary navigation">
+          <a href="about.html">About</a>
+          <a href="programmes.html">Programmes</a>
+          <a href="team.html">Team</a>
+          <a href="results.html">Results</a>
+          <a href="contact.html">Contact</a>
+          <a href="students.html">Access</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" class="landing-page">
+
+    <section class="vd-hero" aria-label="Jothi Learning">
+      <div class="vd-hero-overlay">
+        <div class="vd-hero-inner">
+          <div class="vd-hero-text">
+            <h1>
+              <span>Serious teaching,</span>
+              <span class="vd-hero-desktop-only">A clearer path for your child</span>
+              <span class="vd-hero-mobile-only">
+                <span>A clearer path</span>
+                <span>For your child</span>
+              </span>
+            </h1>
+            <p class="vd-hero-body">Maths and Science support for Years 7&ndash;13, built around live teaching, regular testing, and honest parent feedback. Your child&rsquo;s working stays visible during lessons, so mistakes can be caught early and progress is easier to understand.</p>
+          </div>
+          <div class="vd-hero-actions">
+            <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20discuss%20tutoring%20for%20my%20child" target="_blank" rel="noopener noreferrer">
+              <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.570-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.570-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.374l-.36-.214-3.733.979 1.004-3.642-.234-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+              WhatsApp us
+            </a>
+            <a class="button button-secondary" href="contact.html#contact-form">Start with a consultation</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="vd-stats-band" aria-label="Jothi Learning proof">
+      <div class="wrap">
+        <div class="vd-stats-grid">
+          <article class="vd-stat-item">
+            <strong class="vd-stat-number">500+</strong>
+            <p class="vd-stat-copy">students taught since September 2020</p>
+          </article>
+          <article class="vd-stat-item">
+            <strong class="vd-stat-number">4.9/5</strong>
+            <p class="vd-stat-copy">across 101 verified Google reviews</p>
+          </article>
+          <article class="vd-stat-item">
+            <strong class="vd-stat-number">76%</strong>
+            <p class="vd-stat-copy">of recent GCSE cohort achieved average Grade 7+ across Maths, Chemistry and Physics</p>
+          </article>
+          <article class="vd-stat-item">
+            <strong class="vd-stat-number">~90%</strong>
+            <p class="vd-stat-copy">year-on-year family retention</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="vd-proof-section" aria-label="The Jothi system in practice">
+      <div class="wrap vd-proof-inner">
+
+        <div class="proof-sync-card" data-proof-sync>
+          <div class="proof-sync-topline">
+            <div class="proof-sync-title">
+              <span>The Jothi system in practice</span>
+              <strong>Real teaching. Visible progress. Clearer next steps.</strong>
+              <p class="proof-sync-subline">Every image shows a part of how we teach, test, track, and tell parents the truth.</p>
+            </div>
+          </div>
+
+          <div class="proof-sync-device" aria-label="Synced proof visual">
+            <div class="proof-sync-screen">
+              <figure class="proof-sync-visual is-active" data-proof-visual="0">
+                <img
+                  src="assets/img/home/hero/live-lesson-proof.png"
+                  alt="Annotated live lesson work showing how tutors see student thinking in real time and intervene during the lesson"
+                  loading="eager"
+                  decoding="async"
+                />
+              </figure>
+              <figure class="proof-sync-visual" data-proof-visual="1">
+                <img
+                  src="assets/img/home/hero/live-lesson-proof2.png"
+                  alt="Second annotated live lesson work example showing visible student working and correction"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <figure class="proof-sync-visual" data-proof-visual="2">
+                <div class="proof-sync-placeholder" aria-hidden="true">
+                  <strong class="proof-sync-placeholder-label">Exam correction</strong>
+                  <span></span><span></span><span></span>
+                </div>
+              </figure>
+              <figure class="proof-sync-visual" data-proof-visual="3">
+                <div class="proof-sync-placeholder" aria-hidden="true">
+                  <strong class="proof-sync-placeholder-label">Progress snapshot</strong>
+                  <span></span><span></span><span></span>
+                </div>
+              </figure>
+              <figure class="proof-sync-visual" data-proof-visual="4">
+                <div class="proof-sync-placeholder" aria-hidden="true">
+                  <strong class="proof-sync-placeholder-label">Motivation and habits</strong>
+                  <span></span><span></span><span></span>
+                </div>
+              </figure>
+              <figure class="proof-sync-visual" data-proof-visual="5">
+                <div class="proof-sync-placeholder" aria-hidden="true">
+                  <strong class="proof-sync-placeholder-label">Founder oversight</strong>
+                  <span></span><span></span><span></span>
+                </div>
+              </figure>
+            </div>
+            <img
+              class="proof-sync-stylus-asset"
+              src="assets/img/home/hero/stylus.png"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+
+          <div class="proof-sync-content">
+            <span class="proof-sync-slide-count" data-proof-count>01 / 06</span>
+            <article class="proof-sync-panel is-active" data-proof-panel="0">
+              <h3>Live marked work</h3>
+              <p>Your child writes during the lesson. Tutors see the working live, spot misunderstandings early, and guide the next step before mistakes become habits.</p>
+            </article>
+            <article class="proof-sync-panel" data-proof-panel="1">
+              <h3>Worked solution and screen writing</h3>
+              <p>Method, correction, and working stay visible, so the student can see exactly where the thinking needs to change.</p>
+            </article>
+            <article class="proof-sync-panel" data-proof-panel="2">
+              <h3>Exam correction</h3>
+              <p>Assessment work should show more than a mark. It should show the method error, the corrected route, and the next action.</p>
+            </article>
+            <article class="proof-sync-panel" data-proof-panel="3">
+              <h3>Progress snapshot</h3>
+              <p>Parent updates should make progress easier to understand: what has improved, what is still weak, and what needs attention next.</p>
+            </article>
+            <article class="proof-sync-panel" data-proof-panel="4">
+              <h3>Motivation and habits</h3>
+              <p>We look for the habits behind the work: effort, independence, confidence, and whether the student is responding to correction.</p>
+            </article>
+            <article class="proof-sync-panel" data-proof-panel="5">
+              <h3>Founder oversight</h3>
+              <p><strong>Prakash Micheal</strong> keeps the teaching system close, so quality, parent communication, and academic direction are not left loose.</p>
+            </article>
+            <div class="proof-sync-controls" aria-label="Choose proof slide">
+              <button class="proof-sync-control is-active" type="button" data-proof-control="0">Marked work</button>
+              <button class="proof-sync-control" type="button" data-proof-control="1">Screen writing</button>
+              <button class="proof-sync-control" type="button" data-proof-control="2">Exam correction</button>
+              <button class="proof-sync-control" type="button" data-proof-control="3">Progress</button>
+              <button class="proof-sync-control" type="button" data-proof-control="4">Habits</button>
+              <button class="proof-sync-control" type="button" data-proof-control="5">Founder</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section-shell home-google-reviews" aria-labelledby="home-google-reviews-heading">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Independent parent reviews</p>
+          <h2 id="home-google-reviews-heading">4.9 stars from families who wanted clearer progress.</h2>
+          <p class="section-intro">Parents do not just want extra lessons. They want to know what is being taught, where their child is improving, and what needs attention next.</p>
+        </div>
+
+        <div class="home-google-carousel-wrap">
+          <div class="home-google-carousel-nav" aria-label="Homepage Google reviews carousel controls">
+            <button class="tutor-strip-btn" id="homeReviewPrev" aria-label="Previous homepage review">&lsaquo;</button>
+            <button class="tutor-strip-btn" id="homeReviewNext" aria-label="Next homepage review">&rsaquo;</button>
+          </div>
+
+          <div class="home-google-review-track" id="homeReviewTrack" aria-label="Selected parent and student reviews">
+            <article class="review-card google-review-card home-google-review-card">
+              <div class="google-review-header">
+                <div class="review-avatar" aria-hidden="true">A</div>
+                <div class="home-google-reviewer-block">
+                  <p class="home-google-reviewer">Dr. A.P.</p>
+                  <p class="google-review-tag">Verified Google review</p>
+                </div>
+              </div>
+              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+              <p class="review-quote">The quality of teaching has been outstanding. The regular assessments, detailed feedback, and exam-focused strategies helped my daughter identify her weaknesses and work on them effectively.</p>
+              <p class="review-meta">Parent</p>
+            </article>
+
+            <article class="review-card google-review-card home-google-review-card">
+              <div class="google-review-header">
+                <div class="review-avatar" aria-hidden="true">L</div>
+                <div class="home-google-reviewer-block">
+                  <p class="home-google-reviewer">L.R.</p>
+                  <p class="google-review-tag">Verified Google review</p>
+                </div>
+              </div>
+              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+              <p class="review-quote">i was grade 4 now im grade 6-7 miss helped alot</p>
+              <p class="review-meta">Student</p>
+            </article>
+
+            <article class="review-card google-review-card home-google-review-card">
+              <div class="google-review-header">
+                <div class="review-avatar" aria-hidden="true">A</div>
+                <div class="home-google-reviewer-block">
+                  <p class="home-google-reviewer">A.P.</p>
+                  <p class="google-review-tag">Verified Google review</p>
+                </div>
+              </div>
+              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+              <p class="review-quote">When I first started my tutoring with Jothi learning, I felt lost and helpless in many subjects. Now after receiving fantastic support from amazing teachers I am confident in my abilities.</p>
+              <p class="review-meta">A-Level student</p>
+            </article>
+
+            <article class="review-card google-review-card home-google-review-card">
+              <div class="google-review-header">
+                <div class="review-avatar" aria-hidden="true">R</div>
+                <div class="home-google-reviewer-block">
+                  <p class="home-google-reviewer">Mr. R.S.</p>
+                  <p class="google-review-tag">Verified Google review</p>
+                </div>
+              </div>
+              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+              <p class="review-quote">Lessons are well-structured, pitched at the right level, and delivered with real care and patience. My son has grown noticeably in confidence and understanding since joining.</p>
+              <p class="review-meta">Parent</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="home-google-reviews-cta">
+          <a class="button button-secondary" href="results.html#reviews">Read more reviews and results</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell alt-shell" id="parent-problem">
+      <div class="wrap narrow-shell">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Why families come to us</p>
+          <h2>Your child is working hard. The marks still are not moving.</h2>
+          <p class="section-intro">That is usually when parents need more than encouragement. They need a clearer picture of what is happening and what should change next.</p>
+        </div>
+        <div class="statement-grid">
+          <article class="statement-card">
+            <h3>Effort without movement</h3>
+            <p>Your child attends lessons and completes work, but tests still expose the same gaps.</p>
+          </article>
+          <article class="statement-card">
+            <h3>Reassurance without detail</h3>
+            <p>You hear that your child is &ldquo;doing fine&rdquo;, but not exactly what needs fixing next.</p>
+          </article>
+          <article class="statement-card">
+            <h3>Decisions arriving quickly</h3>
+            <p>Sets, GCSEs, A-Levels and subject choices start moving before the route feels clear.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="programmes">
+      <div class="wrap">
+        <div class="section-heading">
+          <p class="section-kicker">Programmes</p>
+          <h2>Clear pathways for each stage.</h2>
+          <p class="section-intro">Once we understand what is holding your child back, we recommend the right route &mdash; Secondary Maths, GCSE Science, or our flagship A-Level Maths cohort.</p>
+        </div>
+
+        <div class="card-grid card-grid-four compact-card-grid">
+          <article class="info-card">
+            <p class="card-tag">Years 7&ndash;11</p>
+            <h3>Secondary Maths</h3>
+            <p>Core Maths support from KS3 to GCSE, with regular testing, progress review, and stretch for high-achievers, including UKMT preparation.</p>
+          </article>
+          <article class="info-card">
+            <p class="card-tag">Years 9&ndash;11</p>
+            <h3>Physics and Chemistry</h3>
+            <p>Focused GCSE Science support for clearer understanding, recall, calculations, and exam method.</p>
+          </article>
+          <article class="info-card">
+            <p class="card-tag">Years 12&ndash;13</p>
+            <h3>A-Level Maths</h3>
+            <p>A specialist Maths pathway for high-ability students ready for serious A-Level Maths preparation, faster progress, and stronger mathematical discipline.</p>
+          </article>
+        </div>
+
+        <p class="programmes-preview-cta"><a class="button button-secondary" href="programmes.html">View all programmes</a></p>
+      </div>
+    </section>
+
+    <section class="section-shell home-method-section" id="system">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">How Jothi works</p>
+          <h2>We teach. We test. We track. We tell you the truth.</h2>
+          <p class="section-intro">Your child does not just attend lessons. We teach the right content, check what has landed, follow the evidence, and keep parents clear about what needs to happen next.</p>
+        </div>
+
+        <div class="home-method-grid compact-method-grid">
+          <article class="home-method-panel">
+            <p class="card-tag">Teach</p>
+            <h3>Clear teaching</h3>
+            <p>Lessons focus on the exact gaps, methods, and exam thinking your child needs next.</p>
+          </article>
+          <article class="home-method-panel">
+            <p class="card-tag">Test</p>
+            <h3>Regular checks</h3>
+            <p>We test understanding often, so weak areas are found before they become habits.</p>
+          </article>
+          <article class="home-method-panel">
+            <p class="card-tag">Track</p>
+            <h3>Visible evidence</h3>
+            <p>Progress is followed through lesson work, assessment patterns, and parent updates.</p>
+          </article>
+          <article class="home-method-panel">
+            <p class="card-tag">Tell</p>
+            <h3>Honest feedback</h3>
+            <p>Parents hear what is improving, what is still weak, and what needs to change next.</p>
+          </article>
+        </div>
+
+        <p class="home-method-link"><a href="about.html#jothi-system">Read how the full Jothi system works &rarr;</a></p>
+      </div>
+    </section>
+
+    <section class="section-shell proof-gallery-shell" id="proof-gallery">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Proof gallery direction</p>
+          <h2>Real evidence slots to replace before launch.</h2>
+          <p class="section-intro">These are editorial placeholders only. Each slot should be replaced with a real Jothi asset, with student names and private details removed.</p>
+        </div>
+
+        <div class="proof-gallery-grid">
+          <article class="proof-placeholder-card">
+            <div class="proof-placeholder-frame" aria-hidden="true"></div>
+            <p class="card-tag">Live marked work</p>
+            <h3>Live marked work</h3>
+            <p>Replace with a close crop of real student work being marked live, with names removed.</p>
+          </article>
+          <article class="proof-placeholder-card">
+            <div class="proof-placeholder-frame" aria-hidden="true"></div>
+            <p class="card-tag">Screen writing</p>
+            <h3>Screen writing</h3>
+            <p>Replace with a tutor screen-writing example showing correction, method, or working.</p>
+          </article>
+          <article class="proof-placeholder-card">
+            <div class="proof-placeholder-frame" aria-hidden="true"></div>
+            <p class="card-tag">Exam correction</p>
+            <h3>Exam correction</h3>
+            <p>Replace with an anonymised GCSE/A-Level question showing red correction and feedback.</p>
+          </article>
+          <article class="proof-placeholder-card">
+            <div class="proof-placeholder-frame" aria-hidden="true"></div>
+            <p class="card-tag">Progress snapshot</p>
+            <h3>Progress snapshot</h3>
+            <p>Replace with an anonymised parent progress update or tracking view.</p>
+          </article>
+          <article class="proof-placeholder-card">
+            <div class="proof-placeholder-frame" aria-hidden="true"></div>
+            <p class="card-tag">Results proof</p>
+            <h3>Results proof</h3>
+            <p>Replace with a certificate, medal, or exam outcome proof with student details blurred.</p>
+          </article>
+          <article class="proof-placeholder-card">
+            <div class="proof-placeholder-frame" aria-hidden="true"></div>
+            <p class="card-tag">Founder oversight</p>
+            <h3>Founder oversight</h3>
+            <p>Replace with a warm, professional founder photo of Prakash Micheal.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell" id="new-to-uk">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">For families new to the UK system</p>
+          <h2>You bring ambition. We explain the route.</h2>
+          <p class="section-intro">We help parents understand sets, GCSE choices, exam preparation, A-Level pathways and university-facing decisions in plain English.</p>
+        </div>
+
+        <div class="icp-grid">
+          <article class="icp-block">
+            <h3>Clear school guidance</h3>
+            <p>We explain what matters now and what can wait.</p>
+          </article>
+          <article class="icp-block">
+            <h3>Fast parent communication</h3>
+            <p>WhatsApp keeps questions simple and direct.</p>
+          </article>
+          <article class="icp-block">
+            <h3>Support across England</h3>
+            <p>Trusted by 100+ active families today.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell alt-shell" id="pricing">
+      <div class="wrap pricing-shell">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Pricing</p>
+          <h2>Transparent programme fees</h2>
+          <p class="section-intro">Our programmes are priced by stage and paid monthly across the teaching cycle.</p>
+          <p class="section-intro">Each monthly payment contributes to the full academic programme your child follows: lessons, testing, progress tracking, parent updates, and pathway guidance.</p>
+        </div>
+        <div class="pricing-snapshot-grid">
+          <article class="pricing-card pricing-snapshot-card">
+            <p class="card-tag">KS3</p>
+            <span>Years 7&ndash;8</span>
+            <strong>From &pound;80/month</strong>
+            <p>Foundation Maths, UKMT stretch, or full core foundations.</p>
+          </article>
+          <article class="pricing-card pricing-snapshot-card">
+            <p class="card-tag">GCSE Prep</p>
+            <span>Years 9&ndash;10</span>
+            <strong>From &pound;100/month</strong>
+            <p>GCSE topic coverage across Maths, Physics, and Chemistry.</p>
+          </article>
+          <article class="pricing-card pricing-snapshot-card">
+            <p class="card-tag">Year 11</p>
+            <span>GCSE exam year</span>
+            <strong>From &pound;125/month</strong>
+            <p>Exam rehearsal, mocks, correction, and past-paper method.</p>
+          </article>
+          <article class="pricing-card pricing-snapshot-card">
+            <p class="card-tag">A-Level Maths</p>
+            <span>AS and A-Level</span>
+            <strong>From &pound;150/month</strong>
+            <p>AS foundations, Year 13 support, and specialist pathways.</p>
+          </article>
+        </div>
+        <p class="pricing-snapshot-note">Students joining part-way through the year may begin with a short Diagnostic Bridge so we can assess their level and recommend the right pathway.</p>
+        <p class="pricing-snapshot-link"><a href="programmes.html#programme-stage-nav">View programme fees and joining process &rarr;</a></p>
+      </div>
+    </section>
+
+    <section class="section-shell consultation-shell" id="consultation">
+      <div class="wrap consultation-card">
+        <div>
+          <p class="section-kicker">Consultation</p>
+          <h2>Start with a clear next step.</h2>
+          <p>Message us on WhatsApp first. We will help you decide whether Jothi is the right fit for your child.</p>
+        </div>
+        <div class="consultation-actions">
+          <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20discuss%20tutoring%20for%20my%20child" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.570-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.570-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.374l-.36-.214-3.733.979 1.004-3.642-.234-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+            WhatsApp us
+          </a>
+          <a class="button button-secondary" href="contact.html#contact-form">Start with a consultation</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <p class="footer-kicker">Jothi Learning</p>
+        <h2>Clear structure. Serious teaching. Credible progress.</h2>
+      </div>
+
+      <div>
+        <h3>Quick Access</h3>
+        <nav class="footer-links" aria-label="Footer quick access">
+          <a href="students.html">For Students</a>
+          <a href="tutors.html">For Tutors</a>
+        </nav>
+      </div>
+
+      <div>
+        <h3>Site Navigation</h3>
+        <nav class="footer-links" aria-label="Footer site navigation">
+          <a href="#top">Home</a>
+          <a href="programmes.html">Programmes</a>
+          <a href="about.html">About</a>
+          <a href="team.html">Team</a>
+          <a href="results.html">Results</a>
+          <a href="contact.html">Contact</a>
+          <a href="contact.html#contact-form">Consultation</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="cookies.html">Cookies</a>
+          <a href="terms.html">Terms</a>
+        </nav>
+      </div>
+
+      <div class="legal-block">
+        <h3>Legal Details</h3>
+        <p>JOTHI LEARNING LIMITED</p>
+        <p>Registered in England and Wales</p>
+        <p>Company No. 12571880</p>
+        <p>Registered office: 2 Wilmot Drive, Birmingham, B23 5UA</p>
+        <p>ICO registration: ZC121472</p>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20discuss%20tutoring%20for%20my%20child" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Jothi Learning">
+    <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.150-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.570-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.570-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.374l-.36-.214-3.733.979 1.004-3.642-.234-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+  </a>
+
+  <script src="script.js"></script>
+  <script>
+    document.querySelectorAll("[data-proof-sync]").forEach(function (module) {
+      var visuals = Array.from(module.querySelectorAll("[data-proof-visual]"));
+      var panels = Array.from(module.querySelectorAll("[data-proof-panel]"));
+      var controls = Array.from(module.querySelectorAll("[data-proof-control]"));
+      var count = module.querySelector("[data-proof-count]");
+      function goTo(index) {
+        visuals.forEach(function (v, i) { v.classList.toggle("is-active", i === index); });
+        panels.forEach(function (p, i) { p.classList.toggle("is-active", i === index); });
+        controls.forEach(function (c, i) {
+          c.classList.toggle("is-active", i === index);
+          c.setAttribute("aria-current", i === index ? "true" : "false");
+        });
+        if (count) {
+          count.textContent = String(index + 1).padStart(2, "0") + " / " + String(visuals.length).padStart(2, "0");
+        }
+      }
+      controls.forEach(function (c) {
+        c.addEventListener("click", function () { goTo(Number(c.dataset.proofControl)); });
+      });
+    });
+  </script>
+</body>
+</html>
