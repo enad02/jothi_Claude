@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jothi Learning | Maths and Science Consultation</title>
+  <meta
+    name="description"
+    content="Structured online Maths and Science tutoring for Years 7-13 with clear teaching, visible progress, and honest parent feedback."
+  />
+  <meta name="robots" content="noindex,follow" />
+  <meta name="theme-color" content="#10233f" />
+  <link rel="canonical" href="https://new.jothi.co.uk/consultation/" />
+  <meta property="og:title" content="Jothi Learning | Structured Maths and Science Tutoring" />
+  <meta
+    property="og:description"
+    content="Clear teaching. Visible progress. Honest feedback for ambitious families who want more than casual homework help."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://new.jothi.co.uk/consultation/" />
+  <meta property="og:site_name" content="Jothi Learning" />
+  <meta property="og:locale" content="en_GB" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Jothi Learning | Structured Maths and Science Tutoring" />
+  <meta
+    name="twitter:description"
+    content="Structured online Maths and Science tutoring for Years 7-13 with clear teaching, visible progress, and honest parent feedback."
+  />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .consultation-page {
+      background:
+        radial-gradient(circle at 12% 0%, rgba(194, 163, 95, 0.18), transparent 30%),
+        linear-gradient(180deg, var(--ivory-50), var(--ivory-100));
+    }
+
+    .consultation-simple-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(251, 248, 241, 0.94);
+      border-bottom: 1px solid rgba(16, 35, 63, 0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    .consultation-simple-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 82px;
+      padding: 10px 0;
+    }
+
+    .consultation-simple-nav .brand {
+      gap: 12px;
+    }
+
+    .consultation-simple-nav .brand img {
+      width: 56px;
+      height: 56px;
+    }
+
+    .consultation-simple-nav .brand-name {
+      font-size: 1.12rem;
+      letter-spacing: 0.2em;
+    }
+
+    .consultation-simple-nav .brand-subline {
+      font-size: 0.48rem;
+      letter-spacing: 0.18em;
+    }
+
+    .consultation-simple-nav .brand-tag {
+      font-size: 0.68rem;
+    }
+
+    .consultation-simple-nav .button {
+      display: none;
+    }
+
+    .consultation-hero {
+      padding: 28px 0 30px;
+    }
+
+    .consultation-hero-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .consultation-hero-card,
+    .consultation-proof-card,
+    .consultation-problem-card,
+    .consultation-route-card,
+    .consultation-founder-card,
+    .consultation-final-card {
+      border: 1px solid rgba(194, 163, 95, 0.26);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 18% 0%, rgba(194, 163, 95, 0.12), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 251, 245, 0.86)),
+        var(--ivory-50);
+      box-shadow: 0 14px 34px rgba(11, 23, 48, 0.055);
+    }
+
+    .consultation-hero-card {
+      padding: 28px 24px;
+    }
+
+    .consultation-hero h1 {
+      max-width: 16ch;
+      margin-top: 16px;
+      font-size: clamp(2.08rem, 9.5vw, 4.15rem);
+      letter-spacing: -0.02em;
+    }
+
+    .consultation-hero .hero-body {
+      margin-bottom: 20px;
+      color: var(--navy-900);
+    }
+
+    .consultation-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .consultation-actions .button {
+      width: 100%;
+    }
+
+    .consultation-hero-note {
+      margin: 12px 0 0;
+      color: var(--slate-500);
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .consultation-proof-card {
+      padding: 22px;
+      background:
+        linear-gradient(180deg, rgba(16, 35, 63, 0.98), rgba(24, 49, 83, 0.95)),
+        var(--navy-900);
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+    .consultation-proof-card h2 {
+      color: var(--white);
+      font-size: clamp(1.6rem, 7vw, 2.2rem);
+    }
+
+    .consultation-proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .consultation-proof-item {
+      padding: 14px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .consultation-proof-item strong {
+      display: block;
+      color: var(--white);
+      font-family: var(--font-serif-current);
+      font-size: clamp(1.3rem, 7vw, 1.8rem);
+      line-height: 1;
+    }
+
+    .consultation-proof-item span {
+      display: block;
+      margin-top: 7px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .consultation-proof-item-wide {
+      grid-column: 1 / -1;
+    }
+
+    .consultation-section {
+      padding: 32px 0;
+    }
+
+    .consultation-narrow {
+      max-width: 920px;
+      margin-inline: auto;
+    }
+
+    .consultation-section .section-heading {
+      margin-bottom: 20px;
+    }
+
+    .consultation-section h2 {
+      font-size: clamp(2rem, 8vw, 3rem);
+    }
+
+    .consultation-problem-card,
+    .consultation-founder-card,
+    .consultation-final-card {
+      padding: 24px;
+    }
+
+    .consultation-problem-card p,
+    .consultation-founder-card p,
+    .consultation-final-card p {
+      color: var(--navy-900);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .consultation-difference-grid,
+    .consultation-routes-grid,
+    .consultation-fit-grid,
+    .consultation-review-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .consultation-difference-card,
+    .consultation-fit-card,
+    .consultation-review-card {
+      padding: 22px;
+      border: 1px solid rgba(16, 35, 63, 0.08);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: var(--shadow-card);
+    }
+
+    .consultation-difference-card h3,
+    .consultation-route-card h3,
+    .consultation-fit-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.14rem;
+    }
+
+    .consultation-difference-card p,
+    .consultation-route-card p,
+    .consultation-fit-card p {
+      margin: 0;
+      color: var(--navy-900);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .consultation-routes-grid {
+      margin-top: 22px;
+    }
+
+    .consultation-route-card {
+      padding: 22px;
+      box-shadow: none;
+    }
+
+    .consultation-route-card .card-tag {
+      margin-bottom: 12px;
+    }
+
+    .consultation-mid-cta,
+    .consultation-proof-cta {
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      margin-top: 22px;
+      text-align: center;
+    }
+
+    .consultation-mid-cta p,
+    .consultation-proof-cta p {
+      margin: 0;
+      color: var(--slate-500);
+      font-size: 0.94rem;
+    }
+
+    .consultation-check-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .consultation-check-list li {
+      position: relative;
+      padding-left: 24px;
+      color: var(--navy-900);
+      line-height: 1.55;
+    }
+
+    .consultation-check-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 9px;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--gold-400);
+    }
+
+    .consultation-review-card {
+      display: grid;
+      gap: 14px;
+    }
+
+    .consultation-stars {
+      margin: 0;
+      color: var(--gold-400);
+      letter-spacing: 2px;
+      line-height: 1;
+    }
+
+    .consultation-review-card .review-quote {
+      margin: 0;
+      font-size: clamp(1.08rem, 4.5vw, 1.24rem);
+    }
+
+    .consultation-review-card .review-meta {
+      margin: 0;
+    }
+
+    .consultation-founder-card {
+      display: grid;
+      gap: 18px;
+      background:
+        linear-gradient(135deg, rgba(16, 35, 63, 0.98), rgba(24, 49, 83, 0.95)),
+        var(--navy-900);
+      color: rgba(255, 255, 255, 0.84);
+    }
+
+    .consultation-founder-card h2,
+    .consultation-founder-card h3 {
+      color: var(--white);
+    }
+
+    .consultation-founder-card p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .consultation-founder-signature {
+      display: grid;
+      gap: 4px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .consultation-founder-signature strong {
+      color: var(--white);
+      font-family: var(--font-serif-current);
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .consultation-founder-signature span {
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 0.95rem;
+    }
+
+    .consultation-final-card {
+      text-align: center;
+    }
+
+    .consultation-final-card h2 {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .consultation-message-list {
+      display: grid;
+      gap: 10px;
+      max-width: 520px;
+      margin: 22px auto;
+      padding: 0;
+      list-style: none;
+      text-align: left;
+    }
+
+    .consultation-message-list li {
+      padding: 13px 15px;
+      border: 1px solid rgba(16, 35, 63, 0.08);
+      border-radius: var(--radius-sm);
+      background: rgba(245, 239, 227, 0.52);
+      color: var(--navy-900);
+    }
+
+    .consultation-footer {
+      padding: 32px 0 90px;
+      background: var(--navy-950);
+      color: rgba(255, 255, 255, 0.74);
+    }
+
+    .consultation-footer-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .consultation-footer h2,
+    .consultation-footer h3 {
+      color: var(--white);
+    }
+
+    .consultation-footer p,
+    .consultation-footer a {
+      font-size: 0.95rem;
+    }
+
+    .consultation-footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+
+    .consultation-sticky-cta {
+      position: fixed;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      z-index: 40;
+      display: grid;
+      box-shadow: 0 14px 30px rgba(11, 23, 48, 0.22);
+    }
+
+    @media (min-width: 640px) {
+      .consultation-simple-nav .button {
+        display: inline-flex;
+      }
+
+      .consultation-actions {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .consultation-actions .button {
+        width: auto;
+      }
+
+      .consultation-sticky-cta {
+        display: none;
+      }
+
+      .consultation-footer {
+        padding-bottom: 44px;
+      }
+    }
+
+    @media (min-width: 760px) {
+      .consultation-hero {
+        padding: 54px 0 42px;
+      }
+
+      .consultation-hero-grid {
+        grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .consultation-hero-card,
+      .consultation-proof-card,
+      .consultation-problem-card,
+      .consultation-founder-card,
+      .consultation-final-card {
+        padding: 38px;
+      }
+
+      .consultation-proof-card {
+        align-content: center;
+      }
+
+      .consultation-proof-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .consultation-difference-grid,
+      .consultation-fit-grid,
+      .consultation-review-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .consultation-routes-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .consultation-footer-grid {
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: start;
+      }
+    }
+
+    @media (min-width: 1040px) {
+      .consultation-simple-nav {
+        min-height: 92px;
+      }
+
+      .consultation-proof-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .consultation-proof-item-wide {
+        grid-column: auto;
+      }
+
+      .consultation-difference-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .consultation-fit-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+
+      .consultation-review-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body class="consultation-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="consultation-simple-header" id="top">
+    <div class="wrap consultation-simple-nav">
+      <a class="brand" href="../index.html" aria-label="Jothi Learning home">
+        <img src="../Logo%202026.png" alt="Jothi Learning logo" width="56" height="56" />
+        <span class="brand-lockup">
+          <span class="brand-name">JOTHI</span>
+          <span class="brand-subline">LEARNING</span>
+          <span class="brand-tag">Clear teaching. Visible progress.</span>
+        </span>
+      </a>
+      <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20ask%20about%20the%20right%20programme%20for%20my%20child.%0A%0AYear%20group%3A%0ASubject%20needed%3A%0ACurrent%20level%20or%20recent%20test%20result%3A%0ATarget%20grade%20or%20goal%3A" target="_blank" rel="noopener noreferrer">Start on WhatsApp</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="consultation-hero" aria-labelledby="consultation-hero-heading">
+      <div class="wrap consultation-hero-grid">
+        <article class="consultation-hero-card">
+          <p class="section-kicker">For Years 7&ndash;13</p>
+          <h1 id="consultation-hero-heading">Structured online Maths and Science tutoring for Years 7&ndash;13</h1>
+          <p class="hero-body">Clear teaching. Visible progress. Honest feedback for ambitious families who want more than casual homework help.</p>
+          <div class="consultation-actions" aria-label="Consultation actions">
+            <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20ask%20about%20the%20right%20programme%20for%20my%20child.%0A%0AYear%20group%3A%0ASubject%20needed%3A%0ACurrent%20level%20or%20recent%20test%20result%3A%0ATarget%20grade%20or%20goal%3A" target="_blank" rel="noopener noreferrer">Ask about the right programme</a>
+            <a class="button button-secondary" href="../contact.html#contact-form">Start with a consultation</a>
+          </div>
+          <p class="consultation-hero-note">Message us with your child&rsquo;s year group, subject, current level, and goal. We will guide you towards the right route.</p>
+        </article>
+
+        <aside class="consultation-proof-card" aria-label="Jothi Learning proof points">
+          <p class="section-kicker">Trusted by families</p>
+          <h2>Proof that structure matters.</h2>
+          <div class="consultation-proof-grid">
+            <div class="consultation-proof-item">
+              <strong>4.9/5</strong>
+              <span>Google rating</span>
+            </div>
+            <div class="consultation-proof-item">
+              <strong>101</strong>
+              <span>verified reviews</span>
+            </div>
+            <div class="consultation-proof-item">
+              <strong>500+</strong>
+              <span>students taught</span>
+            </div>
+            <div class="consultation-proof-item">
+              <strong>76%</strong>
+              <span>recent GCSE cohort Grade 7+</span>
+            </div>
+            <div class="consultation-proof-item consultation-proof-item-wide">
+              <strong>~90%</strong>
+              <span>family retention</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="consultation-section" aria-labelledby="consultation-problem-heading">
+      <div class="wrap consultation-narrow">
+        <article class="consultation-problem-card">
+          <p class="section-kicker">Parent problem</p>
+          <h2 id="consultation-problem-heading">When hard work is not yet turning into marks</h2>
+          <p>Many capable students attend tuition, complete homework, and still stay stuck.</p>
+          <p>The problem is often not effort. It is that nobody is clearly diagnosing where marks are being lost, correcting mistakes early, and showing parents what is actually changing.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="consultation-section alt-shell" aria-labelledby="consultation-difference-heading">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Why Jothi is different</p>
+          <h2 id="consultation-difference-heading">Teaching you can see. Progress you can understand.</h2>
+          <p class="section-intro">We are not built around casual, ad hoc tutoring. We teach live, track understanding, and give parents a clearer view of what needs to happen next.</p>
+        </div>
+
+        <div class="consultation-difference-grid">
+          <article class="consultation-difference-card">
+            <h3>Live online lessons</h3>
+            <p>Your child is taught in real time, with space to ask, attempt, correct, and improve.</p>
+          </article>
+          <article class="consultation-difference-card">
+            <h3>Student working stays visible</h3>
+            <p>We can see how your child is thinking, not just whether the final answer is right.</p>
+          </article>
+          <article class="consultation-difference-card">
+            <h3>Mistakes corrected early</h3>
+            <p>Small errors become patterns if they are not caught. We correct method, accuracy, and exam habits.</p>
+          </article>
+          <article class="consultation-difference-card">
+            <h3>Regular testing</h3>
+            <p>Students need evidence of understanding before exam pressure arrives.</p>
+          </article>
+          <article class="consultation-difference-card">
+            <h3>Honest parent feedback</h3>
+            <p>We tell you what is improving, what is still weak, and what should happen next.</p>
+          </article>
+          <article class="consultation-difference-card">
+            <h3>Structured routes</h3>
+            <p>Your child joins a clear academic route, not a loose run of disconnected lessons.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="consultation-section" aria-labelledby="consultation-routes-heading">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Programme routes</p>
+          <h2 id="consultation-routes-heading">Find the right route for your child</h2>
+          <p class="section-intro">Start with your child&rsquo;s year group and subject. We will help you choose the route that fits their current level and exam timeline.</p>
+        </div>
+
+        <div class="consultation-routes-grid">
+          <article class="consultation-route-card">
+            <p class="card-tag">Years 7&ndash;8</p>
+            <h3>Maths foundations and stretch</h3>
+            <p>Core Maths strength, confidence, and stretch for students ready for harder problem-solving.</p>
+          </article>
+          <article class="consultation-route-card">
+            <p class="card-tag">Years 9&ndash;10</p>
+            <h3>GCSE preparation</h3>
+            <p>Topic coverage, regular testing, and stronger foundations before Year 11 pressure.</p>
+          </article>
+          <article class="consultation-route-card">
+            <p class="card-tag">Year 11</p>
+            <h3>Exam-focused support</h3>
+            <p>Weak topics, mixed questions, past-paper method, timing, and mark-scheme discipline.</p>
+          </article>
+          <article class="consultation-route-card">
+            <p class="card-tag">GCSE Science</p>
+            <h3>Physics, Chemistry, Biology</h3>
+            <p>Targeted support where Science gaps are affecting confidence, accuracy, or exam readiness.</p>
+          </article>
+          <article class="consultation-route-card">
+            <p class="card-tag">UKMT</p>
+            <h3>Stretch and problem-solving</h3>
+            <p>Challenge for students who need deeper mathematical thinking beyond routine school work.</p>
+          </article>
+          <article class="consultation-route-card">
+            <p class="card-tag">A-Level Maths</p>
+            <h3>Structured pathway</h3>
+            <p>A clearer route through Year 12 and Year 13 Maths, with serious teaching and regular checks.</p>
+          </article>
+        </div>
+
+        <div class="consultation-mid-cta">
+          <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20ask%20about%20the%20right%20programme%20for%20my%20child.%0A%0AYear%20group%3A%0ASubject%20needed%3A%0ACurrent%20level%20or%20recent%20test%20result%3A%0ATarget%20grade%20or%20goal%3A" target="_blank" rel="noopener noreferrer">Message us about your child</a>
+          <p>We will help you decide where to begin.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="consultation-section alt-shell" aria-labelledby="consultation-fit-heading">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Who this is for</p>
+          <h2 id="consultation-fit-heading">Jothi may be right for your child if&hellip;</h2>
+        </div>
+
+        <div class="consultation-fit-grid">
+          <article class="consultation-fit-card">
+            <h3>Capable but inconsistent</h3>
+            <p>They understand some topics well but lose marks through gaps, method, or exam habits.</p>
+          </article>
+          <article class="consultation-fit-card">
+            <h3>Working hard but stuck</h3>
+            <p>They are putting in time, but marks are not moving in the way you expected.</p>
+          </article>
+          <article class="consultation-fit-card">
+            <h3>You want clearer feedback</h3>
+            <p>You need more than &ldquo;doing fine&rdquo;. You want to know what is actually happening.</p>
+          </article>
+          <article class="consultation-fit-card">
+            <h3>You want serious teaching</h3>
+            <p>Your child needs structure and standards without a harsh or joyless environment.</p>
+          </article>
+          <article class="consultation-fit-card">
+            <h3>Exams are getting closer</h3>
+            <p>You want visible progress before mocks, GCSEs, or A-Level exams arrive.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="consultation-section" aria-labelledby="consultation-reviews-heading">
+      <div class="wrap">
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Reviews and proof</p>
+          <h2 id="consultation-reviews-heading">What parents notice when the teaching becomes structured</h2>
+        </div>
+
+        <div class="consultation-review-grid">
+          <article class="consultation-review-card">
+            <p class="consultation-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+            <p class="review-quote">&ldquo;The quality of teaching has been outstanding. The structured approach to both Maths and Science mock preparation was particularly impressive. The regular assessments, detailed feedback, and exam-focused strategies helped my daughter identify her weaknesses and work on them effectively.&rdquo;</p>
+            <p class="review-meta">&mdash; Dr. A.P., parent</p>
+          </article>
+
+          <article class="consultation-review-card">
+            <p class="consultation-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
+            <p class="review-quote">&ldquo;My son has been attending Jothi Learning for the past two years, and I couldn&rsquo;t be more pleased. Lessons are well-structured, pitched at the right level, and delivered with real care and patience. My son has grown noticeably in confidence and understanding since joining.&rdquo;</p>
+            <p class="review-meta">&mdash; Mr. R.S., parent</p>
+          </article>
+        </div>
+
+        <div class="consultation-proof-cta">
+          <p>4.9/5 across 101 verified Google reviews.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="consultation-section alt-shell" aria-labelledby="consultation-founder-heading">
+      <div class="wrap consultation-narrow">
+        <article class="consultation-founder-card">
+          <div>
+            <p class="section-kicker">Founder-led quality</p>
+            <h2 id="consultation-founder-heading">Not a tutor marketplace.</h2>
+            <p>Jothi is a founder-led academic system. Teaching quality, parent communication, and academic direction stay close to one set of standards.</p>
+            <p>That matters because parents are not just buying extra lesson time. They are trusting us to diagnose the right problem, guide the route, and tell the truth about progress.</p>
+          </div>
+          <div class="consultation-founder-signature">
+            <strong>Prakash Micheal</strong>
+            <span>Founder, Jothi Learning</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="consultation-section" aria-labelledby="consultation-final-heading">
+      <div class="wrap consultation-narrow">
+        <article class="consultation-final-card">
+          <p class="section-kicker">Start here</p>
+          <h2 id="consultation-final-heading">Tell us your child&rsquo;s year group and subject</h2>
+          <p>Message us with the basics. We will reply with the most sensible next step for your child.</p>
+          <ul class="consultation-message-list" aria-label="What to include in your WhatsApp message">
+            <li>Child&rsquo;s year group</li>
+            <li>Subject needed</li>
+            <li>Current level or recent test result</li>
+            <li>Target grade or goal</li>
+          </ul>
+          <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20ask%20about%20the%20right%20programme%20for%20my%20child.%0A%0AYear%20group%3A%0ASubject%20needed%3A%0ACurrent%20level%20or%20recent%20test%20result%3A%0ATarget%20grade%20or%20goal%3A" target="_blank" rel="noopener noreferrer">Start on WhatsApp</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="consultation-footer">
+    <div class="wrap consultation-footer-grid">
+      <div>
+        <h2>Jothi Learning</h2>
+        <p>Structured online Maths and Science tutoring for ambitious families across England.</p>
+        <p><a href="mailto:admissions@jothi.uk">admissions@jothi.uk</a> &middot; <a href="tel:+447985588975">+44 7985 588975</a></p>
+      </div>
+      <div>
+        <h3>Trust and legal</h3>
+        <div class="consultation-footer-links">
+          <a href="../privacy.html">Privacy</a>
+          <a href="../cookies.html">Cookies</a>
+          <a href="../terms.html">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a class="button button-whatsapp consultation-sticky-cta" href="https://wa.me/447985588975?text=Hi%20Jothi%2C%20I%27d%20like%20to%20ask%20about%20the%20right%20programme%20for%20my%20child.%0A%0AYear%20group%3A%0ASubject%20needed%3A%0ACurrent%20level%20or%20recent%20test%20result%3A%0ATarget%20grade%20or%20goal%3A" target="_blank" rel="noopener noreferrer">Start on WhatsApp</a>
+</body>
+</html>
