@@ -184,7 +184,7 @@
 
     .vd-hero-text h1 {
       margin: 0;
-      max-width: 20ch;
+      max-width: min(100%, 24ch);
       margin-inline: auto;
       color: var(--navy-950, #10233f);
       font-size: clamp(1.8rem, 2.65vw, 2.65rem);
@@ -313,8 +313,10 @@
     /* --- Proof module (Variant D: Asset Resting Stylus) --- */
 
     .vd-proof-section {
-      padding: clamp(48px, 7vw, 88px) 0 clamp(56px, 8vw, 100px);
-      background: var(--ivory-50, #faf7f1);
+      padding: clamp(54px, 7.4vw, 94px) 0 clamp(52px, 7vw, 86px);
+      background:
+        radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0) 38%),
+        linear-gradient(180deg, var(--ivory-100, #f4efe7) 0%, var(--ivory-50, #faf7f1) 46%, rgba(255, 255, 255, 0.92) 100%);
     }
 
     .vd-proof-inner {
@@ -324,30 +326,31 @@
     }
 
     .proof-sync-card {
+      --proof-stage-gap: clamp(22px, 3vw, 38px);
+      --proof-frame-width: min(100%, 940px);
       display: grid;
-      gap: 16px;
-      padding: clamp(16px, 2vw, 24px);
-      border: 1px solid rgba(194, 163, 95, 0.26);
-      border-radius: var(--radius-lg, 16px);
-      background:
-        radial-gradient(circle at 12% 0%, rgba(194, 163, 95, 0.14), transparent 32%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(245, 239, 227, 0.64)),
-        var(--ivory-50, #faf7f1);
-      box-shadow: 0 18px 38px rgba(11, 23, 48, 0.075);
+      gap: clamp(16px, 2vw, 22px);
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
       width: 100%;
-      max-width: 820px;
+      max-width: 940px;
       min-width: 0;
     }
 
     .proof-sync-title {
       display: grid;
-      gap: 7px;
-      max-width: 620px;
+      gap: 10px;
+      max-width: 720px;
+      justify-items: center;
+      justify-self: center;
+      margin-inline: auto;
+      text-align: center;
     }
 
-    .proof-sync-title span,
-    .proof-sync-slide-count {
-      justify-self: start;
+    .proof-sync-title span {
       display: inline-flex;
       align-items: center;
       min-height: 32px;
@@ -362,47 +365,48 @@
       text-transform: uppercase;
     }
 
+    .proof-sync-title span {
+      justify-self: center;
+    }
+
     .proof-sync-title strong {
       color: var(--navy-950, #10233f);
-      font-family: var(--font-serif-current, 'Playfair Display', Georgia, serif);
-      font-size: clamp(1.38rem, 2.4vw, 1.9rem);
-      line-height: 1.15;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(1.8rem, 3vw, 2.65rem);
+      font-weight: 700;
+      line-height: 1.12;
     }
 
     .proof-sync-subline {
       margin: 0;
       color: var(--slate-700, #4a5568);
-      font-size: 0.96rem;
-      line-height: 1.45;
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(0.95rem, 1.25vw, 1.04rem);
+      line-height: 1.6;
+      max-width: 58ch;
     }
 
     .proof-sync-device {
       position: relative;
-      padding: clamp(6px, 1vw, 10px);
-      margin-top: clamp(-18px, -1.8vw, -12px);
-      border: 1px solid transparent;
-      border-radius: 26px;
-      background: transparent;
+      width: var(--proof-frame-width);
+      margin-top: clamp(8px, 1.4vw, 18px);
+      justify-self: center;
+      display: grid;
       min-width: 0;
     }
 
-    .proof-sync-screen {
+    .proof-sync-stage {
       position: relative;
-      min-height: clamp(390px, 50vw, 590px);
-      border: 1px solid transparent;
-      border-radius: 20px;
-      background: transparent;
-      overflow: hidden;
+      display: grid;
       min-width: 0;
     }
 
     .proof-sync-visual {
-      position: absolute;
-      inset: 0;
+      grid-area: 1 / 1;
+      position: relative;
       z-index: 1;
       display: grid;
       place-items: center;
-      padding: clamp(4px, 0.8vw, 8px);
       opacity: 0;
       pointer-events: none;
       transition: opacity 180ms ease;
@@ -415,70 +419,55 @@
 
     .proof-sync-visual img {
       width: 100%;
-      height: 100%;
-      object-fit: contain;
-      transform: scale(1.14);
-      filter:
-        drop-shadow(0 5px 6px rgba(11, 23, 48, 0.12))
-        drop-shadow(0 10px 12px rgba(11, 23, 48, 0.08));
-    }
-
-    .proof-sync-stylus-asset {
-      position: absolute;
-      z-index: 4;
-      right: clamp(58px, 9vw, 110px);
-      bottom: clamp(-36px, -3vw, -24px);
-      width: clamp(320px, 73%, 600px);
       height: auto;
-      filter:
-        drop-shadow(0 2px 3px rgba(11, 23, 48, 0.2))
-        drop-shadow(0 9px 14px rgba(11, 23, 48, 0.1));
-      opacity: 0.96;
-      transform: rotate(-2deg);
-      pointer-events: none;
-    }
-
-    .proof-sync-placeholder {
-      display: grid;
-      gap: 16px;
-      width: min(100%, 520px);
-      padding: clamp(20px, 3vw, 34px);
-      border: 1px solid rgba(194, 163, 95, 0.26);
-      border-radius: var(--radius-md, 12px);
-      background:
-        linear-gradient(180deg, rgba(251, 248, 241, 0.98), rgba(255, 255, 255, 0.94)),
-        var(--white, #fff);
-      box-shadow: 0 14px 26px rgba(11, 23, 48, 0.06);
-    }
-
-    .proof-sync-placeholder span {
       display: block;
-      height: 12px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(16, 35, 63, 0.16), rgba(194, 163, 95, 0.32));
     }
 
-    .proof-sync-placeholder span:nth-child(2) { width: 82%; }
-    .proof-sync-placeholder span:nth-child(3) { width: 66%; }
-    .proof-sync-placeholder span:nth-child(4) { width: 74%; }
+    .proof-sync-arrow {
+      position: absolute;
+      top: 50%;
+      z-index: 3;
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 999px;
+      background: #050505;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.35rem;
+      line-height: 1;
+      transform: translateY(-50%);
+      box-shadow: 0 8px 18px rgba(11, 23, 48, 0.16);
+    }
 
-    .proof-sync-placeholder-label {
-      color: var(--navy-950, #10233f);
-      font-family: var(--font-serif-current, 'Playfair Display', Georgia, serif);
-      font-size: clamp(1.25rem, 2.2vw, 1.75rem);
-      line-height: 1.18;
+    .proof-sync-arrow-prev {
+      left: -18px;
+    }
+
+    .proof-sync-arrow-next {
+      right: -18px;
     }
 
     .proof-sync-content {
+      position: absolute;
+      top: clamp(48px, 5.8vw, 72px);
+      right: clamp(56px, 7vw, 92px);
+      z-index: 2;
       display: grid;
-      gap: 12px;
-      padding: 22px;
-      border: 1px solid rgba(194, 163, 95, 0.24);
-      border-radius: var(--radius-md, 12px);
+      gap: 10px;
+      width: min(330px, 38%);
+      padding: clamp(16px, 2vw, 20px);
+      border: 1px solid rgba(194, 163, 95, 0.22);
+      border-radius: 10px;
       background:
-        radial-gradient(circle at 18% 0%, rgba(194, 163, 95, 0.12), transparent 34%),
-        rgba(255, 251, 245, 0.96);
-      box-shadow: 0 12px 24px rgba(11, 23, 48, 0.055);
+        radial-gradient(circle at 18% 0%, rgba(194, 163, 95, 0.08), transparent 36%),
+        rgba(255, 252, 246, 0.9);
+      box-shadow:
+        0 18px 34px rgba(11, 23, 48, 0.14),
+        0 2px 8px rgba(11, 23, 48, 0.08);
+      backdrop-filter: blur(12px) saturate(1.08);
       min-width: 0;
     }
 
@@ -495,15 +484,15 @@
     .proof-sync-panel h3 {
       margin: 0;
       color: var(--navy-950, #10233f);
-      font-size: clamp(1.35rem, 2vw, 1.75rem);
+      font-size: clamp(1.1rem, 1.55vw, 1.35rem);
       line-height: 1.18;
     }
 
     .proof-sync-panel p {
       margin: 0;
       color: var(--navy-900, #152744);
-      font-size: 0.95rem;
-      line-height: 1.55;
+      font-size: 0.9rem;
+      line-height: 1.48;
     }
 
     .proof-sync-panel strong {
@@ -513,8 +502,10 @@
     .proof-sync-controls {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 8px;
-      padding-top: 2px;
+      margin-top: clamp(-8px, -0.8vw, -4px);
+      padding-top: 0;
     }
 
     .proof-sync-control {
@@ -535,6 +526,31 @@
       color: var(--navy-950, #10233f);
     }
 
+    .home-programmes-section {
+      margin-top: clamp(18px, 3vw, 34px);
+      background:
+        linear-gradient(180deg, rgba(251, 248, 241, 0.72), rgba(255, 255, 255, 0));
+    }
+
+    .home-programmes-section .section-heading {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .home-programmes-section .section-intro {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .home-programmes-section .section-kicker {
+      justify-content: center;
+    }
+
+    .home-programmes-section .programmes-preview-cta {
+      text-align: center;
+    }
+
     /* --- Homepage typography --- */
 
     body {
@@ -548,10 +564,6 @@
     /* --- Mobile breakpoints --- */
 
     @media (max-width: 720px) {
-      .proof-sync-screen {
-        min-height: 330px;
-      }
-
       .proof-sync-subline,
       .proof-sync-panel p {
         overflow-wrap: break-word;
@@ -653,19 +665,6 @@
         white-space: normal;
       }
 
-      .vd-hero-text h1 .vd-hero-desktop-only {
-        display: none;
-      }
-
-      .vd-hero-text h1 .vd-hero-mobile-only {
-        display: block;
-      }
-
-      .vd-hero-text h1 .vd-hero-mobile-only span {
-        display: block;
-        white-space: nowrap;
-      }
-
       .vd-hero-body {
         max-width: min(30ch, calc(100vw - 40px));
       }
@@ -695,40 +694,35 @@
     @media (max-width: 560px) {
       .proof-sync-card,
       .proof-sync-device,
-      .proof-sync-screen,
       .proof-sync-content {
+        position: relative;
+        left: auto;
+        top: auto;
+        right: auto;
+        bottom: auto;
         width: 100%;
         max-width: 100%;
+        margin-top: clamp(14px, 3vw, 22px);
+        backdrop-filter: none;
       }
 
       .proof-sync-card {
-        overflow: hidden;
         justify-self: center;
-        padding: 2px 10px 14px;
+        padding: 2px 0 14px;
       }
 
-      .proof-sync-device {
-        padding: 0;
-        margin-top: -24px;
+      .proof-sync-arrow {
+        width: 34px;
+        height: 34px;
+        font-size: 1.2rem;
       }
 
-      .proof-sync-screen {
-        min-height: clamp(392px, 100vw, 452px);
+      .proof-sync-arrow-prev {
+        left: 6px;
       }
 
-      .proof-sync-visual {
-        padding: 0;
-      }
-
-      .proof-sync-visual img {
-        transform: scale(1.28);
-        object-position: center bottom;
-      }
-
-      .proof-sync-stylus-asset {
-        right: clamp(24px, 7.2vw, 34px);
-        bottom: clamp(-2px, -0.5vw, 0px);
-        width: clamp(228px, 73%, 300px);
+      .proof-sync-arrow-next {
+        right: 6px;
       }
 
       .proof-sync-content,
@@ -738,12 +732,22 @@
         text-align: center;
       }
 
-      .proof-sync-slide-count {
-        justify-self: center;
+      .proof-sync-controls {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        padding: 2px 2px 8px;
+        margin-top: clamp(6px, 1.5vw, 10px);
+        scrollbar-width: none;
       }
 
-      .proof-sync-controls {
-        justify-content: center;
+      .proof-sync-controls::-webkit-scrollbar {
+        display: none;
+      }
+
+      .proof-sync-control {
+        flex: 0 0 auto;
       }
     }
   </style>
@@ -769,7 +773,7 @@
         <span class="brand-lockup">
           <span class="brand-name">JOTHI</span>
           <span class="brand-subline">LEARNING</span>
-          <span class="brand-tag">Serious teaching. Visible progress.</span>
+          <span class="brand-tag">Clear teaching. Visible progress.</span>
         </span>
       </a>
     </div>
@@ -794,12 +798,9 @@
         <div class="vd-hero-inner">
           <div class="vd-hero-text">
             <h1>
-              <span>Serious teaching,</span>
-              <span class="vd-hero-desktop-only">A clearer path for your child</span>
-              <span class="vd-hero-mobile-only">
-                <span>A clearer path</span>
-                <span>For your child</span>
-              </span>
+              <span>Clear teaching,</span>
+              <span>Confident progress</span>
+              <span>for your child</span>
             </h1>
             <p class="vd-hero-body">Maths and Science support for Years 7&ndash;13, built around live teaching, regular testing, and honest parent feedback. Your child&rsquo;s working stays visible during lessons, so mistakes can be caught early and progress is easier to understand.</p>
           </div>
@@ -852,98 +853,118 @@
           <div class="proof-sync-topline">
             <div class="proof-sync-title">
               <span>The Jothi system in practice</span>
-              <strong>Real teaching. Visible progress. Clearer next steps.</strong>
+              <strong>Live teaching. Visible progress. Clear next steps.</strong>
               <p class="proof-sync-subline">Every image shows a part of how we teach, test, track, and tell parents the truth.</p>
             </div>
           </div>
 
           <div class="proof-sync-device" aria-label="Synced proof visual">
-            <div class="proof-sync-screen">
+            <div class="proof-sync-stage">
               <figure class="proof-sync-visual is-active" data-proof-visual="0">
                 <img
-                  src="assets/img/home/Hero/live-lesson-proof.png"
+                  src="assets/img/home/proof/live-marked-work-screen.png"
+                  data-proof-random-images="assets/img/home/proof/live-marked-work-screen.png"
                   alt="Annotated live lesson work showing how tutors see student thinking in real time and intervene during the lesson"
+                  width="1536"
+                  height="1024"
                   loading="eager"
                   decoding="async"
                 />
               </figure>
               <figure class="proof-sync-visual" data-proof-visual="1">
                 <img
-                  src="assets/img/home/Hero/live-lesson-proof2.png"
+                  src="assets/img/home/proof/screen-writing-screen.png"
+                  data-proof-random-images="assets/img/home/proof/screen-writing-screen.png"
                   alt="Second annotated live lesson work example showing visible student working and correction"
+                  width="1536"
+                  height="1024"
                   loading="lazy"
                   decoding="async"
                 />
               </figure>
               <figure class="proof-sync-visual" data-proof-visual="2">
-                <div class="proof-sync-placeholder" aria-hidden="true">
-                  <strong class="proof-sync-placeholder-label">Exam correction</strong>
-                  <span></span><span></span><span></span>
-                </div>
+                <img
+                  src="assets/img/home/proof/exam-correction-screen.png"
+                  data-proof-random-images="assets/img/home/proof/exam-correction-screen.png"
+                  alt="Exam correction proof image showing method error and corrected working"
+                  width="1536"
+                  height="1024"
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
               <figure class="proof-sync-visual" data-proof-visual="3">
-                <div class="proof-sync-placeholder" aria-hidden="true">
-                  <strong class="proof-sync-placeholder-label">Progress snapshot</strong>
-                  <span></span><span></span><span></span>
-                </div>
+                <img
+                  src="assets/img/home/proof/progress-snapshot-screen.png"
+                  data-proof-random-images="assets/img/home/proof/progress-snapshot-screen.png"
+                  alt="Progress snapshot proof image showing student progress and next actions"
+                  width="1536"
+                  height="1024"
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
               <figure class="proof-sync-visual" data-proof-visual="4">
-                <div class="proof-sync-placeholder" aria-hidden="true">
-                  <strong class="proof-sync-placeholder-label">Motivation and habits</strong>
-                  <span></span><span></span><span></span>
-                </div>
+                <img
+                  src="assets/img/home/proof/learning-habit-screen.png"
+                  data-proof-random-images="assets/img/home/proof/learning-habit-screen.png"
+                  alt="Learning habit proof image showing motivation and study habits"
+                  width="1536"
+                  height="1024"
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
               <figure class="proof-sync-visual" data-proof-visual="5">
-                <div class="proof-sync-placeholder" aria-hidden="true">
-                  <strong class="proof-sync-placeholder-label">Founder oversight</strong>
-                  <span></span><span></span><span></span>
-                </div>
+                <img
+                  src="assets/img/home/proof/founder-oversight-screen.png"
+                  data-proof-random-images="assets/img/home/proof/founder-oversight-screen.png"
+                  alt="Founder oversight proof image showing teaching quality review"
+                  width="1536"
+                  height="1024"
+                  loading="lazy"
+                  decoding="async"
+                />
               </figure>
+              <button class="proof-sync-arrow proof-sync-arrow-prev" type="button" data-proof-step="-1" aria-label="Previous proof slide">‹</button>
+              <button class="proof-sync-arrow proof-sync-arrow-next" type="button" data-proof-step="1" aria-label="Next proof slide">›</button>
             </div>
-            <img
-              class="proof-sync-stylus-asset"
-              src="assets/img/home/Hero/stylus.png"
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              decoding="async"
-            />
+
+            <div class="proof-sync-content">
+              <article class="proof-sync-panel is-active" data-proof-panel="0">
+                <h3>Live marked work</h3>
+                <p>Your child writes during the lesson. Tutors see the working live, spot misunderstandings early, and guide the next step before mistakes become habits.</p>
+              </article>
+              <article class="proof-sync-panel" data-proof-panel="1">
+                <h3>Worked solution and screen writing</h3>
+                <p>Method, correction, and working stay visible, so the student can see exactly where the thinking needs to change.</p>
+              </article>
+              <article class="proof-sync-panel" data-proof-panel="2">
+                <h3>Exam correction</h3>
+                <p>Assessment work should show more than a mark. It should show the method error, the corrected route, and the next action.</p>
+              </article>
+              <article class="proof-sync-panel" data-proof-panel="3">
+                <h3>Progress snapshot</h3>
+                <p>Parent updates should make progress easier to understand: what has improved, what is still weak, and what needs attention next.</p>
+              </article>
+              <article class="proof-sync-panel" data-proof-panel="4">
+                <h3>Motivation and habits</h3>
+                <p>We look for the habits behind the work: effort, independence, confidence, and whether the student is responding to correction.</p>
+              </article>
+              <article class="proof-sync-panel" data-proof-panel="5">
+                <h3>Founder oversight</h3>
+                <p><strong>Prakash Micheal</strong> keeps the teaching system close, so quality, parent communication, and academic direction are not left loose.</p>
+              </article>
+            </div>
           </div>
 
-          <div class="proof-sync-content">
-            <span class="proof-sync-slide-count" data-proof-count>01 / 06</span>
-            <article class="proof-sync-panel is-active" data-proof-panel="0">
-              <h3>Live marked work</h3>
-              <p>Your child writes during the lesson. Tutors see the working live, spot misunderstandings early, and guide the next step before mistakes become habits.</p>
-            </article>
-            <article class="proof-sync-panel" data-proof-panel="1">
-              <h3>Worked solution and screen writing</h3>
-              <p>Method, correction, and working stay visible, so the student can see exactly where the thinking needs to change.</p>
-            </article>
-            <article class="proof-sync-panel" data-proof-panel="2">
-              <h3>Exam correction</h3>
-              <p>Assessment work should show more than a mark. It should show the method error, the corrected route, and the next action.</p>
-            </article>
-            <article class="proof-sync-panel" data-proof-panel="3">
-              <h3>Progress snapshot</h3>
-              <p>Parent updates should make progress easier to understand: what has improved, what is still weak, and what needs attention next.</p>
-            </article>
-            <article class="proof-sync-panel" data-proof-panel="4">
-              <h3>Motivation and habits</h3>
-              <p>We look for the habits behind the work: effort, independence, confidence, and whether the student is responding to correction.</p>
-            </article>
-            <article class="proof-sync-panel" data-proof-panel="5">
-              <h3>Founder oversight</h3>
-              <p><strong>Prakash Micheal</strong> keeps the teaching system close, so quality, parent communication, and academic direction are not left loose.</p>
-            </article>
-            <div class="proof-sync-controls" aria-label="Choose proof slide">
-              <button class="proof-sync-control is-active" type="button" data-proof-control="0">Marked work</button>
-              <button class="proof-sync-control" type="button" data-proof-control="1">Screen writing</button>
-              <button class="proof-sync-control" type="button" data-proof-control="2">Exam correction</button>
-              <button class="proof-sync-control" type="button" data-proof-control="3">Progress</button>
-              <button class="proof-sync-control" type="button" data-proof-control="4">Habits</button>
-              <button class="proof-sync-control" type="button" data-proof-control="5">Founder</button>
-            </div>
+          <div class="proof-sync-controls" aria-label="Choose proof slide">
+            <button class="proof-sync-control is-active" type="button" data-proof-control="0">Marked work</button>
+            <button class="proof-sync-control" type="button" data-proof-control="1">Screen writing</button>
+            <button class="proof-sync-control" type="button" data-proof-control="2">Exam correction</button>
+            <button class="proof-sync-control" type="button" data-proof-control="3">Progress</button>
+            <button class="proof-sync-control" type="button" data-proof-control="4">Habits</button>
+            <button class="proof-sync-control" type="button" data-proof-control="5">Founder</button>
           </div>
         </div>
 
@@ -1049,9 +1070,9 @@
       </div>
     </section>
 
-    <section class="section-shell" id="programmes">
+    <section class="section-shell home-programmes-section" id="programmes">
       <div class="wrap">
-        <div class="section-heading">
+        <div class="section-heading centered-heading">
           <p class="section-kicker">Programmes</p>
           <h2>Clear pathways for each stage.</h2>
           <p class="section-intro">Once we understand what is holding your child back, we recommend the right route &mdash; Secondary Maths, GCSE Science, or our flagship A-Level Maths cohort.</p>
@@ -1249,20 +1270,41 @@
       var visuals = Array.from(module.querySelectorAll("[data-proof-visual]"));
       var panels = Array.from(module.querySelectorAll("[data-proof-panel]"));
       var controls = Array.from(module.querySelectorAll("[data-proof-control]"));
-      var count = module.querySelector("[data-proof-count]");
+      var steppers = Array.from(module.querySelectorAll("[data-proof-step]"));
+      var desktopHover = window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      var currentIndex = visuals.findIndex(function (v) { return v.classList.contains("is-active"); });
+      if (currentIndex < 0) currentIndex = 0;
+      module.querySelectorAll("[data-proof-random-images]").forEach(function (img) {
+        var candidates = img.getAttribute("data-proof-random-images")
+          .split("|")
+          .map(function (path) { return path.trim(); })
+          .filter(Boolean);
+        if (candidates.length) {
+          img.src = candidates[Math.floor(Math.random() * candidates.length)];
+        }
+      });
       function goTo(index) {
+        currentIndex = index;
         visuals.forEach(function (v, i) { v.classList.toggle("is-active", i === index); });
         panels.forEach(function (p, i) { p.classList.toggle("is-active", i === index); });
         controls.forEach(function (c, i) {
           c.classList.toggle("is-active", i === index);
           c.setAttribute("aria-current", i === index ? "true" : "false");
         });
-        if (count) {
-          count.textContent = String(index + 1).padStart(2, "0") + " / " + String(visuals.length).padStart(2, "0");
-        }
       }
       controls.forEach(function (c) {
-        c.addEventListener("click", function () { goTo(Number(c.dataset.proofControl)); });
+        var targetIndex = Number(c.dataset.proofControl);
+        c.addEventListener("click", function () { goTo(targetIndex); });
+        if (desktopHover) {
+          c.addEventListener("mouseenter", function () { goTo(targetIndex); });
+          c.addEventListener("focus", function () { goTo(targetIndex); });
+        }
+      });
+      steppers.forEach(function (button) {
+        button.addEventListener("click", function () {
+          var step = parseInt(button.getAttribute("data-proof-step"), 10) || 0;
+          goTo((currentIndex + step + visuals.length) % visuals.length);
+        });
       });
     });
   </script>
