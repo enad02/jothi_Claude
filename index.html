@@ -66,14 +66,14 @@
       display: grid;
       gap: 14px;
       width: 100%;
-      max-width: 720px;
+      max-width: 940px;
       justify-items: center;
       text-align: center;
     }
 
     .vd-hero-text h1 {
       margin: 0;
-      max-width: min(100%, 24ch);
+      max-width: min(100%, 44ch);
       margin-inline: auto;
       color: var(--navy-950, #10233f);
       font-size: clamp(1.8rem, 2.65vw, 2.65rem);
@@ -84,8 +84,12 @@
     }
 
     .vd-hero-text h1 span {
+      display: inline;
+      white-space: normal;
+    }
+
+    .vd-hero-text h1 span:last-child {
       display: block;
-      white-space: nowrap;
     }
 
     .vd-hero-text h1 .vd-hero-mobile-only {
@@ -97,7 +101,7 @@
       color: var(--navy-900, #152744);
       font-size: clamp(0.93rem, 1.4vw, 1.04rem);
       line-height: 1.62;
-      max-width: 580px;
+      max-width: 880px;
       justify-self: center;
       text-align: center;
     }
@@ -115,12 +119,12 @@
     /* --- Stats band --- */
 
     .vd-stats-band {
-      --stat-patch-size: clamp(112px, 11vw, 154px);
+      --stat-patch-size: clamp(170px, 16.5vw, 230px);
       --stat-number-size: clamp(1.58rem, 2.25vw, 2.16rem);
-      --stat-visual-height: clamp(116px, 10vw, 154px);
+      --stat-visual-height: clamp(170px, 16.5vw, 230px);
       --stat-caption-gap: clamp(6px, 0.8vw, 10px);
       --stat-number-offset: clamp(-5px, -0.35vw, -3px);
-      padding: clamp(24px, 3.8vw, 44px) 0;
+      padding: clamp(18px, 2.6vw, 30px) 0;
       background:
         radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0) 42%),
         var(--ivory-100, #f4efe7);
@@ -139,7 +143,7 @@
       justify-items: center;
       align-content: start;
       gap: var(--stat-caption-gap);
-      padding: clamp(12px, 1.8vw, 22px) clamp(12px, 1.8vw, 22px);
+      padding: clamp(8px, 1.2vw, 16px) clamp(8px, 1.2vw, 16px);
       text-align: center;
       overflow: hidden;
     }
@@ -190,7 +194,7 @@
       font-family: 'Lato', sans-serif;
       font-size: 0.86rem;
       line-height: 1.45;
-      max-width: 24ch;
+      max-width: 32ch;
     }
 
     @media (max-width: 860px) {
@@ -494,6 +498,7 @@
       }
 
       .vd-hero-text h1 span {
+        display: block;
         white-space: normal;
       }
 
@@ -520,6 +525,46 @@
         justify-content: center;
         white-space: nowrap;
         margin-inline: auto;
+      }
+
+      .vd-hdr-brand .main-nav {
+        padding: 5px 0 2px;
+      }
+
+      .vd-hdr-brand .brand img {
+        width: clamp(66px, 16vw, 82px);
+        height: clamp(66px, 16vw, 82px);
+      }
+
+      .vd-hdr-brand .brand-name {
+        font-size: clamp(1.14rem, 4.4vw, 1.36rem);
+        letter-spacing: 0.12em;
+      }
+
+      .vd-hdr-brand .brand-subline {
+        font-size: clamp(0.44rem, 1.6vw, 0.54rem);
+        letter-spacing: 0.22em;
+        gap: 5px;
+      }
+
+      .vd-hdr-brand .brand-tag {
+        font-size: clamp(0.7rem, 2.5vw, 0.84rem);
+      }
+
+      .vd-nav-bar-inner {
+        width: 100%;
+        justify-content: space-between;
+        padding: 10px 4px 18px;
+      }
+
+      .vd-nav-bar nav a {
+        font-size: 0.6rem;
+        letter-spacing: 0.04em;
+      }
+
+      .vd-stats-band {
+        --stat-patch-size: clamp(100px, 28vw, 140px);
+        --stat-visual-height: clamp(100px, 28vw, 140px);
       }
     }
 
@@ -582,6 +627,63 @@
         flex: 0 0 auto;
       }
     }
+
+    /* --- Variant D header refinements --- */
+
+    .vd-hdr-brand .main-nav {
+      padding: 6px 0 4px;
+    }
+
+    .vd-hdr-brand .brand {
+      gap: clamp(12px, 1.8vw, 18px);
+    }
+
+    .vd-hdr-brand .brand img {
+      width: clamp(104px, 10.5vw, 138px);
+      height: clamp(104px, 10.5vw, 138px);
+    }
+
+    .vd-hdr-brand .brand-lockup {
+      gap: 3px;
+    }
+
+    .vd-hdr-brand .brand-name {
+      font-size: clamp(1.6rem, 2.8vw, 2.35rem);
+      letter-spacing: 0.18em;
+    }
+
+    .vd-hdr-brand .brand-subline {
+      font-size: clamp(0.55rem, 0.95vw, 0.74rem);
+      letter-spacing: 0.34em;
+      gap: 8px;
+    }
+
+    .vd-hdr-brand .brand-tag {
+      font-size: clamp(0.94rem, 1.25vw, 1.12rem);
+    }
+
+    /* Nav bar: spread items wider to align with brand visual width */
+    .vd-nav-bar nav {
+      background: linear-gradient(
+        to bottom,
+        var(--navy-950) 0,
+        var(--navy-950) calc(100% - 6px),
+        var(--gold-500) calc(100% - 6px),
+        var(--gold-500) 100%
+      );
+    }
+
+    .vd-nav-bar-inner {
+      width: min(calc(100% - 40px), 500px);
+      justify-content: space-between;
+      gap: 0;
+      padding: 14px 12px 21px;
+    }
+
+    .vd-nav-bar nav a {
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+    }
   </style>
   <script type="application/ld+json">
     {
@@ -599,7 +701,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header" id="top">
-    <div class="main-nav-shell">
+      <div class="main-nav-shell vd-hdr-brand vd-nav-bar">
       <div class="wrap main-nav">
         <a class="brand" href="index.html" aria-label="Jothi Learning home">
           <img src="Logo%202026.png" alt="Jothi Learning logo" width="90" height="90" />
@@ -612,7 +714,7 @@
       </div>
 
       <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
-        <div class="site-nav-inner">
+        <div class="site-nav-inner vd-nav-bar-inner">
           <a href="programmes.html">Programmes</a>
           <a href="about.html">About</a>
           <a href="team.html">Team</a>
