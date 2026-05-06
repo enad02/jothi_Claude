@@ -863,6 +863,11 @@ p {
   padding-bottom: 0;
 }
 
+.team-hero .hero-panel-card {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
 .contact-hero .hero-actions {
   margin-top: 24px;
 }
