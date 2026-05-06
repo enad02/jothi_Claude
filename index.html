@@ -30,117 +30,6 @@
   <style>
     /* Promoted homepage proof design */
 
-    /* --- Header --- */
-
-    .vd-hdr {
-      background: var(--white, #fff);
-    }
-
-    .vd-hdr-brand {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: clamp(6px, 1vw, 12px) clamp(16px, 4vw, 40px);
-    }
-
-    .vd-hdr-brand .brand {
-      display: flex;
-      align-items: center;
-      gap: clamp(6px, 0.95vw, 11px);
-      text-decoration: none;
-    }
-
-    .vd-hdr-brand .brand img {
-      width: clamp(97px, 9.35vw, 134px);
-      height: auto;
-    }
-
-    .vd-hdr-brand .brand-lockup {
-      display: grid;
-      gap: 3px;
-      justify-items: center;
-      transform: translateY(-1px);
-    }
-
-    .vd-hdr-brand .brand-name {
-      color: var(--navy-950, #10233f);
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(1.42rem, 2.9vw, 2.28rem);
-      font-weight: 600;
-      line-height: 0.95;
-      letter-spacing: 0.15em;
-    }
-
-    .vd-hdr-brand .brand-subline {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      color: var(--gold-500, #c2a35f);
-      font-size: clamp(0.5rem, 0.82vw, 0.72rem);
-      font-weight: 700;
-      letter-spacing: 0.32em;
-      line-height: 1;
-    }
-
-    .vd-hdr-brand .brand-tag {
-      color: var(--navy-900, #152744);
-      font-family: 'Lato', sans-serif;
-      font-size: clamp(0.9rem, 1.2vw, 1.12rem);
-      font-weight: 600;
-      line-height: 1.15;
-      text-align: center;
-    }
-
-    .vd-hdr-brand .brand-subline::before,
-    .vd-hdr-brand .brand-subline::after {
-      content: '';
-      width: clamp(16px, 2vw, 26px);
-      border-top: 1px solid rgba(194, 163, 95, 0.8);
-    }
-
-    .vd-nav-bar {
-      background: linear-gradient(
-        to bottom,
-        #10233f 0,
-        #10233f calc(100% - 6px),
-        #c8a95a calc(100% - 6px),
-        #c8a95a 100%
-      );
-    }
-
-    .vd-nav-bar-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 clamp(16px, 4vw, 40px);
-      display: flex;
-      justify-content: center;
-    }
-
-    .vd-nav-bar nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .vd-nav-bar nav a {
-      display: inline-block;
-      padding: 13px clamp(11px, 1.8vw, 22px) 21px;
-      color: rgba(255, 255, 255, 0.86);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: color 150ms;
-    }
-
-    .vd-nav-bar nav a:hover {
-      color: var(--gold-500, #c2a35f);
-    }
-
     /* --- Hero band --- */
 
     .vd-hero {
@@ -571,63 +460,6 @@
     }
 
     @media (max-width: 600px) {
-      .vd-hdr-brand {
-        padding: 5px 14px;
-      }
-
-      .vd-hdr-brand .brand {
-        gap: 6px;
-      }
-
-      .vd-hdr-brand .brand img {
-        width: clamp(79px, 23vw, 97px);
-      }
-
-      .vd-hdr-brand .brand-lockup {
-        gap: 2px;
-        transform: translateY(0);
-      }
-
-      .vd-hdr-brand .brand-name {
-        font-size: clamp(1.22rem, 5.5vw, 1.5rem);
-        letter-spacing: 0.125em;
-      }
-
-      .vd-hdr-brand .brand-subline {
-        gap: 6px;
-        font-size: clamp(0.44rem, 1.95vw, 0.56rem);
-        letter-spacing: 0.22em;
-      }
-
-      .vd-hdr-brand .brand-tag {
-        font-size: clamp(0.78rem, 3.2vw, 0.92rem);
-      }
-
-      .vd-hdr-brand .brand-subline::before,
-      .vd-hdr-brand .brand-subline::after {
-        width: 12px;
-      }
-
-      .vd-nav-bar-inner {
-        padding: 0 8px;
-        overflow: hidden;
-      }
-
-      .vd-nav-bar nav {
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        width: 100%;
-        gap: 0;
-      }
-
-      .vd-nav-bar nav a {
-        flex: 0 1 auto;
-        padding: 9px 3px 17px;
-        font-size: 0.58rem;
-        letter-spacing: 0.045em;
-        white-space: nowrap;
-      }
-
       .vd-hero {
         height: auto;
         min-height: 430px;
@@ -766,28 +598,29 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <header class="vd-hdr" id="top">
-    <div class="vd-hdr-brand">
-      <a class="brand" href="index.html" aria-label="Jothi Learning home">
-        <img src="Logo%202026.png" alt="Jothi Learning logo" width="90" height="90" />
-        <span class="brand-lockup">
-          <span class="brand-name">JOTHI</span>
-          <span class="brand-subline">LEARNING</span>
-          <span class="brand-tag">Clear teaching. Visible progress.</span>
-        </span>
-      </a>
-    </div>
-    <div class="vd-nav-bar">
-      <div class="vd-nav-bar-inner">
-        <nav aria-label="Primary navigation">
-          <a href="about.html">About</a>
+  <header class="site-header" id="top">
+    <div class="main-nav-shell">
+      <div class="wrap main-nav">
+        <a class="brand" href="index.html" aria-label="Jothi Learning home">
+          <img src="Logo%202026.png" alt="Jothi Learning logo" width="90" height="90" />
+          <span class="brand-lockup">
+            <span class="brand-name">JOTHI</span>
+            <span class="brand-subline">LEARNING</span>
+            <span class="brand-tag">Serious teaching. Visible progress.</span>
+          </span>
+        </a>
+      </div>
+
+      <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+        <div class="site-nav-inner">
           <a href="programmes.html">Programmes</a>
+          <a href="about.html">About</a>
           <a href="team.html">Team</a>
           <a href="results.html">Results</a>
           <a href="contact.html">Contact</a>
           <a href="students.html">Access</a>
-        </nav>
-      </div>
+        </div>
+      </nav>
     </div>
   </header>
 
