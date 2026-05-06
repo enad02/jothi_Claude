@@ -38,6 +38,26 @@ If documents conflict, follow the order above. If pricing, proof numbers, names,
 - Do not redesign unrelated sections while completing a scoped task.
 - Keep public pages `noindex,follow` until launch indexing is explicitly approved.
 
+## AI Coding Workflow and Token Discipline
+
+- Treat AI coding tools as narrow executors, not designers or open-ended reviewers.
+- The user or strategy reviewer decides what should change before code is edited.
+- For each task, edit the smallest safe patch.
+- Use one task per coding session whenever possible.
+- Use only the named files for the task.
+- Do not inspect unrelated files unless the task clearly requires it.
+- Do not run full repo audits for targeted fixes.
+- Do not re-read repo instruction files repeatedly inside the same session.
+- Do not paste large diffs into the chat.
+- Report only changed files, a short summary, QA results, and risks.
+- Prefer `git diff --check` for basic whitespace/error checking after edits.
+- Screenshots should be requested only when visual QA matters.
+- Avoid broad prompts such as "improve", "polish", "optimise", "make premium", or "review the whole page".
+- Prefer exact verbs such as remove, add, align, reduce, restore, centre, or change.
+- Do not redesign unrelated sections while completing a scoped task.
+- If a request is broad, ambiguous, multi-page, or likely to cause token burn, pause and ask for the task to be narrowed before editing.
+- For lessons learned from previous AI coding sessions, consult `docs/AI_CODING_LESSONS.md` when the user explicitly asks for a workflow review or end-of-day reflection. Do not read it for every small coding task.
+
 ## Current Homepage State
 
 - `index.html` is the live homepage and uses the promoted Variant D design.
