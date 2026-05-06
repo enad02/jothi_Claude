@@ -16,3 +16,9 @@ desktop.ini
 
 # Node (if ever used locally)
 node_modules/
+
+# Local QA / archive artefacts
+_archive/
+_qa-header-screens/
+*.patch
+assets/img/home/proof/archive/
