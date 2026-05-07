@@ -584,7 +584,26 @@
       }
 
       .vd-stat-copy {
-        max-width: calc(var(--stat-patch-size) * 0.58);
+        max-width: calc(var(--stat-patch-size) * 0.82);
+      }
+    }
+
+    @media (min-width: 390px) and (max-width: 440px) {
+      .vd-hero-text h1 {
+        max-width: min(96vw, 390px);
+        font-size: clamp(1.5rem, 6.4vw, 1.85rem);
+      }
+    }
+
+    @media (min-width: 601px) and (max-width: 860px) {
+      .vd-stats-band {
+        --stat-patch-size: clamp(180px, 24vw, 210px);
+        --stat-visual-height: clamp(200px, 26vw, 240px);
+      }
+
+      .vd-stat-visual {
+        height: var(--stat-visual-height);
+        padding-top: calc(var(--stat-visual-height) * 0.40 - 28px);
       }
     }
 
