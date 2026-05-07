@@ -223,7 +223,7 @@
     /* --- Proof module (Variant D: Asset Resting Stylus) --- */
 
     .vd-proof-section {
-      padding: clamp(54px, 7.4vw, 94px) 0 clamp(52px, 7vw, 86px);
+      padding: clamp(36px, 5.5vw, 78px) 0 clamp(52px, 7vw, 86px);
       background:
         radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0) 38%),
         linear-gradient(180deg, var(--ivory-100, #f4efe7) 0%, var(--ivory-50, #faf7f1) 46%, rgba(255, 255, 255, 0.92) 100%);
@@ -239,7 +239,7 @@
       --proof-stage-gap: clamp(22px, 3vw, 38px);
       --proof-frame-width: min(100%, 940px);
       display: grid;
-      gap: clamp(16px, 2vw, 22px);
+      gap: clamp(4px, 0.5vw, 6px);
       padding: 0;
       border: 0;
       border-radius: 0;
@@ -260,31 +260,13 @@
       text-align: center;
     }
 
-    .proof-sync-title span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 0 12px;
-      border-radius: 999px;
-      background: rgba(194, 163, 95, 0.12);
-      color: var(--gold-500, #c2a35f);
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      line-height: 1.35;
-      text-transform: uppercase;
-    }
-
-    .proof-sync-title span {
-      justify-self: center;
-    }
-
-    .proof-sync-title strong {
+    .proof-sync-title h2 {
       color: var(--navy-950, #10233f);
       font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(1.8rem, 3vw, 2.65rem);
+      font-size: clamp(2rem, 3.4vw, 3.1rem);
       font-weight: 700;
       line-height: 1.12;
+      margin: 0;
     }
 
     .proof-sync-subline {
@@ -296,10 +278,22 @@
       max-width: 58ch;
     }
 
+    .proof-sync-explainer {
+      margin: 0;
+      margin-top: clamp(3px, 0.3vw, 5px);
+      color: var(--slate-700, #4a5568);
+      font-family: 'Lato', sans-serif;
+      font-size: clamp(0.9rem, 1.15vw, 0.98rem);
+      line-height: 1.55;
+      max-width: none;
+      text-align: center;
+      justify-self: center;
+    }
+
     .proof-sync-device {
       position: relative;
       width: var(--proof-frame-width);
-      margin-top: clamp(8px, 1.4vw, 18px);
+      margin-top: 0;
       justify-self: center;
       display: grid;
       min-width: 0;
@@ -414,7 +408,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 8px;
-      margin-top: clamp(-8px, -0.8vw, -4px);
+      margin-top: clamp(4px, 0.5vw, 6px);
       padding-top: 0;
     }
 
@@ -814,9 +808,8 @@
         <div class="proof-sync-card" data-proof-sync>
           <div class="proof-sync-topline">
             <div class="proof-sync-title">
-              <span>The Jothi system in practice</span>
-              <strong>Live teaching. Visible progress. Clear next steps.</strong>
-              <p class="proof-sync-subline">Every image shows a part of how we teach, test, track, and tell parents the truth.</p>
+              <h2>The Jothi system in practice</h2>
+              <p class="proof-sync-subline">Live teaching. Visible progress. Clear next steps.</p>
             </div>
           </div>
 
@@ -919,6 +912,8 @@
               </article>
             </div>
           </div>
+
+          <p class="proof-sync-explainer">Every image shows how we teach, test, and track the small steps that lead to transformation.</p>
 
           <div class="proof-sync-controls" aria-label="Choose proof slide">
             <button class="proof-sync-control is-active" type="button" data-proof-control="0">Marked work</button>
