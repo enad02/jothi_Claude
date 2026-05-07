@@ -151,16 +151,19 @@
       gap: var(--stat-caption-gap);
       padding: clamp(8px, 1.2vw, 16px) clamp(8px, 1.2vw, 16px);
       text-align: center;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .vd-stat-visual {
       position: relative;
-      display: grid;
-      place-items: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
       width: min(100%, var(--stat-patch-size));
       min-height: var(--stat-visual-height);
-      aspect-ratio: 1 / 1;
+      gap: var(--stat-caption-gap);
+      padding-top: calc(var(--stat-visual-height) * 0.42 - 36px);
     }
 
     .vd-stat-visual::before {
@@ -169,7 +172,7 @@
       left: 50%;
       top: 50%;
       width: 116%;
-      height: 116%;
+      aspect-ratio: 1 / 1;
       transform: translate(-50%, -50%);
       background-image: url("Logo%202026.png");
       background-repeat: no-repeat;
@@ -189,7 +192,6 @@
       font-weight: 700;
       line-height: 1.1;
       margin: var(--stat-number-offset) 0 0;
-      align-self: center;
     }
 
     .vd-stat-copy {
@@ -200,7 +202,7 @@
       font-family: 'Lato', sans-serif;
       font-size: 0.86rem;
       line-height: 1.45;
-      max-width: 32ch;
+      max-width: 20ch;
     }
 
     @media (max-width: 860px) {
@@ -572,6 +574,10 @@
         --stat-patch-size: clamp(100px, 28vw, 140px);
         --stat-visual-height: clamp(100px, 28vw, 140px);
       }
+
+      .vd-stat-visual {
+        padding-top: calc(var(--stat-visual-height) * 0.42 - 12px);
+      }
     }
 
     @media (max-width: 560px) {
@@ -762,26 +768,26 @@
           <article class="vd-stat-item">
             <div class="vd-stat-visual">
               <strong class="vd-stat-number">500+</strong>
+              <p class="vd-stat-copy">students taught since September 2020</p>
             </div>
-            <p class="vd-stat-copy">students taught since September 2020</p>
           </article>
           <article class="vd-stat-item">
             <div class="vd-stat-visual">
               <strong class="vd-stat-number">4.9/5</strong>
+              <p class="vd-stat-copy">across 101 verified Google reviews</p>
             </div>
-            <p class="vd-stat-copy">across 101 verified Google reviews</p>
           </article>
           <article class="vd-stat-item">
             <div class="vd-stat-visual">
               <strong class="vd-stat-number">76%</strong>
+              <p class="vd-stat-copy">of recent GCSE cohort averaged Grade 7+ across Maths, Chemistry and Physics</p>
             </div>
-            <p class="vd-stat-copy">of recent GCSE cohort achieved average Grade 7+ across Maths, Chemistry and Physics</p>
           </article>
           <article class="vd-stat-item">
             <div class="vd-stat-visual">
               <strong class="vd-stat-number">~90%</strong>
+              <p class="vd-stat-copy">year-on-year family retention</p>
             </div>
-            <p class="vd-stat-copy">year-on-year family retention</p>
           </article>
         </div>
       </div>
