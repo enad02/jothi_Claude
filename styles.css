@@ -272,6 +272,99 @@ h3 {
   white-space: nowrap;
 }
 
+/* --- Approved homepage header/menu system --- */
+
+.vd-hdr-brand .main-nav {
+  padding: 6px 0 4px;
+}
+
+.vd-hdr-brand .brand {
+  gap: clamp(12px, 1.8vw, 18px);
+}
+
+.vd-hdr-brand .brand img {
+  width: clamp(104px, 10.5vw, 138px);
+  height: clamp(104px, 10.5vw, 138px);
+}
+
+.vd-hdr-brand .brand-lockup {
+  gap: 3px;
+}
+
+.vd-hdr-brand .brand-name {
+  font-size: clamp(1.6rem, 2.8vw, 2.35rem);
+  letter-spacing: 0.18em;
+}
+
+.vd-hdr-brand .brand-subline {
+  font-size: clamp(0.55rem, 0.95vw, 0.74rem);
+  letter-spacing: 0.34em;
+  gap: 8px;
+}
+
+.vd-hdr-brand .brand-tag {
+  font-size: clamp(0.94rem, 1.25vw, 1.12rem);
+}
+
+.vd-nav-bar nav {
+  background: linear-gradient(
+    to bottom,
+    var(--navy-950) 0,
+    var(--navy-950) calc(100% - 6px),
+    var(--gold-500) calc(100% - 6px),
+    var(--gold-500) 100%
+  );
+}
+
+.vd-nav-bar-inner {
+  width: min(calc(100% - 40px), 880px);
+  justify-content: space-between;
+  gap: 0;
+  padding: 14px 12px 21px;
+}
+
+.vd-nav-bar nav a {
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+}
+
+@media (max-width: 600px) {
+  .vd-hdr-brand .main-nav {
+    padding: 5px 0 2px;
+  }
+
+  .vd-hdr-brand .brand img {
+    width: clamp(66px, 16vw, 82px);
+    height: clamp(66px, 16vw, 82px);
+  }
+
+  .vd-hdr-brand .brand-name {
+    font-size: clamp(1.14rem, 4.4vw, 1.36rem);
+    letter-spacing: 0.12em;
+  }
+
+  .vd-hdr-brand .brand-subline {
+    font-size: clamp(0.44rem, 1.6vw, 0.54rem);
+    letter-spacing: 0.22em;
+    gap: 5px;
+  }
+
+  .vd-hdr-brand .brand-tag {
+    font-size: clamp(0.7rem, 2.5vw, 0.84rem);
+  }
+
+  .vd-nav-bar-inner {
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px 4px 18px;
+  }
+
+  .vd-nav-bar nav a {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+}
+
 .button {
   min-height: 50px;
   padding: 0 22px;
@@ -2693,6 +2786,19 @@ p {
   .consultation-card {
     padding: 24px;
     border-radius: 22px;
+  }
+}
+
+/* --- One-line mobile nav for wider phones (>413px) --- */
+
+@media (max-width: 560px) and (min-width: 414px) {
+  .site-nav-inner {
+    flex-wrap: nowrap;
+  }
+
+  .site-nav a {
+    flex: 1 1 0;
+    min-width: 0;
   }
 }
 
