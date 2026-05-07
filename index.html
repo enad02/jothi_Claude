@@ -571,12 +571,17 @@
       }
 
       .vd-stats-band {
-        --stat-patch-size: clamp(100px, 28vw, 140px);
-        --stat-visual-height: clamp(100px, 28vw, 140px);
+        --stat-patch-size: clamp(145px, 38vw, 195px);
+        --stat-visual-height: clamp(220px, 52vw, 270px);
       }
 
       .vd-stat-visual {
-        padding-top: calc(var(--stat-visual-height) * 0.42 - 12px);
+        height: var(--stat-visual-height);
+        padding-top: calc(var(--stat-patch-size) * 0.42 - 12px);
+      }
+
+      .vd-stat-copy {
+        max-width: calc(var(--stat-patch-size) * 0.58);
       }
     }
 
@@ -780,7 +785,7 @@
           <article class="vd-stat-item">
             <div class="vd-stat-visual">
               <strong class="vd-stat-number">76%</strong>
-              <p class="vd-stat-copy">of recent GCSE cohort averaged Grade 7+ across Maths, Chemistry and Physics</p>
+              <p class="vd-stat-copy">averaged Grade 7+ in GCSEs</p>
             </div>
           </article>
           <article class="vd-stat-item">
