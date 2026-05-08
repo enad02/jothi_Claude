@@ -272,6 +272,66 @@ h3 {
   white-space: nowrap;
 }
 
+/* ── Nav dropdown ─────────────────────────── */
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-label {
+  cursor: pointer;
+}
+
+.nav-dropdown-label::after {
+  content: "\25BE";
+  margin-left: 4px;
+  font-size: 0.72em;
+}
+
+.nav-dropdown-panel {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy-950);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  min-width: 170px;
+  padding: 8px 0;
+  z-index: 200;
+  margin-top: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.nav-dropdown-panel a {
+  display: block;
+  flex: none;
+  padding: 10px 20px;
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: left;
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+
+.nav-dropdown-panel a:hover,
+.nav-dropdown-panel a:focus {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.nav-dropdown:hover .nav-dropdown-panel,
+.nav-dropdown-label:focus + .nav-dropdown-panel,
+.nav-dropdown-panel:hover {
+  display: block;
+}
+
 /* --- Approved homepage header/menu system --- */
 
 .vd-hdr-brand .main-nav {
@@ -2639,6 +2699,11 @@ p {
     text-align: center;
   }
 
+  .nav-dropdown {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
   .hero-panel,
   .hero-copy,
   .content-panel,
@@ -2918,14 +2983,16 @@ p {
 
 .gateway-intro-panel {
   max-width: 760px;
-  margin: 0 auto;
-  padding: 32px 36px;
+  margin: 0 auto 36px;
+  padding: 0 36px;
 }
 
 .gateway-hero h1 {
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   color: var(--navy-950);
   margin: 8px 0 14px;
+  max-width: none;
+  text-align: center;
 }
 
 .gateway-intro {
@@ -3011,9 +3078,13 @@ p {
   line-height: 1.55;
 }
 
+.gateway-card-help {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 560px) {
   .gateway-intro-panel {
-    padding: 24px;
+    padding: 0 24px;
   }
 
   .gateway-grid {
