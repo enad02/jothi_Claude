@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://new.jothi.co.uk/sitemap.xml
+Sitemap: https://jothi.uk/sitemap.xml
