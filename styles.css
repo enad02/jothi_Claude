@@ -1661,6 +1661,37 @@ p {
   }
 }
 
+/* ── New-to-UK section visual treatment ─────────────────── */
+#new-to-uk {
+  background: linear-gradient(180deg, rgba(251, 248, 241, 0.62), rgba(255, 255, 255, 0.84));
+  padding-top: 60px;
+  padding-bottom: 64px;
+}
+
+#new-to-uk .section-heading .section-intro:first-of-type {
+  font-size: 1.28rem;
+  font-family: var(--font-serif-current);
+  color: var(--navy-900);
+  max-width: none;
+}
+
+#new-to-uk .section-intro {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#new-to-uk .icp-block {
+  box-shadow: 0 10px 22px rgba(11, 23, 48, 0.04);
+}
+
+#new-to-uk .icp-block .card-tag {
+  border-radius: var(--radius-sm);
+  padding: 5px 14px;
+  font-size: 0.8rem;
+  color: var(--gold-500);
+}
+
 /* ── Annual fee cards ───────────────────────────────────── */
 .fee-grid {
   display: grid;
@@ -5598,6 +5629,7 @@ p {
   .proof-stat-grid.trust-inner,
   .pricing-snapshot-grid,
   .compact-method-grid,
+  .icp-grid,
   .proof-gallery-grid {
     grid-template-columns: repeat(2, 1fr);
   }
