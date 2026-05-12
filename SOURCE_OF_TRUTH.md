@@ -7,7 +7,7 @@ It should contain only stable decisions, not working-state notes.
 
 ## Locked business description
 
-Jothi Learning is a UK-based online tutoring company helping students from Year 5 to Year 13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths. KS2 is a Maths-first offer; Year 6 may include focused SATs English support where appropriate.
+Jothi Learning is a UK-based online tutoring company helping students from Year 5 to Year 13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths. KS2 is a Maths-first offer approved commercially and appears on the Programmes page. The homepage remains focused on Years 7–13 for now. Year 6 may include focused SATs English support where appropriate, but KS2 is not shown in homepage pricing or pathway cards. KS2 may be promoted separately through a dedicated landing page or campaign.
 
 The site should present the business as warm, nurturing, premium, and serious.
 
