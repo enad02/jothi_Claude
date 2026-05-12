@@ -212,7 +212,75 @@ if (navToggle && siteNav) {
   initScrollCarousel("messageTrack", "messagePrev", "messageNext", ".results-message-card", 0.9, 20);
   initScrollCarousel("reviewTrack", "reviewPrev", "reviewNext", ".results-review-card", 0.9, 20);
   initScrollCarousel("certTrack", "certPrev", "certNext", ".results-cert-card", 0.9, 20);
-  initScrollCarousel("homeReviewTrack", "homeReviewPrev", "homeReviewNext", ".home-google-review-card", 0.85, 22);
+})();
+
+(function () {
+  var stage = document.getElementById("parentStoriesStage");
+  if (!stage) return;
+
+  var cards = stage.querySelectorAll(".parent-stories-track > .parent-stories-card");
+  var dots = stage.querySelectorAll(".parent-stories-dot");
+  var prev = stage.querySelector(".parent-stories-prev");
+  var next = stage.querySelector(".parent-stories-next");
+  if (!cards.length || !dots.length) return;
+
+  var currentIndex = 0;
+
+  function goTo(index) {
+    if (index === currentIndex) return;
+    cards[currentIndex].classList.remove("is-active");
+    dots[currentIndex].classList.remove("is-active");
+    dots[currentIndex].setAttribute("aria-selected", "false");
+
+    currentIndex = (index + cards.length) % cards.length;
+
+    cards[currentIndex].classList.add("is-active");
+    dots[currentIndex].classList.add("is-active");
+    dots[currentIndex].setAttribute("aria-selected", "true");
+  }
+
+  if (prev) {
+    prev.addEventListener("click", function () {
+      goTo(currentIndex - 1);
+    });
+  }
+
+  if (next) {
+    next.addEventListener("click", function () {
+      goTo(currentIndex + 1);
+    });
+  }
+
+  dots.forEach(function (dot) {
+    dot.addEventListener("click", function () {
+      var idx = Array.prototype.indexOf.call(dots, dot);
+      goTo(idx);
+    });
+  });
+
+  var viewport = stage.querySelector(".parent-stories-viewport");
+  if (viewport) {
+    var touchStartX = 0;
+    var touchStartY = 0;
+
+    viewport.addEventListener("touchstart", function (e) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    viewport.addEventListener("touchend", function (e) {
+      var deltaX = e.changedTouches[0].clientX - touchStartX;
+      var deltaY = e.changedTouches[0].clientY - touchStartY;
+
+      if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX < 0) {
+          goTo(currentIndex + 1);
+        } else {
+          goTo(currentIndex - 1);
+        }
+      }
+    });
+  }
 })();
 
 if (contactForm && accessKeyField && formStatus) {

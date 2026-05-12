@@ -632,24 +632,6 @@
       }
     }
 
-    /* --- Homepage reviews carousel arrows --- */
-
-    .home-google-carousel-nav {
-      left: -16px;
-      right: -16px;
-    }
-
-    .home-google-carousel-nav .tutor-strip-btn {
-      width: 44px;
-      height: 44px;
-      font-size: 1.5rem;
-      line-height: 1;
-      border-radius: 50%;
-    }
-
-    #homeReviewPrev {
-      transform: translateX(-27px);
-    }
   </style>
   <script type="application/ld+json">
     {
@@ -880,78 +862,124 @@
       </div>
     </section>
 
-    <section class="section-shell home-google-reviews" aria-labelledby="home-google-reviews-heading">
+    <section class="section-shell home-parent-stories" aria-labelledby="home-parent-stories-heading">
       <div class="wrap">
-        <div class="section-heading centered-heading" style="max-width:880px">
-          <h2 id="home-google-reviews-heading">Independent parent reviews</h2>
-          <p class="section-intro" style="max-width:880px">4.9 stars from families who wanted teaching they could trust and progress they could see.</p>
+        <div class="section-heading centered-heading">
+          <h2 id="home-parent-stories-heading">What families say about Jothi</h2>
+          <p class="section-intro">Real stories from families who trust Jothi for clear teaching and visible progress.</p>
         </div>
 
-        <div class="home-google-carousel-wrap">
-          <div class="home-google-carousel-nav" aria-label="Homepage Google reviews carousel controls">
-            <button class="tutor-strip-btn" id="homeReviewPrev" aria-label="Previous homepage review">&lsaquo;</button>
-            <button class="tutor-strip-btn" id="homeReviewNext" aria-label="Next homepage review">&rsaquo;</button>
+        <div class="parent-stories-stage" id="parentStoriesStage" aria-roledescription="carousel" aria-label="Parent stories">
+          <div class="parent-stories-viewport" aria-live="polite">
+            <div class="parent-stories-track">
+              <article class="parent-stories-card is-active" data-ps-id="0" role="group" aria-roledescription="slide" aria-label="1 of 5">
+                <div class="parent-stories-card-inner">
+                  <div class="parent-stories-portrait-frame">
+                    <img src="assets/img/testimonials/smitha-thottam.webp" alt="Smitha Thottam" loading="eager" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                    <span class="parent-stories-portrait-fallback" aria-hidden="true">ST</span>
+                  </div>
+                  <div class="parent-stories-card-copy">
+                    <p class="parent-stories-quote-mark" aria-hidden="true">&ldquo;</p>
+                    <h3 class="parent-stories-headline">We trusted Jothi with our children.</h3>
+                    <blockquote class="parent-stories-quote">
+                      <p>We have trusted Jothi Learning with our children, and that says a lot. What stands out is the seriousness of the teaching, the structure around the lessons, and the way parents are kept close to the progress being made. Jothi feels personal, disciplined, and genuinely committed to helping students do well.</p>
+                    </blockquote>
+                    <hr class="parent-stories-divider" aria-hidden="true" />
+                    <p class="parent-stories-name">Smitha Thottam</p>
+                    <p class="parent-stories-descriptor">UUKMA National Vice President &middot; Jothi parent across three children</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="parent-stories-card" data-ps-id="1" role="group" aria-roledescription="slide" aria-label="2 of 5">
+                <div class="parent-stories-card-inner">
+                  <div class="parent-stories-portrait-frame">
+                    <img src="assets/img/testimonials/manoj-parameswaran.webp" alt="Manoj Parameswaran" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                    <span class="parent-stories-portrait-fallback" aria-hidden="true">MP</span>
+                  </div>
+                  <div class="parent-stories-card-copy">
+                    <p class="parent-stories-quote-mark" aria-hidden="true">&ldquo;</p>
+                    <h3 class="parent-stories-headline">They acted as mentors, not just tutors.</h3>
+                    <blockquote class="parent-stories-quote">
+                      <p>Jothi Learning helped build my son&rsquo;s confidence and identify his strengths. With their support, he achieved above his expected GCSE score. What impressed me most was that the team acted not only as teachers, but as mentors. We also saw strong improvement in our daughter, especially in Chemistry and Physics, and we feel Jothi supports confidence and personal growth as well as academics.</p>
+                    </blockquote>
+                    <hr class="parent-stories-divider" aria-hidden="true" />
+                    <p class="parent-stories-name">Manoj Parameswaran</p>
+                    <p class="parent-stories-descriptor">President, SNDP Cambridge &middot; Parent of two Jothi students</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="parent-stories-card" data-ps-id="2" role="group" aria-roledescription="slide" aria-label="3 of 5">
+                <div class="parent-stories-card-inner">
+                  <div class="parent-stories-portrait-frame">
+                    <img src="assets/img/testimonials/anuja-eldho.webp" alt="Anuja Eldho" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                    <span class="parent-stories-portrait-fallback" aria-hidden="true">AE</span>
+                  </div>
+                  <div class="parent-stories-card-copy">
+                    <p class="parent-stories-quote-mark" aria-hidden="true">&ldquo;</p>
+                    <h3 class="parent-stories-headline">Jothi helped them grow beyond academics.</h3>
+                    <blockquote class="parent-stories-quote">
+                      <p>The changes in both my daughters have been huge. They have grown so much in their communication skills and now feel far more confident speaking with their friends. Jothi Learning has helped them think more broadly, connect better with others, and understand the best way for them to learn. As a parent, I am really glad to see their growth academically and personally.</p>
+                    </blockquote>
+                    <hr class="parent-stories-divider" aria-hidden="true" />
+                    <p class="parent-stories-name">Anuja Eldho</p>
+                    <p class="parent-stories-descriptor">Parent of two Jothi students</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="parent-stories-card" data-ps-id="3" role="group" aria-roledescription="slide" aria-label="4 of 5">
+                <div class="parent-stories-card-inner">
+                  <div class="parent-stories-portrait-frame">
+                    <img src="assets/img/testimonials/ashok-sam-alex.webp" alt="Ashok Sam Alex" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                    <span class="parent-stories-portrait-fallback" aria-hidden="true">AS</span>
+                  </div>
+                  <div class="parent-stories-card-copy">
+                    <p class="parent-stories-quote-mark" aria-hidden="true">&ldquo;</p>
+                    <h3 class="parent-stories-headline">She grew into a more confident, independent learner.</h3>
+                    <blockquote class="parent-stories-quote">
+                      <p>Before joining Jothi Learning, my daughter had a positive outlook but struggled with accuracy and the foundational speed needed for Maths. She has since become a more independent learner who genuinely enjoys the subject and pushes herself to be faster and more precise. Seeing her hard work lead to strong SATs progress and later take on UKMT challenge work has been a proud moment for us.</p>
+                    </blockquote>
+                    <hr class="parent-stories-divider" aria-hidden="true" />
+                    <p class="parent-stories-name">Ashok Sam Alex</p>
+                    <p class="parent-stories-descriptor">Jothi parent</p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="parent-stories-card" data-ps-id="4" role="group" aria-roledescription="slide" aria-label="5 of 5">
+                <div class="parent-stories-card-inner">
+                  <div class="parent-stories-portrait-frame">
+                    <img src="assets/img/testimonials/shiny-benny.webp" alt="Shiny Benny" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                    <span class="parent-stories-portrait-fallback" aria-hidden="true">SB</span>
+                  </div>
+                  <div class="parent-stories-card-copy">
+                    <p class="parent-stories-quote-mark" aria-hidden="true">&ldquo;</p>
+                    <h3 class="parent-stories-headline">Maths became one of his strongest subjects.</h3>
+                    <blockquote class="parent-stories-quote">
+                      <p>Before joining Jothi Learning, my son was struggling at school. Simple topics felt overwhelming, especially Maths, and his confidence was suffering. Since joining, everything has changed. He now understands what he is being taught, the step-by-step approach has improved his confidence and grades, and Maths has become one of his strongest subjects. He also went on to take part in the UKMT challenge.</p>
+                    </blockquote>
+                    <hr class="parent-stories-divider" aria-hidden="true" />
+                    <p class="parent-stories-name">Shiny Benny</p>
+                    <p class="parent-stories-descriptor">Parent of a Jothi student</p>
+                  </div>
+                </div>
+              </article>
+            </div>
           </div>
 
-          <div class="home-google-review-track" id="homeReviewTrack" aria-label="Selected parent and student reviews">
-            <article class="review-card google-review-card home-google-review-card">
-              <div class="google-review-header">
-                <div class="review-avatar" aria-hidden="true">A</div>
-                <div class="home-google-reviewer-block">
-                  <p class="home-google-reviewer">Dr. A.P.</p>
-                  <p class="google-review-tag">Verified Google review</p>
-                </div>
-              </div>
-              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-              <p class="review-quote">The quality of teaching has been outstanding. The regular assessments, detailed feedback, and exam-focused strategies helped my daughter identify her weaknesses and work on them effectively.</p>
-              <p class="review-meta">Parent</p>
-            </article>
-
-            <article class="review-card google-review-card home-google-review-card">
-              <div class="google-review-header">
-                <div class="review-avatar" aria-hidden="true">L</div>
-                <div class="home-google-reviewer-block">
-                  <p class="home-google-reviewer">L.R.</p>
-                  <p class="google-review-tag">Verified Google review</p>
-                </div>
-              </div>
-              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-              <p class="review-quote">i was grade 4 now im grade 6-7 miss helped alot</p>
-              <p class="review-meta">Student</p>
-            </article>
-
-            <article class="review-card google-review-card home-google-review-card">
-              <div class="google-review-header">
-                <div class="review-avatar" aria-hidden="true">A</div>
-                <div class="home-google-reviewer-block">
-                  <p class="home-google-reviewer">A.P.</p>
-                  <p class="google-review-tag">Verified Google review</p>
-                </div>
-              </div>
-              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-              <p class="review-quote">When I first started my tutoring with Jothi learning, I felt lost and helpless in many subjects. Now after receiving fantastic support from amazing teachers I am confident in my abilities.</p>
-              <p class="review-meta">A-Level student</p>
-            </article>
-
-            <article class="review-card google-review-card home-google-review-card">
-              <div class="google-review-header">
-                <div class="review-avatar" aria-hidden="true">R</div>
-                <div class="home-google-reviewer-block">
-                  <p class="home-google-reviewer">Mr. R.S.</p>
-                  <p class="google-review-tag">Verified Google review</p>
-                </div>
-              </div>
-              <p class="google-stars" aria-label="Five stars">&#9733;&#9733;&#9733;&#9733;&#9733;</p>
-              <p class="review-quote">Lessons are well-structured, pitched at the right level, and delivered with real care and patience. My son has grown noticeably in confidence and understanding since joining.</p>
-              <p class="review-meta">Parent</p>
-            </article>
+          <div class="parent-stories-nav">
+            <button class="parent-stories-arrow parent-stories-prev" type="button" aria-label="Previous testimonial">&lsaquo;</button>
+            <div class="parent-stories-dots" role="tablist" aria-label="Select parent story">
+              <button class="parent-stories-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Show Smitha Thottam testimonial"></button>
+              <button class="parent-stories-dot" type="button" role="tab" aria-selected="false" aria-label="Show Manoj Parameswaran testimonial"></button>
+              <button class="parent-stories-dot" type="button" role="tab" aria-selected="false" aria-label="Show Anuja Eldho testimonial"></button>
+              <button class="parent-stories-dot" type="button" role="tab" aria-selected="false" aria-label="Show Ashok Sam Alex testimonial"></button>
+              <button class="parent-stories-dot" type="button" role="tab" aria-selected="false" aria-label="Show Shiny Benny testimonial"></button>
+            </div>
+            <button class="parent-stories-arrow parent-stories-next" type="button" aria-label="Next testimonial">&rsaquo;</button>
           </div>
-        </div>
-
-        <p class="section-intro" style="text-align:center;max-width:820px;margin-top:36px;">Parents want more than extra lessons: clear teaching, visible improvement, and honest next steps.</p>
-
-        <div class="home-google-reviews-cta">
-          <a class="button button-secondary" href="results.html#reviews">Read more reviews and results</a>
         </div>
       </div>
     </section>
