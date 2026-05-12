@@ -1,13 +1,13 @@
 # Source of Truth - Jothi Learning Website
 
-Last updated: 1 May 2026
+Last updated: 12 May 2026
 
 This file holds locked facts and decisions for the website build.
 It should contain only stable decisions, not working-state notes.
 
 ## Locked business description
 
-Jothi Learning is a UK-based online tutoring company helping students in Years 7-13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
+Jothi Learning is a UK-based online tutoring company helping students from Year 5 to Year 13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths. KS2 is a Maths-first offer; Year 6 may include focused SATs English support where appropriate.
 
 The site should present the business as warm, nurturing, premium, and serious.
 
@@ -76,23 +76,30 @@ If old annual figures remain anywhere, flag them for review rather than silently
 
 ### Monthly programme-cycle fees
 
+#### KS2 Years 5-6 (Maths-first)
+- Programme cycle: September-July
+- 1 subject (Maths Foundations): £75/month
+- 2-subject pathway (Maths + SATs English support, Year 6 only where appropriate): £150/month
+- KS2 is positioned as Maths-first. English is focused SATs English support for Year 6 where appropriate, not a full English pillar.
+- No Full Core option at KS2.
+
 #### KS3 Years 7-8
 - Programme cycle: September-July
 - 1 subject / standard pathway: £80/month
 - 2-session pathway: £160/month
-- Full Core Foundations: £220/month
+- Full Core Foundations: £225/month
 
 #### Years 9-10 GCSE preparation
 - Programme cycle: September-July
 - 1 subject: £100/month
 - 2-subject pathway: £200/month
-- GCSE Full Core: £275/month
+- GCSE Full Core: £285/month
 
 #### Year 11 GCSE exam year
 - Programme cycle: September-April
 - 1 subject: £125/month
 - 2-subject pathway: £250/month
-- Full Core Exam Programme: £325/month
+- Full Core Exam Programme: £350/month
 
 #### AS / Year 12 Maths
 - Programme cycle: September-May
@@ -122,11 +129,13 @@ The Diagnostic Bridge is a short one-to-one entry pathway for students joining p
 Homepage pricing should stay light. Do not show a full pricing table on the homepage.
 Homepage pricing should use monthly parent-facing figures.
 
-Homepage pricing should use these `from` prices:
+Homepage pricing should use these `from` prices (4 cards only):
 - KS3 from £80/month
 - GCSE Prep from £100/month
 - Year 11 from £125/month
 - A-Level Maths from £150/month
+
+KS2 is approved commercially and appears on the Programmes page, but is not shown in the homepage pricing cards. KS2 may be promoted separately through the Programmes page, a dedicated landing page, or campaign.
 
 The Programmes page should show stage-based monthly pricing by pathway.
 Programme detail pages may explain pathway details, but pricing must not contradict the monthly model.
