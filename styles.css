@@ -5834,6 +5834,10 @@ p {
     grid-template-columns: 1fr;
   }
 
+  #new-to-uk .icp-grid {
+    grid-template-columns: 1fr;
+  }
+
   .pricing-snapshot-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -5866,6 +5870,16 @@ p {
 
   .proof-experiment-frame-secondary img {
     min-height: 180px;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1120px) {
+  .statement-grid > :nth-child(3),
+  #programmes .card-grid > :nth-child(3),
+  #new-to-uk .icp-grid > :nth-child(3) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - 11px);
   }
 }
 
