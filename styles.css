@@ -497,6 +497,18 @@ h3 {
   scroll-margin-top: 120px;
 }
 
+#programmes .card-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+#programmes .section-intro {
+  max-width: 720px;
+}
+
+.intro-line {
+  display: block;
+}
+
 .hero-section {
   padding-top: 64px;
 }
@@ -2892,6 +2904,10 @@ p {
 
   #parent-problem .statement-card {
     padding: 24px;
+  }
+
+  .intro-line {
+    display: inline;
   }
 }
 
@@ -5562,6 +5578,7 @@ p {
 
 @media (max-width: 1120px) {
   .compact-card-grid.card-grid-four,
+  #programmes .card-grid,
   .proof-stat-grid.trust-inner,
   .pricing-snapshot-grid,
   .compact-method-grid,
@@ -5705,6 +5722,7 @@ p {
   }
 
   .compact-card-grid.card-grid-four,
+  #programmes .card-grid,
   .proof-stat-grid.trust-inner,
   .live-supervision-board,
   .proof-gallery-grid,
