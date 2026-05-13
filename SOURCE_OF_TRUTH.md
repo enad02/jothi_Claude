@@ -1,6 +1,6 @@
 # Source of Truth - Jothi Learning Website
 
-Last updated: 12 May 2026
+Last updated: 13 May 2026
 
 This file holds locked facts and decisions for the website build.
 It should contain only stable decisions, not working-state notes.
@@ -76,6 +76,8 @@ If old annual figures remain anywhere, flag them for review rather than silently
 
 ### Monthly programme-cycle fees
 
+- Two-subject pathways follow standard combined monthly pricing with no reduction. Full Core three-subject pathways include a small combined-programme reduction for families paying by monthly standing order. Public copy should describe this as combined-programme pricing, not as a discount.
+
 #### KS2 Years 5-6 (Maths-first)
 - Programme cycle: September-July
 - 1 subject (Maths Foundations): £75/month
@@ -87,19 +89,19 @@ If old annual figures remain anywhere, flag them for review rather than silently
 - Programme cycle: September-July
 - 1 subject / standard pathway: £80/month
 - 2-session pathway: £160/month
-- Full Core Foundations: £225/month
+- Full Core Foundations: £220/month
 
 #### Years 9-10 GCSE preparation
 - Programme cycle: September-July
 - 1 subject: £100/month
 - 2-subject pathway: £200/month
-- GCSE Full Core: £285/month
+- GCSE Full Core: £275/month
 
 #### Year 11 GCSE exam year
 - Programme cycle: September-April
 - 1 subject: £125/month
 - 2-subject pathway: £250/month
-- Full Core Exam Programme: £350/month
+- Full Core Exam Programme: £345/month
 
 #### AS / Year 12 Maths
 - Programme cycle: September-May
