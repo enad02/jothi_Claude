@@ -1,0 +1,25 @@
+{
+  "name": "Jothi Learning",
+  "short_name": "Jothi",
+  "icons": [
+    {
+      "src": "/assets/favicon/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/favicon/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/favicon/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "minimal-ui",
+  "theme_color": "#10233f",
+  "background_color": "#ffffff"
+}
