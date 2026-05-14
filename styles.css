@@ -1058,7 +1058,6 @@ p {
   padding-bottom: 28px;
 }
 
-.about-hero .hero-grid,
 .team-hero .hero-grid,
 .contact-hero .hero-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1102,7 +1101,143 @@ p {
 
 .about-hero h1 {
   font-size: clamp(2.35rem, 4.2vw, 4.1rem);
-  max-width: 14ch;
+  max-width: 22ch;
+}
+
+/* --- About hero open layout --- */
+
+.about-hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: stretch;
+}
+
+.about-hero-copy .hero-actions {
+  margin-top: 40px;
+}
+
+.about-hero-copy .programme-hero-support {
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* --- Belief rail --- */
+
+.about-belief-rail {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid rgba(194, 163, 95, 0.3);
+  padding-left: clamp(24px, 3vw, 36px);
+}
+
+.about-belief-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(194, 163, 95, 0.12);
+  color: var(--gold-500);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+}
+
+.about-belief-statement {
+  margin: 0 0 36px;
+  color: var(--navy-950);
+  font-family: var(--font-serif-current);
+  font-size: clamp(1.32rem, 2vw, 1.65rem);
+  line-height: 1.25;
+}
+
+.about-belief-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.about-belief-step {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(16, 35, 63, 0.08);
+  color: var(--navy-900);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.about-belief-step:last-child {
+  padding-bottom: 0;
+}
+
+.about-belief-step-num {
+  flex-shrink: 0;
+  color: var(--gold-500);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  min-width: 20px;
+}
+
+/* --- About audience section --- */
+
+.about-audience-section {
+  background: linear-gradient(180deg, rgba(251, 248, 241, 0.78), rgba(245, 239, 227, 0.28));
+  border-top: 1px solid rgba(194, 163, 95, 0.16);
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.about-audience-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+  gap: clamp(32px, 4vw, 56px);
+  align-items: start;
+}
+
+.about-audience-copy h2 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  max-width: 22ch;
+}
+
+.about-audience-list-heading {
+  color: var(--gold-500);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+}
+
+.about-audience-item {
+  padding: 18px 0;
+  border-top: 1px solid rgba(16, 35, 63, 0.08);
+}
+
+.about-audience-item:last-child {
+  padding-bottom: 0;
+}
+
+.about-audience-item strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--navy-950);
+  font-size: 1rem;
+}
+
+.about-audience-item p {
+  margin: 0;
+  color: var(--navy-900);
+  font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 .results-hero h1 {
@@ -1216,6 +1351,8 @@ p {
 }
 
 .about-values-shell {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(251, 248, 241, 0.4));
+  border-top: 1px solid rgba(194, 163, 95, 0.12);
   padding-top: 52px;
   padding-bottom: 52px;
 }
@@ -2748,7 +2885,6 @@ p {
   }
 
   .programme-hero .hero-grid,
-  .about-hero .hero-grid,
   .team-hero .hero-grid,
   .contact-hero .hero-grid {
     grid-template-columns: 1fr;
@@ -2875,6 +3011,21 @@ p {
   .dashboard-row {
     grid-template-columns: 1fr;
   }
+
+  .about-hero-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-belief-rail {
+    border-left: none;
+    border-top: 1px solid rgba(194, 163, 95, 0.3);
+    padding-left: 0;
+    padding-top: clamp(24px, 3vw, 32px);
+  }
+
+  .about-audience-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 560px) {
@@ -2971,7 +3122,7 @@ p {
   .about-hero h1,
   .team-hero h1 {
     font-size: clamp(2rem, 7.6vw, 2.75rem);
-    max-width: 15ch;
+    max-width: 24ch;
   }
 
   .programme-hero h1,
