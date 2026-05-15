@@ -3753,13 +3753,14 @@ p {
 }
 
 #contact-form .section-heading {
-  max-width: 780px;
+  max-width: 980px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
 }
 
 #contact-form .section-intro {
+  max-width: 780px;
   margin-left: auto;
   margin-right: auto;
 }
