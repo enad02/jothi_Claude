@@ -70,12 +70,15 @@
 
   <main id="main">
     <section class="hero-section contact-hero">
-      <div class="wrap hero-grid">
-        <div class="hero-copy">
+      <div class="wrap contact-hero-layout">
+        <div class="contact-hero-copy">
           <p class="section-kicker">Contact</p>
-          <h1>Start with a consultation.</h1>
+          <h1>Start with the right conversation.</h1>
           <p class="hero-body">
-            Tell us your child&rsquo;s year group, current level, and what you want support with. We will help you decide whether Jothi is the right fit before recommending a pathway.
+            If you are looking for a more structured path for your child, start by telling us where they are now and what support you are considering.
+          </p>
+          <p class="hero-body">
+            We will look at their year group, current level, subject needs, goals, and whether Jothi is the right fit.
           </p>
           <div class="hero-actions">
             <a class="button button-primary" href="#contact-form">Start with a consultation</a>
@@ -83,40 +86,46 @@
           </div>
         </div>
 
-        <aside class="hero-panel" aria-label="Contact overview">
-          <div class="hero-panel-card">
-            <p class="panel-label">What happens next</p>
-            <h2>A clear first conversation, then a recommended pathway.</h2>
-            <ul class="detail-list">
-              <li>We understand your child&rsquo;s stage and current level.</li>
-              <li>We identify the subject support and pace that would suit them.</li>
-              <li>We recommend the most suitable programme or Diagnostic Bridge.</li>
-            </ul>
-          </div>
-          <div class="hero-panel-support">
-            <p class="panel-label">Contact details</p>
-            <ul class="detail-list">
-              <li>Email: <a href="mailto:admissions@jothi.uk" style="text-decoration:underline;">admissions@jothi.uk</a></li>
-              <li>Phone: <a href="tel:+447985588975" style="text-decoration:underline;">+44 7985 588975</a></li>
-            </ul>
+        <aside class="contact-skim-rail" aria-label="Contact overview">
+          <p class="contact-skim-label">What we will look at</p>
+          <ol class="contact-skim-steps">
+            <li class="contact-skim-step">
+              <span class="contact-skim-step-num">01</span>
+              <span>year group and subject needs</span>
+            </li>
+            <li class="contact-skim-step">
+              <span class="contact-skim-step-num">02</span>
+              <span>current level and confidence</span>
+            </li>
+            <li class="contact-skim-step">
+              <span class="contact-skim-step-num">03</span>
+              <span>recent results or concerns</span>
+            </li>
+            <li class="contact-skim-step">
+              <span class="contact-skim-step-num">04</span>
+              <span>the right programme direction</span>
+            </li>
+          </ol>
+          <div class="contact-skim-details">
+            <p><a href="mailto:admissions@jothi.uk">admissions@jothi.uk</a></p>
+            <p><a href="tel:+447985588975">+44 7985 588975</a></p>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section-shell alt-shell" id="contact-form">
+    <section class="section-shell alt-shell contact-form-section" id="contact-form">
       <div class="wrap">
-        <div class="section-heading">
-          <p class="section-kicker">Enquiry form</p>
-          <h2>Tell us what support you're looking for.</h2>
+        <div class="section-heading centered-heading">
+          <p class="section-kicker">Enquiry Form</p>
+          <h2>Tell us what support your child needs.</h2>
           <p class="section-intro">
-            Share the year group, subject, current level, and anything else that will help us reply usefully.
+            Share the practical details first: year group, subject, current level, recent results, and what you would like to improve.
           </p>
         </div>
 
         <form
           class="content-panel contact-form-card"
-          style="max-width:780px;margin:0 auto"
           action="https://api.web3forms.com/submit"
           method="POST"
         >
@@ -171,11 +180,6 @@
       </div>
     </section>
 
-    <section class="section-shell alt-shell">
-      <div class="wrap narrow-shell">
-        <p class="form-note" style="text-align:center">Enquiries are only used to respond to your request. Read our <a href="privacy.html">privacy notice</a> for details.</p>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">
