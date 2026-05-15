@@ -4172,6 +4172,15 @@ p {
     min-width: 0;
   }
 
+  .nav-dropdown-panel {
+    left: auto;
+    right: 0;
+    transform: none;
+    box-sizing: border-box;
+    max-width: calc(100vw - 32px);
+    overflow-wrap: break-word;
+  }
+
   h1 {
     font-size: clamp(2rem, 8vw, 2.85rem);
   }
