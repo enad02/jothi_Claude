@@ -215,6 +215,59 @@ if (navToggle && siteNav) {
 })();
 
 (function () {
+  var track = document.getElementById("tutorTrack");
+  var dotsContainer = document.getElementById("tutorDots");
+  if (!track || !dotsContainer) return;
+
+  var cards = track.querySelectorAll(".tutor-strip-card");
+  var totalCards = cards.length;
+  if (!totalCards) return;
+
+  var DOT_COUNT = 6;
+
+  function buildDots() {
+    dotsContainer.innerHTML = "";
+    for (var i = 0; i < DOT_COUNT; i++) {
+      var dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "tutor-strip-dot";
+      dot.setAttribute("aria-label", "Teaching team page " + (i + 1));
+      dot.addEventListener("click", (function(idx) {
+        return function() {
+          var maxScroll = track.scrollWidth - track.clientWidth;
+          var targetScroll = maxScroll > 0 ? Math.round((idx / (DOT_COUNT - 1)) * maxScroll) : 0;
+          track.scrollTo({ left: targetScroll, behavior: "smooth" });
+        };
+      })(i));
+      dotsContainer.appendChild(dot);
+    }
+    syncDots();
+  }
+
+  function syncDots() {
+    var dots = dotsContainer.querySelectorAll(".tutor-strip-dot");
+    if (!dots.length) return;
+    var maxScroll = track.scrollWidth - track.clientWidth;
+    if (maxScroll <= 0) {
+      dots.forEach(function(d, i) {
+        d.classList.toggle("is-active", i === 0);
+        d.setAttribute("aria-current", i === 0 ? "true" : "false");
+      });
+      return;
+    }
+    var ratio = track.scrollLeft / maxScroll;
+    var activeDot = Math.min(Math.round(ratio * (DOT_COUNT - 1)), DOT_COUNT - 1);
+    dots.forEach(function(d, i) {
+      d.classList.toggle("is-active", i === activeDot);
+      d.setAttribute("aria-current", i === activeDot ? "true" : "false");
+    });
+  }
+
+  buildDots();
+  track.addEventListener("scroll", syncDots, { passive: true });
+})();
+
+(function () {
   var stage = document.getElementById("parentStoriesStage");
   if (!stage) return;
 
