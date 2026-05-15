@@ -580,16 +580,21 @@ h3 {
 .section-kicker,
 .card-tag,
 .panel-label,
-.footer-kicker {
+.footer-kicker,
+.programme-format-kicker {
   display: inline-flex;
   align-items: center;
-  min-height: 32px;
-  padding: 0 12px;
+  box-sizing: border-box;
+  min-height: 0;
+  padding: 7px 12px;
+  border: 1px solid rgba(194, 163, 95, 0.22);
   border-radius: 999px;
-  background: rgba(194, 163, 95, 0.12);
+  background: rgba(194, 163, 95, 0.08);
   color: var(--gold-500);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  line-height: 1.2;
   text-transform: uppercase;
 }
 
@@ -1792,6 +1797,7 @@ p {
   width: 100%;
   height: auto;
   border-radius: var(--radius-lg);
+  border: 1px solid rgba(194, 163, 95, 0.32);
   box-shadow: 0 8px 28px rgba(11, 23, 48, 0.06);
 }
 
@@ -2684,9 +2690,6 @@ p {
 }
 
 #new-to-uk .icp-block .card-tag {
-  border-radius: var(--radius-sm);
-  padding: 5px 14px;
-  font-size: 0.8rem;
   color: var(--gold-500);
 }
 
@@ -2954,16 +2957,6 @@ p {
   width: max-content;
   max-width: 100%;
   margin: 0;
-  padding: 7px 12px;
-  border: 1px solid rgba(194, 163, 95, 0.22);
-  border-radius: 999px;
-  background: rgba(194, 163, 95, 0.08);
-  color: var(--gold-600);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.11em;
-  line-height: 1.2;
-  text-transform: uppercase;
 }
 
 .programme-format-content {
@@ -3012,12 +3005,6 @@ p {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 10px 20px;
-}
-
-.programme-proof-header .section-kicker {
-  padding: 0 10px;
-  min-height: 28px;
-  font-size: 0.72rem;
 }
 
 .programme-proof-header h2 {
@@ -4941,16 +4928,39 @@ p {
 .results-page-hero h1 { max-width: none; font-size: clamp(2.2rem, 4vw, 3.6rem); text-align: center; }
 .results-page #gcse { background: transparent; }
 .results-page #messages {
-  background: linear-gradient(180deg, rgba(16,35,63,0.96), rgba(24,49,83,0.92));
-  border-top: 1px solid rgba(194,163,95,0.14);
-  border-bottom: 1px solid rgba(194,163,95,0.14);
+  background: linear-gradient(180deg, rgba(251, 248, 241, 0.96), rgba(245, 239, 227, 0.72));
+  border-top: 1px solid rgba(194, 163, 95, 0.14);
+  border-bottom: 1px solid rgba(194, 163, 95, 0.14);
 }
-.results-page #messages .section-kicker { color: var(--gold-400); }
+.results-page #messages .section-kicker {
+  background: rgba(255, 251, 245, 0.78);
+  color: var(--navy-900);
+  border-color: rgba(194, 163, 95, 0.28);
+}
 .results-page #messages h2,
 .results-page #messages .section-intro,
-.results-page #messages .section-outro { color: var(--ivory-100); }
-.results-page #messages .section-outro:last-of-type { color: rgba(255,248,238,0.78); }
+.results-page #messages .section-outro { color: var(--navy-950); }
+.results-page #messages .section-outro:last-of-type { color: var(--slate-500); }
 .results-page #messages .results-message-card .message-bubble-attribution { color: var(--slate-500); }
+.results-page #messages .section-heading {
+  max-width: 980px;
+}
+.results-page #messages .section-intro {
+  max-width: 920px;
+}
+.results-page #messages .section-outro {
+  max-width: 920px;
+}
+#improvement .section-heading {
+  max-width: 1040px;
+}
+
+#improvement .section-heading h2 {
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .results-page #improvement,
 .results-page #alevel,
 .results-page #consultation {
@@ -4958,11 +4968,30 @@ p {
   border-top: 1px solid rgba(16,35,63,0.05);
   border-bottom: 1px solid rgba(16,35,63,0.05);
 }
-.results-page #ukmt,
-.results-page #reviews {
+#ukmt .section-intro {
+  max-width: 780px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.results-page #ukmt {
   background: var(--ivory-100);
   border-top: 1px solid rgba(16,35,63,0.04);
   border-bottom: 1px solid rgba(16,35,63,0.04);
+}
+.results-page #reviews {
+  background: var(--ivory-50);
+  border-top: 1px solid rgba(16,35,63,0.04);
+  border-bottom: 1px solid rgba(16,35,63,0.04);
+}
+
+.results-page #reviews .results-review-card {
+  box-shadow: none;
+  border-color: rgba(194, 163, 95, 0.28);
+}
+
+.results-page #reviews .results-review-card .review-quote {
+  font-family: var(--font-body-current);
 }
 .results-proof-kicker-block { margin-bottom: 0; }
 .results-proof-kicker-block .section-kicker { margin-bottom: 0; }
@@ -5099,6 +5128,10 @@ p {
     linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 251, 245, 0.94));
   box-shadow: 0 10px 24px rgba(11, 23, 48, 0.07);
 }
+.results-page #gcse .results-proof-card {
+  border: 1px solid rgba(194, 163, 95, 0.28);
+  box-shadow: none;
+}
 .results-proof-icon {
   width: 48px;
   height: 48px;
@@ -5201,9 +5234,12 @@ p {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   padding: 30px 24px 26px;
-  overflow: hidden;
   transform: none;
   transition: none;
+}
+.results-page #messages .results-message-card {
+  border: 1px solid rgba(194, 163, 95, 0.28);
+  box-shadow: none;
 }
 .results-message-card:hover,
 .results-message-card:focus-within {
@@ -5232,9 +5268,7 @@ p {
 .results-review-card {
   padding: 24px 24px 22px;
   min-height: 100%;
-  background: rgba(255,255,255,0.92);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(251, 248, 241, 0.92));
+  background: rgba(255, 255, 255, 0.94);
 }
 .results-message-card .message-bubble {
   flex: 1 1 auto;
@@ -5635,6 +5669,28 @@ p {
   .team-cta-shell .consultation-actions {
     margin-top: 0;
   }
+}
+
+/* ── Team page section-kicker pill standardisation ───── */
+.team-mentor-hero .section-kicker,
+.team-recruit-section .section-kicker,
+#teaching-team .section-kicker,
+.team-cta-shell .section-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(194, 163, 95, 0.28);
+  background: rgba(255, 251, 245, 0.78);
+  color: var(--navy-900);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 /* Homepage-first landing page refinements */
