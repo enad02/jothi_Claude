@@ -292,22 +292,31 @@ if (navToggle && siteNav) {
     dots[currentIndex].setAttribute("aria-selected", "true");
   }
 
-  function scrollToTestimonialHash() {
+  function activateTestimonialFromHash() {
     if (!window.location.hash || !window.location.hash.startsWith("#testimonial-")) return;
 
-    var target = document.getElementById(window.location.hash.slice(1));
-    if (!target || !stage.contains(target)) return;
+    var card = document.querySelector(window.location.hash);
+    if (!card || !card.classList.contains("parent-stories-card") || !stage.contains(card)) return;
 
-    var index = Array.prototype.indexOf.call(cards, target);
-    if (index >= 0) {
-      goTo(index);
-    }
+    var index = Number(card.getAttribute("data-ps-id"));
+    if (!Number.isInteger(index) || index < 0 || index >= cards.length) return;
+
+    cards.forEach(function (item, itemIndex) {
+      item.classList.toggle("is-active", itemIndex === index);
+    });
+
+    dots.forEach(function (dot, dotIndex) {
+      var isActive = dotIndex === index;
+      dot.classList.toggle("is-active", isActive);
+      dot.setAttribute("aria-selected", isActive ? "true" : "false");
+    });
+
+    currentIndex = index;
 
     window.setTimeout(function () {
-      target.scrollIntoView({
+      card.scrollIntoView({
         behavior: "smooth",
-        block: "start",
-        inline: "center"
+        block: "start"
       });
     }, 80);
   }
@@ -355,8 +364,9 @@ if (navToggle && siteNav) {
     });
   }
 
-  window.addEventListener("load", scrollToTestimonialHash);
-  window.addEventListener("hashchange", scrollToTestimonialHash);
+  activateTestimonialFromHash();
+  window.addEventListener("load", activateTestimonialFromHash);
+  window.addEventListener("hashchange", activateTestimonialFromHash);
 })();
 
 if (contactForm && accessKeyField && formStatus) {
