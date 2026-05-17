@@ -292,6 +292,26 @@ if (navToggle && siteNav) {
     dots[currentIndex].setAttribute("aria-selected", "true");
   }
 
+  function scrollToTestimonialHash() {
+    if (!window.location.hash || !window.location.hash.startsWith("#testimonial-")) return;
+
+    var target = document.getElementById(window.location.hash.slice(1));
+    if (!target || !stage.contains(target)) return;
+
+    var index = Array.prototype.indexOf.call(cards, target);
+    if (index >= 0) {
+      goTo(index);
+    }
+
+    window.setTimeout(function () {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "center"
+      });
+    }, 80);
+  }
+
   if (prev) {
     prev.addEventListener("click", function () {
       goTo(currentIndex - 1);
@@ -334,6 +354,9 @@ if (navToggle && siteNav) {
       }
     });
   }
+
+  window.addEventListener("load", scrollToTestimonialHash);
+  window.addEventListener("hashchange", scrollToTestimonialHash);
 })();
 
 if (contactForm && accessKeyField && formStatus) {

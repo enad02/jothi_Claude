@@ -497,6 +497,10 @@ h3 {
   scroll-margin-top: 120px;
 }
 
+[id^="testimonial-"] {
+  scroll-margin-top: 120px;
+}
+
 #programmes .card-grid {
   grid-template-columns: repeat(3, 1fr);
 }
