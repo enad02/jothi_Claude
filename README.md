@@ -14,7 +14,7 @@ The site is a static website build and is intentionally simple to maintain.
 - CSS
 - Vanilla JavaScript
 - GitHub for version control
-- Vercel for deployment
+- Cloudflare Pages for production deployment
 
 ## Deployment workflow
 
@@ -22,7 +22,21 @@ The site is a static website build and is intentionally simple to maintain.
 2. Review changes
 3. Commit to `main`
 4. Push to GitHub
-5. Vercel auto-deploys the latest version
+5. Cloudflare Pages auto-deploys `main`
+
+Production is hosted on Cloudflare Pages:
+
+- Live domain: https://jothi.uk/
+- Cloudflare Pages project: `jothi2026`
+- Preview URL: https://jothi2026.pages.dev
+- Production branch: `main`
+- Framework preset: None / static site
+- Build command: empty
+- Build output directory: repository root
+
+Deployment is configured in the Cloudflare dashboard, so no `wrangler.toml` or Cloudflare config file is required. `www.jothi.uk` and `jothi.co.uk` redirect to https://jothi.uk/.
+
+Vercel was previously used for preview/testing only and is no longer the production host.
 
 ## Core files
 
