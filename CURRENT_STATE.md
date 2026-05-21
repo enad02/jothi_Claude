@@ -1,6 +1,6 @@
 # Current State - Jothi Learning Website
 
-Last updated: 1 May 2026
+Last updated: 21 May 2026
 
 This file is the live working snapshot for future website work.
 
@@ -19,8 +19,11 @@ Older Claude-specific references should not control current implementation if th
 - The site is a static HTML/CSS/JS build.
 - Core public pages exist: homepage, programmes, results, about, team, contact, students, tutors, and legal pages.
 - The site uses a shared design system in `styles.css`.
-- Public pages still use `noindex,follow`.
-- `robots.txt` and `sitemap.xml` are present, but indexing has not yet been intentionally switched on.
+- The six public marketing pages are launched and indexable: homepage, programmes, about, team, results, and contact.
+- Google Search Console confirms those six public marketing pages are indexed.
+- Legal pages and gateway pages remain `noindex,follow`.
+- Production is hosted on Cloudflare Pages.
+- Vercel is historical/non-production only.
 - The contact form is a static Web3Forms setup.
 - Safe metadata improvements have been added, including Open Graph/Twitter basics and one `EducationalOrganization` JSON-LD block on the homepage.
 - Accessibility and mobile polish have been applied to navigation, focus states, form messaging, and small-screen behaviour.
@@ -30,6 +33,21 @@ Older Claude-specific references should not control current implementation if th
 - The Programmes page now follows a parent decision flow: stage, pathway, monthly fee, joining route.
 - The student and tutor gateway pages have been visually polished but remain practical access pages rather than marketing pages.
 - The About page now includes a Vision / Mission / Purpose section, but its final placement and visual prominence still need review during the full premium About page pass.
+
+## Current production and deployment
+
+- Live production domain: https://jothi.uk/
+- Cloudflare Pages project: `jothi2026`
+- Cloudflare preview URL: https://jothi2026.pages.dev
+- GitHub production repo: `enad02/jothi_Claude`
+- Production branch: `main`
+- Framework preset: None / static site
+- Build command: empty
+- Build output directory: repository root
+- Deployment is dashboard-managed in Cloudflare Pages.
+- No `wrangler.toml`, `cloudflare.json`, Worker script, GitHub Action, or Cloudflare config file is required.
+- `www.jothi.uk` redirects to https://jothi.uk/.
+- `jothi.co.uk` redirects to https://jothi.uk/.
 
 ## What is already settled in the build
 
@@ -45,22 +63,20 @@ Older Claude-specific references should not control current implementation if th
 
 ## What still needs final human approval or stronger assets
 
-- Final decision on when to remove `noindex`.
 - Stronger real photography and proof imagery where available.
 - Better tutor credibility assets on the Team page:
   - real photos
   - fuller bios
   - any approved safeguarding / DBS-related trust signals
 - Stronger proof packaging on the Results page as better permissions and evidence become available.
-- Final launch-level review of proof claims before indexation.
+- Ongoing review of proof claims as new proof assets become available.
 
 ## Best next priorities
 
-1. Decide launch indexing policy and remove `noindex` only when approved.
-2. Improve real proof assets and imagery.
-3. Strengthen Team page tutor credibility with approved real-world assets.
-4. Run a final launch QA pass across content, links, and mobile.
-5. Review whether any remaining internal/project notes should be trimmed or moved into `SOURCE_OF_TRUTH.md`.
+1. Improve real proof assets and imagery.
+2. Strengthen Team page tutor credibility with approved real-world assets.
+3. Run periodic QA across content, links, and mobile after production changes.
+4. Review whether any remaining internal/project notes should be trimmed or moved into `SOURCE_OF_TRUTH.md`.
 
 ## How to use this file
 

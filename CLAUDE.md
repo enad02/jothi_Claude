@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Legacy note: This file was originally written for Claude Code. The current preferred agent-neutral instruction file is AGENTS.md. If there is a conflict: current user chat instructions win first, SOURCE_OF_TRUTH.md wins for locked business facts, AGENTS.md wins for agent workflow, and this CLAUDE.md file is historical unless explicitly referenced.
+Legacy note: This file was originally written for Claude Code. The current preferred agent-neutral instruction file is AGENTS.md. If there is a conflict: current user chat instructions win first, SOURCE_OF_TRUTH.md wins for locked business facts, AGENTS.md wins for agent workflow, CURRENT_STATE.md and AGENTS.md override this file for current deployment/indexing status, and this CLAUDE.md file is historical unless explicitly referenced.
 
 ### Operating notes for Claude Code on this repo
 
@@ -52,9 +52,9 @@ Use `CURRENT_STATE.md` for the current working snapshot.
 - Preserve calm spacing and editorial restraint
 - Student and tutor gateway pages should remain practical access pages, not full marketing pages
 
-## Launch/indexing guardrail
+## Launch/indexing note
 
-- Public pages remain `noindex,follow` until launch approval is explicitly given
+- The launch/indexing status in this legacy file may be stale. Use `CURRENT_STATE.md` and `AGENTS.md` for current deployment and indexing rules.
 
 ## Current homepage state
 

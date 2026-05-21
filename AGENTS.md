@@ -36,7 +36,8 @@ If documents conflict, follow the order above. If pricing, proof numbers, names,
 - Reuse existing design tokens before introducing new values.
 - Keep changes small, reviewable, and production-safe.
 - Do not redesign unrelated sections while completing a scoped task.
-- Keep public pages `noindex,follow` until launch indexing is explicitly approved.
+- The six public marketing pages are indexable. Legal and gateway pages should remain `noindex,follow` unless explicitly changed.
+- Production deploys through Cloudflare Pages from GitHub `main`. Do not add Cloudflare config files unless explicitly needed.
 
 ## AI Coding Workflow and Token Discipline
 
