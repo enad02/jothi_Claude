@@ -4512,10 +4512,13 @@ p {
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(22px, 4vw, 36px);
   align-items: start;
+  min-width: 0;
 }
 
 .parent-advice-article {
+  width: 100%;
   max-width: 820px;
+  min-width: 0;
 }
 
 .parent-advice-short-answer {
@@ -4559,6 +4562,7 @@ p {
 .parent-advice-sidebar {
   display: grid;
   gap: 18px;
+  min-width: 0;
 }
 
 .parent-advice-cta-actions {
@@ -4584,11 +4588,13 @@ p {
 .parent-advice-card-grid {
   display: grid;
   gap: 18px;
+  min-width: 0;
 }
 
 .parent-advice-card {
   display: grid;
   align-content: start;
+  min-width: 0;
 }
 
 .parent-advice-card h2 {
@@ -4597,6 +4603,25 @@ p {
 
 .parent-advice-empty {
   text-align: center;
+}
+
+.parent-advice-page .wrap,
+.parent-advice-page .content-panel,
+.parent-advice-short-answer,
+.parent-advice-prose,
+.parent-advice-related,
+.parent-advice-cta {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.parent-advice-page h1,
+.parent-advice-page h2,
+.parent-advice-page h3,
+.parent-advice-page p,
+.parent-advice-page li,
+.parent-advice-page a {
+  overflow-wrap: break-word;
 }
 
 @media (min-width: 900px) {
@@ -4611,6 +4636,24 @@ p {
 
   .parent-advice-card-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .parent-advice-page .section-intro,
+  .parent-advice-meta,
+  .parent-advice-prose,
+  .parent-advice-short-answer,
+  .parent-advice-card,
+  .parent-advice-cta,
+  .parent-advice-related {
+    overflow-wrap: anywhere;
+  }
+
+  .parent-advice-page .button {
+    width: 100%;
+    min-width: 0;
+    white-space: normal;
   }
 }
 
