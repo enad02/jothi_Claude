@@ -42,8 +42,11 @@ Older Claude-specific references should not control current implementation if th
 - GitHub production repo: `enad02/jothi_Claude`
 - Production branch: `main`
 - Framework preset: None / static site
-- Build command: empty
-- Build output directory: repository root
+- Historically the Cloudflare build command was empty.
+- Parent Advice migration introduces a Node build step.
+- Cloudflare should not be changed until the real repo build and preview QA pass.
+- Future required build command: `npm run build`.
+- Output directory remains repository root.
 - Deployment is dashboard-managed in Cloudflare Pages.
 - No `wrangler.toml`, `cloudflare.json`, Worker script, GitHub Action, or Cloudflare config file is required.
 - `www.jothi.uk` redirects to https://jothi.uk/.
