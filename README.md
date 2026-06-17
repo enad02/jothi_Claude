@@ -13,6 +13,7 @@ The site is a static website build and is intentionally simple to maintain.
 - Static HTML
 - CSS
 - Vanilla JavaScript
+- Small Node build script for generated Parent Advice pages
 - GitHub for version control
 - Cloudflare Pages for production deployment
 
@@ -59,6 +60,21 @@ Vercel was previously used for preview/testing only and is no longer the product
 - `assets/` — images and supporting assets
 - `robots.txt`
 - `sitemap.xml`
+
+## Parent Advice content pilot
+
+Parent Advice source articles live in `content/parent-advice/**/*.md`.
+Generated static HTML is written to `parent-advice/**/index.html` by:
+
+```bash
+npm run build
+```
+
+The generated `parent-advice/**` HTML is build output and should not be edited manually.
+
+For this pilot, Parent Advice pages remain `noindex,follow` until launch approval. Draft/noindex article pages are excluded from `sitemap.xml`.
+
+Related article links use explicit front matter slugs first. The build fails if an explicit related slug does not exist. If no related list is set, the generator falls back to recent articles in the same category.
 
 ## Project documents
 
