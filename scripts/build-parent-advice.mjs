@@ -20,6 +20,15 @@ const approvedCategories = new Map([
   ["uk-school-system", "UK School System"]
 ]);
 
+const categoryDescriptions = new Map([
+  ["primary-to-secondary", "Support for the move from Year 6 into secondary school, including routines, confidence, independence and early learning habits."],
+  ["years-7-9", "Guidance for the quiet but important KS3 years, when foundations, confidence and learning habits are built before GCSE pressure begins."],
+  ["gcse", "Practical advice on mocks, revision, Year 10 preparation and how parents can respond calmly before exam pressure builds."],
+  ["a-level-maths", "Help for families thinking about A-Level Maths, including readiness, the GCSE-to-A-Level jump and the independence students need."],
+  ["sat-university", "Early guidance on competitive courses, subject choices, predicted grades, entrance exams and planning before deadlines create pressure."],
+  ["uk-school-system", "Simple explanations of key stages, school structure and how parents can understand where their child is in the journey."]
+]);
+
 const allowedStatuses = new Set(["draft", "reviewed", "published", "archived"]);
 const allowedIndexing = new Set(["index", "noindex"]);
 let activeArticleReadingTime = "";
@@ -356,8 +365,7 @@ function writeIndexPage(articles) {
     <section class="section-shell alt-shell">
       <div class="wrap">
         <div class="section-heading centered-heading">
-          <h2>Latest draft articles</h2>
-          <p class="section-intro">Pilot content is visible for review but remains noindex until launch approval.</p>
+          <h2>Parent advice articles</h2>
         </div>
         ${articleCardGrid(articles.sort(sortNewestFirst))}
       </div>
@@ -431,21 +439,22 @@ function articleCardGrid(articles) {
 }
 
 function articleCard(article) {
-  return `<article class="content-panel parent-advice-card">
-      <p class="card-tag">${escapeHtml(article.category_label)} · ${escapeHtml(article.status)}</p>
-      <h2><a href="${escapeHtml(article.canonicalPath)}">${escapeHtml(article.title)}</a></h2>
+  return `<a class="content-panel parent-advice-card parent-advice-article-card" href="${escapeHtml(article.canonicalPath)}">
+      <p class="card-tag">${escapeHtml(article.category_label)}</p>
+      <h2>${escapeHtml(article.title)}</h2>
       <p>${escapeHtml(article.description)}</p>
       <p class="parent-advice-meta">Last updated ${formatDate(article.last_updated)}</p>
-    </article>`;
+    </a>`;
 }
 
 function categoryCard(slug, label, articles) {
   const count = articles.filter((article) => article.category === slug).length;
-  return `<article class="content-panel parent-advice-card">
+  const description = categoryDescriptions.get(slug) || "Clear parent guidance from Jothi Learning.";
+  return `<a class="content-panel parent-advice-card parent-advice-category-card" href="/parent-advice/${slug}/">
       <p class="card-tag">${count} article${count === 1 ? "" : "s"}</p>
-      <h2><a href="/parent-advice/${slug}/">${escapeHtml(label)}</a></h2>
-      <p>Guidance for parent questions in this area.</p>
-    </article>`;
+      <h2>${escapeHtml(label)}</h2>
+      <p>${escapeHtml(description)}</p>
+    </a>`;
 }
 
 function relatedHtml(articles) {

@@ -4634,6 +4634,22 @@ p {
   min-width: 0;
 }
 
+.parent-advice-category-card,
+.parent-advice-article-card {
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.parent-advice-category-card:hover,
+.parent-advice-category-card:focus-visible,
+.parent-advice-article-card:hover,
+.parent-advice-article-card:focus-visible {
+  border-color: rgba(194, 163, 95, 0.42);
+  box-shadow: 0 20px 42px rgba(11, 23, 48, 0.1);
+  transform: translateY(-2px);
+}
+
 .parent-advice-card h2 {
   font-size: clamp(1.22rem, 2vw, 1.55rem);
 }
