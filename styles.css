@@ -4332,11 +4332,17 @@ p {
   .site-nav-inner {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    row-gap: 6px;
-    column-gap: 0;
+    row-gap: 10px;
+    column-gap: 8px;
     align-items: center;
     justify-items: center;
     overflow: visible;
+    padding: 11px 8px 23px;
+  }
+
+  .site-nav a {
+    font-size: 0.58rem;
+    letter-spacing: 0.025em;
   }
 
   .site-nav-inner > a {
@@ -4348,6 +4354,7 @@ p {
   }
 
   .site-nav-inner > .nav-dropdown {
+    grid-column: 2;
     flex: initial;
     width: 100%;
     display: flex;
