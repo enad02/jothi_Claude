@@ -439,12 +439,12 @@ function articleCardGrid(articles) {
 }
 
 function articleCard(article) {
-  return `<article class="content-panel parent-advice-card">
+  return `<a class="content-panel parent-advice-card parent-advice-article-card" href="${escapeHtml(article.canonicalPath)}">
       <p class="card-tag">${escapeHtml(article.category_label)}</p>
-      <h2><a href="${escapeHtml(article.canonicalPath)}">${escapeHtml(article.title)}</a></h2>
+      <h2>${escapeHtml(article.title)}</h2>
       <p>${escapeHtml(article.description)}</p>
       <p class="parent-advice-meta">Last updated ${formatDate(article.last_updated)}</p>
-    </article>`;
+    </a>`;
 }
 
 function categoryCard(slug, label, articles) {
