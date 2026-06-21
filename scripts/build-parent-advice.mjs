@@ -16,12 +16,13 @@ const approvedCategories = new Map([
   ["gcse", "GCSE"],
   ["maths-confidence", "Maths Confidence"],
   ["a-level-maths", "A-Level Maths"],
-  ["sat-university", "SAT and University"],
+  ["sat-university", "University Admissions"],
   ["uk-school-system", "UK School System"]
 ]);
 
 const allowedStatuses = new Set(["draft", "reviewed", "published", "archived"]);
 const allowedIndexing = new Set(["index", "noindex"]);
+let activeArticleReadingTime = "";
 const requiredCoreUrls = [
   `${siteUrl}/`,
   `${siteUrl}/programmes`,
@@ -259,8 +260,10 @@ function writeArticlePages(articles) {
   for (const article of articles) {
     const relatedArticles = resolveRelatedArticles(article, articles);
     const { shortAnswer, bodyMarkdown } = splitShortAnswer(article.body);
+    const readingTime = readingTimeLabel(article.body);
     const title = `${article.title} | Jothi Learning`;
     const robots = article.indexing === "noindex" ? "noindex,follow" : "";
+    activeArticleReadingTime = readingTime;
     const content = `
     <section class="section-shell parent-advice-hero">
       <div class="wrap narrow-shell">
@@ -319,6 +322,7 @@ function writeArticlePages(articles) {
         content
       }
     );
+    activeArticleReadingTime = "";
   }
 }
 
@@ -326,7 +330,8 @@ function writeIndexPage(articles) {
   const canonicalUrl = `${siteUrl}/parent-advice/`;
   const title = "Parent Advice | Jothi Learning";
   const description = "Clear parent guidance from Jothi Learning on Maths, Science, GCSE choices, confidence and school decisions.";
-  const categories = [...approvedCategories.entries()];
+  const categories = [...approvedCategories.entries()]
+    .filter(([slug]) => slug !== "maths-confidence");
   const content = `
     <section class="section-shell parent-advice-hero">
       <div class="wrap">
@@ -556,6 +561,22 @@ function splitShortAnswer(markdown) {
   };
 }
 
+function readingTimeLabel(markdown) {
+  const wordCount = countWords(markdown);
+  const minutes = Math.max(2, Math.round(wordCount / 225));
+  return `${minutes} min read`;
+}
+
+function countWords(markdown) {
+  const text = markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]*`/g, " ")
+    .replace(/\[(.*?)\]\([^)]*\)/g, "$1")
+    .replace(/[#>*_\-]/g, " ");
+  const words = text.match(/[\p{L}\p{N}]+(?:[’'][\p{L}\p{N}]+)?/gu);
+  return words ? words.length : 0;
+}
+
 function renderMarkdown(markdown) {
   const blocks = markdown.trim().split(/\n{2,}/).filter(Boolean);
   const html = [];
@@ -683,11 +704,12 @@ function isValidDate(value) {
 }
 
 function formatDate(value) {
-  return new Intl.DateTimeFormat("en-GB", {
+  const formattedDate = new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric"
   }).format(new Date(`${value}T00:00:00Z`));
+  return activeArticleReadingTime ? `${formattedDate} · ${activeArticleReadingTime}` : formattedDate;
 }
 
 function sortNewestFirst(a, b) {

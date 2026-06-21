@@ -4482,6 +4482,42 @@ p {
     linear-gradient(180deg, var(--ivory-100), var(--ivory-50));
 }
 
+.parent-advice-hero .wrap,
+.parent-advice-hero .section-heading {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.parent-advice-hero .section-heading {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.parent-advice-hero h1,
+.parent-advice-hero .section-intro {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.parent-advice-hero h1 {
+  max-width: none;
+  margin-top: clamp(24px, 3vw, 34px);
+}
+
+.parent-advice-article-page .parent-advice-hero h1 {
+  max-width: min(100%, 820px);
+  font-size: clamp(2.35rem, 4.4vw, 4.2rem);
+  white-space: normal;
+}
+
+.parent-advice-index-page .parent-advice-hero {
+  padding-bottom: clamp(24px, 4vw, 34px);
+}
+
+.parent-advice-index-page .parent-advice-hero + .section-shell {
+  padding-top: clamp(24px, 4vw, 34px);
+}
+
 .parent-advice-breadcrumb {
   display: flex;
   flex-wrap: wrap;
@@ -4587,6 +4623,7 @@ p {
 
 .parent-advice-card-grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
   min-width: 0;
 }
@@ -4639,7 +4676,27 @@ p {
   }
 }
 
+@media (min-width: 641px) {
+  .parent-advice-hero h1 {
+    white-space: nowrap;
+  }
+}
+
 @media (max-width: 640px) {
+  .parent-advice-hero h1 {
+    max-width: 11ch;
+    white-space: normal;
+  }
+
+  .parent-advice-article-page .parent-advice-hero h1 {
+    max-width: 13ch;
+    font-size: clamp(2rem, 8vw, 2.35rem);
+  }
+
+  .parent-advice-hero .section-intro {
+    max-width: 34ch;
+  }
+
   .parent-advice-page .section-intro,
   .parent-advice-meta,
   .parent-advice-prose,
