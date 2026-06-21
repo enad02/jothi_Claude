@@ -4678,6 +4678,19 @@ p {
 }
 
 @media (min-width: 900px) {
+  .parent-advice-article-page .parent-advice-hero .narrow-shell {
+    max-width: 980px;
+  }
+
+  .parent-advice-article-page .parent-advice-hero .section-heading {
+    max-width: 900px;
+  }
+
+  .parent-advice-article-page .parent-advice-hero h1 {
+    max-width: min(100%, 900px);
+    font-size: clamp(2.6rem, 3.85vw, 3.85rem);
+  }
+
   .parent-advice-layout {
     grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
   }
