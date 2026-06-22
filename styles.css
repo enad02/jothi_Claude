@@ -4521,6 +4521,16 @@ p {
   padding-bottom: clamp(24px, 4vw, 34px);
 }
 
+.parent-advice-index-page .parent-advice-hero h1 {
+  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.parent-advice-index-page .parent-advice-hero .section-intro {
+  margin-bottom: 0;
+}
+
 .parent-advice-index-page .parent-advice-hero + .section-shell {
   padding-top: clamp(24px, 4vw, 34px);
 }

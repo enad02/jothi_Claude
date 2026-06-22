@@ -350,7 +350,6 @@ function writeIndexPage(articles) {
           ["/parent-advice/", "Parent Advice"]
         ])}
         <div class="section-heading centered-heading">
-          <p class="section-kicker">Parent Advice</p>
           <h1>Parent Advice Library</h1>
           <p class="section-intro">${escapeHtml(description)}</p>
         </div>
