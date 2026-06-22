@@ -375,7 +375,7 @@ function writeIndexPage(articles) {
     templates.index,
     path.join(outputDir, "index.html"),
     {
-      meta: metaTags({ title, description, canonicalUrl, type: "website", robots: "noindex,follow" }),
+      meta: metaTags({ title, description, canonicalUrl, type: "website", robots: "" }),
       jsonLd: jsonScript(breadcrumbJsonLd([
         [siteUrl, "Home"],
         [canonicalUrl, "Parent Advice"]
@@ -394,6 +394,7 @@ function writeSitemap(articles, categoryPages) {
   }
 
   const nextUrls = new Set(existingUrls);
+  nextUrls.add(`${siteUrl}/parent-advice/`);
   for (const article of articles) {
     if (article.status === "published" && article.indexing === "index") {
       nextUrls.add(article.canonicalUrl);
