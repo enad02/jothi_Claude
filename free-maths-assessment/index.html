@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Maths Confidence &amp; Readiness Assessment | Jothi Learning</title>
+  <meta
+    name="description"
+    content="Request a free Maths Confidence &amp; Readiness Assessment for students in Years 7&ndash;11. Jothi Learning provides structured live online Maths support across the UK."
+  />
+  <meta name="theme-color" content="#10233f" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="canonical" href="https://jothi.uk/free-maths-assessment/" />
+  <meta property="og:title" content="Free Maths Confidence &amp; Readiness Assessment | Jothi Learning" />
+  <meta
+    property="og:description"
+    content="Request a free Maths Confidence &amp; Readiness Assessment for students in Years 7&ndash;11."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jothi.uk/free-maths-assessment/" />
+  <meta property="og:site_name" content="Jothi Learning" />
+  <meta property="og:locale" content="en_GB" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Free Maths Confidence &amp; Readiness Assessment | Jothi Learning" />
+  <meta
+    name="twitter:description"
+    content="Request a free Maths Confidence &amp; Readiness Assessment for students in Years 7&ndash;11."
+  />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    .assessment-page {
+      background:
+        linear-gradient(180deg, rgba(251, 248, 241, 0.96), rgba(245, 239, 227, 0.96) 42%, #fff 100%);
+      overflow-x: hidden;
+    }
+
+    .assessment-hero {
+      padding: clamp(24px, 4vw, 46px) 0 clamp(30px, 5vw, 56px);
+    }
+
+    .assessment-hero-grid {
+      display: grid;
+      gap: clamp(22px, 3vw, 36px);
+      align-items: start;
+    }
+
+    .assessment-hero-copy {
+      max-width: 720px;
+    }
+
+    .assessment-hero h1 {
+      max-width: 13ch;
+      margin: 10px 0 16px;
+      color: var(--navy-950);
+      font-size: clamp(2.35rem, 5.6vw, 4.25rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .assessment-subheading {
+      margin: 0 0 22px;
+      color: var(--gold-500);
+      font-weight: 700;
+      font-size: clamp(1.05rem, 2vw, 1.32rem);
+    }
+
+    .assessment-hero .hero-body {
+      max-width: 660px;
+      color: var(--navy-900);
+      font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+    }
+
+    .assessment-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .assessment-actions .button {
+      min-height: 48px;
+    }
+
+    .assessment-trust-points {
+      display: grid;
+      gap: 9px;
+      margin: 24px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .assessment-trust-points li {
+      position: relative;
+      padding-left: 24px;
+      color: var(--navy-900);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .assessment-trust-points li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.5em;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--gold-400);
+    }
+
+    .assessment-summary-card {
+      border: 1px solid rgba(16, 35, 63, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(251, 248, 241, 0.92)),
+        var(--white);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .assessment-summary-top {
+      padding: 26px;
+      background: var(--navy-950);
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .assessment-summary-top strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--white);
+      font-family: var(--font-serif-current);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.12;
+    }
+
+    .assessment-summary-list {
+      display: grid;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .assessment-summary-list li {
+      padding: 18px 22px;
+      border-top: 1px solid rgba(16, 35, 63, 0.08);
+      color: var(--navy-900);
+      font-weight: 600;
+    }
+
+    .assessment-section {
+      padding: clamp(44px, 7vw, 80px) 0;
+    }
+
+    .assessment-section h2 {
+      max-width: 720px;
+      margin: 0 0 16px;
+      color: var(--navy-950);
+      font-size: clamp(2rem, 5vw, 3.15rem);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .assessment-section p {
+      color: var(--navy-900);
+    }
+
+    .assessment-narrow {
+      max-width: 900px;
+    }
+
+    .assessment-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .assessment-card {
+      border: 1px solid rgba(16, 35, 63, 0.09);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow-card);
+      padding: clamp(22px, 3vw, 30px);
+    }
+
+    .assessment-card h3 {
+      margin: 0 0 10px;
+      color: var(--navy-950);
+      font-size: 1.25rem;
+    }
+
+    .assessment-check-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .assessment-check-list li {
+      position: relative;
+      padding-left: 28px;
+      color: var(--navy-900);
+      line-height: 1.5;
+    }
+
+    .assessment-check-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.62em;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gold-400);
+    }
+
+    .assessment-note {
+      margin-top: 24px;
+      padding: 20px 22px;
+      border-left: 4px solid var(--gold-400);
+      background: rgba(245, 239, 227, 0.62);
+      color: var(--navy-900);
+      font-weight: 600;
+    }
+
+    .assessment-band {
+      background: var(--ivory-100);
+    }
+
+    .assessment-split {
+      display: grid;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .assessment-subjects {
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .assessment-subject {
+      padding: 18px 20px;
+      border: 1px solid rgba(16, 35, 63, 0.09);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.76);
+      color: var(--navy-900);
+      font-weight: 700;
+    }
+
+    .assessment-form-card {
+      border: 1px solid rgba(16, 35, 63, 0.1);
+      border-radius: 8px;
+      background: var(--white);
+      box-shadow: var(--shadow-soft);
+      padding: clamp(18px, 3vw, 26px);
+    }
+
+    .assessment-form-card h2 {
+      margin: 0 0 12px;
+      color: var(--navy-950);
+      font-size: clamp(1.7rem, 3.1vw, 2.4rem);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .assessment-form-card p {
+      color: var(--navy-900);
+    }
+
+    .assessment-form-card .bigin-form-embed {
+      margin-top: 22px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .assessment-form-card iframe {
+      display: block;
+      min-height: 720px;
+      border: 0;
+      background: var(--white);
+    }
+
+    .assessment-campaign-note {
+      margin-top: 14px;
+      color: var(--slate-500);
+      font-size: 0.94rem;
+    }
+
+    .assessment-contact-block {
+      display: grid;
+      gap: 12px;
+      justify-items: start;
+      margin-top: 26px;
+      padding: 24px;
+      border: 1px solid rgba(16, 35, 63, 0.1);
+      border-radius: 8px;
+      background: var(--navy-950);
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .assessment-contact-block h2,
+    .assessment-contact-block p,
+    .assessment-contact-block a {
+      color: inherit;
+    }
+
+    .assessment-contact-block h2 {
+      margin-bottom: 0;
+      color: var(--white);
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+    }
+
+    .assessment-whatsapp-number {
+      color: var(--white);
+      font-size: 1.28rem;
+      font-weight: 700;
+    }
+
+    @media (min-width: 780px) {
+      .assessment-hero-grid {
+        grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+      }
+
+      .assessment-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .assessment-split {
+        grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      }
+    }
+
+    @media (max-width: 620px) {
+      .assessment-page .wrap {
+        width: min(calc(100% - 24px), 366px);
+        margin-left: 12px;
+        margin-right: auto;
+      }
+
+      .assessment-page .site-nav {
+        overflow-x: auto;
+      }
+
+      .assessment-page .site-nav-inner {
+        display: flex;
+        justify-content: flex-start;
+        gap: 0;
+        min-width: 0;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .assessment-page .site-nav-inner > a {
+        flex: 0 0 auto;
+        padding: 12px 6px;
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+      }
+
+      .assessment-page .nav-dropdown {
+        display: none;
+      }
+
+      .assessment-hero-copy,
+      .assessment-summary-card {
+        min-width: 0;
+      }
+
+      .assessment-actions .button {
+        width: 100%;
+        max-width: 100%;
+        white-space: normal;
+      }
+
+      .assessment-hero h1 {
+        max-width: 11ch;
+      }
+
+      .assessment-form-card {
+        margin-inline: -6px;
+      }
+
+      .assessment-form-card iframe {
+        min-height: 960px;
+      }
+    }
+  </style>
+</head>
+<body class="assessment-page">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="main-nav-shell vd-hdr-brand vd-nav-bar">
+      <div class="wrap main-nav">
+        <a class="brand" href="../index.html" aria-label="Jothi Learning home">
+          <img src="../Logo%202026.png" alt="Jothi Learning logo" width="90" height="90" />
+          <span class="brand-lockup">
+            <span class="brand-name">JOTHI</span>
+            <span class="brand-subline">LEARNING</span>
+            <span class="brand-tag">Serious teaching. Visible progress.</span>
+          </span>
+        </a>
+      </div>
+
+      <nav class="site-nav" id="siteNav" aria-label="Primary navigation">
+        <div class="site-nav-inner vd-nav-bar-inner">
+          <a href="../programmes.html">Programmes</a>
+          <a href="/parent-advice/">Parents</a>
+          <a href="../about.html">About</a>
+          <a href="../team.html">Team</a>
+          <a href="../results.html">Results</a>
+          <a href="../contact.html">Contact</a>
+          <span class="nav-dropdown">
+            <a href="#" class="nav-dropdown-label" role="button" aria-haspopup="true" aria-expanded="false">Menu</a>
+            <div class="nav-dropdown-panel">
+              <a href="../students.html">For Students</a>
+              <a href="../tutors.html">For Tutors</a>
+            </div>
+          </span>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="assessment-hero" aria-labelledby="assessment-hero-heading">
+      <div class="wrap assessment-hero-grid">
+        <div class="assessment-hero-copy">
+          <p class="section-kicker">Limited free assessment offer</p>
+          <h1 id="assessment-hero-heading">Free Maths Confidence &amp; Readiness Assessment</h1>
+          <p class="assessment-subheading">For students in Years 7&ndash;11</p>
+          <p class="hero-body">Is your child ready for the new school year in Maths?</p>
+          <p class="hero-body">
+            Jothi Learning is offering a limited number of free one-to-one Maths assessments to help parents understand their child&rsquo;s current confidence, key gaps, and readiness for the next stage of school.
+          </p>
+          <ul class="assessment-trust-points">
+            <li>Years 7&ndash;11 Maths focus</li>
+            <li>Confidence, gaps, and readiness</li>
+            <li>Clear next-step guidance</li>
+          </ul>
+          <div class="assessment-actions" aria-label="Assessment actions">
+            <a class="button button-primary" href="#assessment-form">Request an Assessment</a>
+            <a class="button button-whatsapp" href="https://wa.me/447985588975?text=Hello%20Prakash%2C%20I%27d%20like%20to%20request%20the%20free%20Maths%20Confidence%20%26%20Readiness%20Assessment.%0A%0AChild%27s%20year%20group%3A%0AMaths%20confidence%20or%20current%20challenges%3A%0AHeard%20about%20this%20through%3A%20Malayali%20Association%20%2F%20Onam%20Community%20Pilot" target="_blank" rel="noopener noreferrer">WhatsApp Prakash: +44 7985 588975</a>
+          </div>
+        </div>
+
+        <div class="assessment-form-card" id="assessment-form">
+          <p class="section-kicker">Request an assessment</p>
+          <h2>Request your child&rsquo;s free Maths assessment</h2>
+          <p>
+            Complete the form and we will contact you to discuss suitability, availability, and next steps.
+          </p>
+          <p class="assessment-campaign-note">
+            If you are responding after seeing the Malayali Association / Onam Community Pilot advert or flyer, please mention this in the &ldquo;How did you hear about us?&rdquo; field.
+          </p>
+
+          <div class="bigin-form-embed">
+            <iframe
+              title="Jothi Learning enquiry form"
+              width="100%"
+              height="720"
+              src="https://eu.bigin.online/org20114752723/forms/jothi-learning-enquiry-form"
+              scrolling="auto">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment-section assessment-band" aria-labelledby="clarer-picture-heading">
+      <div class="wrap assessment-narrow">
+        <h2 id="clarer-picture-heading">A clearer picture before the new school year</h2>
+        <div class="assessment-grid">
+          <article class="assessment-card">
+            <h3>What the assessment helps with</h3>
+            <ul class="assessment-check-list">
+              <li>where their child is currently confident</li>
+              <li>where gaps may be developing</li>
+              <li>how prepared they are for the new school year</li>
+              <li>what support may be suitable during the first term</li>
+            </ul>
+          </article>
+          <article class="assessment-card">
+            <h3>What to expect</h3>
+            <p>
+              This is not a pressure-selling conversation. It is a calm starting point for understanding your child&rsquo;s Maths needs.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment-section" aria-labelledby="suitable-heading">
+      <div class="wrap assessment-narrow">
+        <h2 id="suitable-heading">Who is this assessment suitable for?</h2>
+        <p>For parents of Years 7&ndash;11 students who:</p>
+        <div class="assessment-card">
+          <ul class="assessment-check-list">
+            <li>feel their child has lost confidence in Maths</li>
+            <li>are unsure whether their child has gaps from previous years</li>
+            <li>want support before GCSE pressure builds</li>
+            <li>want a clearer plan before September</li>
+            <li>are considering structured online Maths support</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment-section assessment-band" aria-labelledby="about-jothi-heading">
+      <div class="wrap assessment-split">
+        <div>
+          <p class="section-kicker">About Jothi Learning</p>
+          <h2 id="about-jothi-heading">Supporting UK families since 2020</h2>
+        </div>
+        <div class="assessment-card">
+          <p>Jothi Learning is a UK online tutoring company founded by Prakash Michael.</p>
+          <p>We support students across the UK with structured live online teaching, regular feedback, and clear communication with parents.</p>
+          <p>Our focus is serious teaching, visible progress, and long-term academic confidence.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment-section" aria-labelledby="subjects-heading">
+      <div class="wrap assessment-split">
+        <div>
+          <h2 id="subjects-heading">What Jothi Learning supports</h2>
+          <p>This free assessment offer is currently for Maths students in Years 7&ndash;11.</p>
+        </div>
+        <div class="assessment-subjects" aria-label="Subjects supported">
+          <div class="assessment-subject">Maths: Years 7&ndash;13</div>
+          <div class="assessment-subject">Physics: Years 9&ndash;11</div>
+          <div class="assessment-subject">Chemistry: Years 9&ndash;11</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment-section assessment-band" aria-labelledby="lessons-heading">
+      <div class="wrap assessment-narrow">
+        <h2 id="lessons-heading">Live online teaching with clear structure</h2>
+        <div class="assessment-card">
+          <p>
+            Lessons are delivered live online. Students receive structured teaching, guided practice, and support aimed at improving understanding, confidence, and consistency.
+          </p>
+          <p>
+            Parents are kept informed through clear communication and sensible next-step guidance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment-section" aria-labelledby="direct-message-heading">
+      <div class="wrap assessment-narrow">
+        <aside class="assessment-contact-block" aria-labelledby="direct-message-heading">
+          <h2 id="direct-message-heading">Prefer to message directly?</h2>
+          <p>You can also contact us via WhatsApp:</p>
+          <a class="assessment-whatsapp-number" href="https://wa.me/447985588975?text=Hello%20Prakash%2C%20I%27d%20like%20to%20request%20the%20free%20Maths%20Confidence%20%26%20Readiness%20Assessment.%0A%0AChild%27s%20year%20group%3A%0AMaths%20confidence%20or%20current%20challenges%3A%0AHeard%20about%20this%20through%3A%20Malayali%20Association%20%2F%20Onam%20Community%20Pilot" target="_blank" rel="noopener noreferrer">+44 7985 588975</a>
+          <p>Please include your child&rsquo;s year group and a brief note about their Maths confidence or current challenges.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div class="footer-brand">
+        <p class="footer-kicker">Jothi Learning</p>
+        <h2>Clear structure. Serious teaching. Credible progress.</h2>
+      </div>
+
+      <div>
+        <h3>Quick Access</h3>
+        <nav class="footer-links" aria-label="Footer quick access">
+          <a href="../students.html">For Students</a>
+          <a href="../tutors.html">For Tutors</a>
+        </nav>
+      </div>
+
+      <div>
+        <h3>Site Navigation</h3>
+        <nav class="footer-links" aria-label="Footer site navigation">
+          <a href="../index.html">Home</a>
+          <a href="../programmes.html">Programmes</a>
+          <a href="../about.html">About</a>
+          <a href="../team.html">Team</a>
+          <a href="../results.html">Results</a>
+          <a href="../contact.html">Contact</a>
+          <a href="#assessment-form">Request Assessment</a>
+          <a href="../privacy.html">Privacy</a>
+          <a href="../cookies.html">Cookies</a>
+          <a href="../terms.html">Terms</a>
+        </nav>
+      </div>
+
+      <div class="legal-block">
+        <h3>Legal Details</h3>
+        <p>JOTHI LEARNING LIMITED</p>
+        <p>Registered in England and Wales</p>
+        <p>Company No. 12571880</p>
+        <p>Registered office: 2 Wilmot Drive, Birmingham, B23 5UA</p>
+        <p>ICO registration: ZC121472</p>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="https://wa.me/447985588975?text=Hello%20Prakash%2C%20I%27d%20like%20to%20request%20the%20free%20Maths%20Confidence%20%26%20Readiness%20Assessment.%0A%0AChild%27s%20year%20group%3A%0AMaths%20confidence%20or%20current%20challenges%3A%0AHeard%20about%20this%20through%3A%20Malayali%20Association%20%2F%20Onam%20Community%20Pilot" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Jothi Learning">
+    <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.534 5.857L.057 23.998l6.305-1.654A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.007-1.374l-.36-.214-3.733.979 1.004-3.642-.234-.374A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+  </a>
+  <script src="../script.js"></script>
+</body>
+</html>
