@@ -128,25 +128,8 @@ Comparing two Birmingham girls’ schools using 2023/24 data:
 
 ### Comparison summary
 
-**Progress 8**
-
-St Paul’s School for Girls: +1.23
-Sutton Coldfield Grammar School for Girls: +1.05
-
-**Attainment 8**
-
-St Paul’s School for Girls: 65.1
-Sutton Coldfield Grammar School for Girls: 80.9
-
-**Grade 5+ in English and Maths**
-
-St Paul’s School for Girls: 69%
-Sutton Coldfield Grammar School for Girls: 99%
-
-**Ofsted rating**
-
-St Paul’s School for Girls: Outstanding, inspected February 2023
-Sutton Coldfield Grammar School for Girls: Good, inspected November 2022
+- St Paul’s School for Girls: Progress 8 +1.23; Attainment 8 65.1; Grade 5+ in English and Maths 69%; Ofsted Outstanding, inspected February 2023.
+- Sutton Coldfield Grammar School for Girls: Progress 8 +1.05; Attainment 8 80.9; Grade 5+ in English and Maths 99%; Ofsted Good, inspected November 2022.
 
 Both schools show strong progress.
 
