@@ -15,7 +15,7 @@ const approvedCategories = new Map([
   ["years-7-9", "Years 7-9"],
   ["gcse", "GCSE"],
   ["maths-confidence", "Maths Confidence"],
-  ["a-level-maths", "A-Level Maths"],
+  ["a-level-maths", "A-Level"],
   ["sat-university", "University Admissions"],
   ["uk-school-system", "UK School System"]
 ]);
@@ -24,7 +24,7 @@ const categoryDescriptions = new Map([
   ["primary-to-secondary", "Support for the move from Year 6 into secondary school, including routines, confidence, independence and early learning habits."],
   ["years-7-9", "Guidance for the quiet but important KS3 years, when foundations, confidence and learning habits are built before GCSE pressure begins."],
   ["gcse", "Practical advice on mocks, revision, Year 10 preparation and how parents can respond calmly before exam pressure builds."],
-  ["a-level-maths", "Help for families thinking about A-Level Maths, including readiness, the GCSE-to-A-Level jump and the independence students need."],
+  ["a-level-maths", "Guidance for families navigating A-Level choices, workload, sixth form independence, predicted grades, UCAS and preparation for competitive university routes."],
   ["sat-university", "Early guidance on competitive courses, subject choices, predicted grades, entrance exams and planning before deadlines create pressure."],
   ["uk-school-system", "Simple explanations of key stages, school structure and how parents can understand where their child is in the journey."]
 ]);
@@ -154,7 +154,7 @@ function loadArticles() {
   return listMarkdownFiles(contentDir).map((filePath) => {
     const raw = readFile(filePath);
     const { data, body } = parseFrontMatter(raw, filePath);
-    const categoryLabel = data.category_label || approvedCategories.get(data.category);
+    const categoryLabel = approvedCategories.get(data.category) || data.category_label;
     const canonicalPath = data.category && data.slug
       ? `/parent-advice/${data.category}/${data.slug}/`
       : "";
@@ -223,7 +223,7 @@ function buildCategoryPages(articles) {
     const canonicalPath = `/parent-advice/${category}/`;
     const canonicalUrl = `${siteUrl}${canonicalPath}`;
     const title = `${label} Parent Advice | Jothi Learning`;
-    const description = `Parent advice from Jothi Learning on ${label.toLowerCase()} questions, study decisions and next steps.`;
+    const description = categoryDescriptions.get(category) || `Parent advice from Jothi Learning on ${label.toLowerCase()} questions, study decisions and next steps.`;
 
     const content = `
     <section class="section-shell parent-advice-hero">
