@@ -330,6 +330,7 @@ The most reliable source is always the official school, college or university co
 - [What is Double Science and Triple Science?](/parent-advice/gcse/what-is-double-science-and-triple-science-and-which-should-my-child-choose/)
 - [How should students choose their A-Level subjects?](/parent-advice/a-level-maths/how-should-students-choose-their-a-level-subjects/)
 - [What is academic curiosity, and why does it matter for university?](/parent-advice/sat-university/what-is-academic-curiosity-and-why-does-it-matter-for-university/)
+
 ## Final thought
 
 GCSEs do not decide everything.

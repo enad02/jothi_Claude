@@ -298,6 +298,7 @@ These links are useful because A-Level choices should be checked against real si
 - [How do I know if my child is ready for A-Level Maths?](/parent-advice/a-level-maths/how-do-i-know-if-my-child-is-ready-for-a-level-maths/)
 - [What is academic curiosity, and why does it matter for university?](/parent-advice/sat-university/what-is-academic-curiosity-and-why-does-it-matter-for-university/)
 - [University vs degree apprenticeship: which route should my child consider?](/parent-advice/sat-university/university-vs-degree-apprenticeship-which-route-should-my-child-consider/)
+
 ## Final thought
 
 A-Level subject choices should not be made casually.
