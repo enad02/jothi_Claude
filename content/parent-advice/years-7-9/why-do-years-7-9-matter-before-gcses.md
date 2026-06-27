@@ -21,6 +21,10 @@ last_updated: "2026-06-21"
 related:
   - "why-does-my-child-lack-confidence-in-maths"
 cta: "consultation"
+related_reading:
+  - what-should-year-7-and-year-8-students-build-before-gcses
+  - what-maths-foundations-matter-in-years-8-and-9
+  - should-my-child-move-ahead-or-strengthen-foundations-first
 ---
 
 After SATs, 11-plus preparation, or the move into secondary school, many families naturally take a breath.
@@ -152,13 +156,6 @@ By the time GCSE pressure arrives, it is much harder to repair years of weak hab
 
 Starting earlier does not mean creating pressure. It means creating the right environment.
 
-## Related reading
-
-- [What should Year 7 and Year 8 students build before GCSEs?](/parent-advice/primary-to-secondary/what-should-year-7-and-year-8-students-build-before-gcses/)
-- [What Maths foundations matter in Years 8 and 9?](/parent-advice/years-7-9/what-maths-foundations-matter-in-years-8-and-9/)
-- [Should my child move ahead or strengthen foundations first?](/parent-advice/years-7-9/should-my-child-move-ahead-or-strengthen-foundations-first/)
-
-
 ## How Jothi can help
 
 At Jothi Learning, we see Years 7–9 as foundation years.
@@ -168,5 +165,4 @@ The aim is not to rush students into GCSE-style work too early. The aim is to he
 For some students, that means strengthening number skills, fractions or algebra. For others, it means developing reasoning, resilience, independence or better study habits.
 
 The right support in Years 7–9 can prevent small gaps becoming bigger problems later.
-
 If you are wondering whether your child is on track in Years 7–9, Jothi Learning can help you understand their foundation, confidence and next sensible step.

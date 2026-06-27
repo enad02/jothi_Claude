@@ -30,6 +30,11 @@ related:
   - "how-can-parents-help-their-child-move-from-primary-school-to-secondary-school"
   - "why-do-years-7-9-matter-before-gcses"
 cta: "consultation"
+related_reading:
+  - how-can-parents-help-their-child-move-from-primary-school-to-secondary-school
+  - why-do-years-7-9-matter-before-gcses
+  - how-should-parents-think-about-gcse-subject-choices
+  - how-should-students-choose-their-a-level-subjects
 ---
 
 Parents often hear terms like KS2, KS3, GCSE and A-Level, but may not be fully sure how they fit together.
@@ -138,14 +143,6 @@ Useful questions include:
 
 The aim is not pressure. The aim is awareness.
 
-## Related reading
-
-- [How can parents help their child move from primary to secondary school?](/parent-advice/primary-to-secondary/how-can-parents-help-their-child-move-from-primary-school-to-secondary-school/)
-- [Why do Years 7–9 matter even before GCSEs?](/parent-advice/years-7-9/why-do-years-7-9-matter-before-gcses/)
-- [How should parents think about GCSE subject choices?](/parent-advice/gcse/how-should-parents-think-about-gcse-subject-choices/)
-- [How should students choose their A-Level subjects?](/parent-advice/a-level-maths/how-should-students-choose-their-a-level-subjects/)
-
-
 ## How Jothi can help
 
 At Jothi Learning, we see each stage as part of a longer journey: KS2 builds foundations, KS3 deepens learning and habits, KS4 prepares for GCSE performance, and KS5 demands independence, direction and stronger study methods.
@@ -153,5 +150,4 @@ At Jothi Learning, we see each stage as part of a longer journey: KS2 builds fou
 If one stage is weak, the next stage can become harder. But because the curriculum is spiral, gaps can often be repaired with the right support.
 
 The key is not to wait until panic arrives.
-
 If you are unsure where your child sits in the UK school system, or what the next stage will demand, Jothi Learning can help you understand the next sensible step.

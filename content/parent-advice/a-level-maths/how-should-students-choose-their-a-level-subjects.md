@@ -7,6 +7,11 @@ description: "A practical guide for parents and Year 11 students on choosing A-L
 last_updated: "2026-06-26"
 status: "published"
 indexing: "index"
+related_reading:
+  - which-gcses-matter-most-for-a-levels-and-university-options
+  - how-do-i-know-if-my-child-is-ready-for-a-level-maths
+  - what-is-academic-curiosity-and-why-does-it-matter-for-university
+  - university-vs-degree-apprenticeship-which-route-should-my-child-consider
 ---
 
 # How Should Students Choose Their A-Level Subjects? A Parent Guide
@@ -292,13 +297,6 @@ For students and parents who want to check A-Level choices in more detail, these
 
 These links are useful because A-Level choices should be checked against real sixth form, college and university requirements. General advice can guide the decision, but official course pages should always be the final reference.
 
-## Related reading
-
-- [Which GCSEs matter most for A-Levels and university options?](/parent-advice/gcse/which-gcses-matter-most-for-a-levels-and-university-options/)
-- [How do I know if my child is ready for A-Level Maths?](/parent-advice/a-level-maths/how-do-i-know-if-my-child-is-ready-for-a-level-maths/)
-- [What is academic curiosity, and why does it matter for university?](/parent-advice/sat-university/what-is-academic-curiosity-and-why-does-it-matter-for-university/)
-- [University vs degree apprenticeship: which route should my child consider?](/parent-advice/sat-university/university-vs-degree-apprenticeship-which-route-should-my-child-consider/)
-
 ## Final thought
 
 A-Level subject choices should not be made casually.
@@ -312,5 +310,4 @@ Help your child choose subjects that match their strengths, protect sensible fut
 Clear direction means choosing the required subjects.
 
 Unclear direction means keeping strong options open.
-
 Either way, the student must be able to do the work well.

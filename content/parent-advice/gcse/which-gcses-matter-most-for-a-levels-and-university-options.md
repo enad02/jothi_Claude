@@ -7,6 +7,11 @@ description: "A practical guide for parents on how GCSE subjects and grades conn
 last_updated: "2026-06-26"
 status: "published"
 indexing: "index"
+related_reading:
+  - how-should-parents-think-about-gcse-subject-choices
+  - what-is-double-science-and-triple-science-and-which-should-my-child-choose
+  - how-should-students-choose-their-a-level-subjects
+  - what-is-academic-curiosity-and-why-does-it-matter-for-university
 ---
 
 # Which GCSEs Matter Most for A-Levels and University Options?
@@ -324,13 +329,6 @@ Helpful starting points:
 
 The most reliable source is always the official school, college or university course page.
 
-## Related reading
-
-- [How should parents think about GCSE subject choices?](/parent-advice/gcse/how-should-parents-think-about-gcse-subject-choices/)
-- [What is Double Science and Triple Science?](/parent-advice/gcse/what-is-double-science-and-triple-science-and-which-should-my-child-choose/)
-- [How should students choose their A-Level subjects?](/parent-advice/a-level-maths/how-should-students-choose-their-a-level-subjects/)
-- [What is academic curiosity, and why does it matter for university?](/parent-advice/sat-university/what-is-academic-curiosity-and-why-does-it-matter-for-university/)
-
 ## Final thought
 
 GCSEs do not decide everything.
@@ -342,5 +340,4 @@ The safest foundation is strong performance in Maths, English and Science, suppo
 For parents, the goal is not to force a career plan too early. The goal is to protect future options.
 
 A student with strong core GCSEs, sensible subject choices and good working habits will usually have more room to decide later.
-
 That is what GCSE planning should achieve.

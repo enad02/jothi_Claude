@@ -4585,6 +4585,7 @@ p {
 .parent-advice-short-answer h2,
 .parent-advice-prose h2,
 .parent-advice-sidebar h2,
+.parent-advice-related h2,
 .parent-advice-card h2 {
   margin-top: 0;
 }
@@ -4616,6 +4617,10 @@ p {
   display: grid;
   gap: 18px;
   min-width: 0;
+}
+
+.parent-advice-related-reading {
+  margin-top: 24px;
 }
 
 .parent-advice-cta-actions {
@@ -4680,6 +4685,7 @@ p {
 .parent-advice-short-answer,
 .parent-advice-prose,
 .parent-advice-related,
+.parent-advice-related-reading,
 .parent-advice-cta {
   max-width: 100%;
   min-width: 0;
@@ -4749,7 +4755,8 @@ p {
   .parent-advice-short-answer,
   .parent-advice-card,
   .parent-advice-cta,
-  .parent-advice-related {
+  .parent-advice-related,
+  .parent-advice-related-reading {
     overflow-wrap: anywhere;
   }
 

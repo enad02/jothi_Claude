@@ -269,6 +269,7 @@ function buildCategoryPages(articles) {
 function writeArticlePages(articles) {
   for (const article of articles) {
     const relatedArticles = resolveRelatedArticles(article, articles);
+    const relatedReadingArticles = resolveRelatedReadingArticles(article, articles);
     const { shortAnswer, bodyMarkdown } = splitShortAnswer(article.body);
     const readingTime = readingTimeLabel(article.body);
     const title = `${article.title} | Jothi Learning`;
@@ -301,6 +302,7 @@ function writeArticlePages(articles) {
           <div class="parent-advice-prose">
             ${renderMarkdown(bodyMarkdown)}
           </div>
+          ${relatedReadingHtml(relatedReadingArticles)}
         </article>
         <aside class="parent-advice-sidebar" aria-label="Article actions">
           ${ctaHtml()}
@@ -429,6 +431,34 @@ function resolveRelatedArticles(article, articles) {
     .slice(0, 3);
 }
 
+function resolveRelatedReadingArticles(article, articles) {
+  if (!Array.isArray(article.related_reading) || !article.related_reading.length) {
+    return [];
+  }
+
+  const bySlug = new Map(articles.map((item) => [item.slug, item]));
+  const seen = new Set();
+  const relatedArticles = [];
+
+  for (const slug of article.related_reading) {
+    if (seen.has(slug)) {
+      continue;
+    }
+    seen.add(slug);
+
+    const relatedArticle = bySlug.get(slug);
+    if (!relatedArticle) {
+      fail(`${article.source}: related_reading references unknown article slug "${slug}".`);
+    }
+    if (relatedArticle.status !== "published" || relatedArticle.indexing !== "index") {
+      fail(`${article.source}: related_reading article "${slug}" must be published and indexable.`);
+    }
+    relatedArticles.push(relatedArticle);
+  }
+
+  return relatedArticles;
+}
+
 function articleCardGrid(articles) {
   if (!articles.length) {
     return `<div class="content-panel parent-advice-empty"><p>No articles in this category yet.</p></div>`;
@@ -465,6 +495,19 @@ function relatedHtml(articles) {
 
   return `<div class="content-panel parent-advice-related">
       <h2>Related questions</h2>
+      <ul>
+        ${articles.map((article) => `<li><a href="${escapeHtml(article.canonicalPath)}">${escapeHtml(article.title)}</a></li>`).join("\n")}
+      </ul>
+    </div>`;
+}
+
+function relatedReadingHtml(articles) {
+  if (!articles.length) {
+    return "";
+  }
+
+  return `<div class="content-panel parent-advice-related parent-advice-related-reading">
+      <h2>Related reading</h2>
       <ul>
         ${articles.map((article) => `<li><a href="${escapeHtml(article.canonicalPath)}">${escapeHtml(article.title)}</a></li>`).join("\n")}
       </ul>
