@@ -377,6 +377,11 @@ If you would like to explore these ideas further, the following resources can he
 
 These are not meant to add pressure. They are simply tools parents can use when needed.
 
+## Related reading
+
+- [Why do Years 7–9 matter even before GCSEs?](/parent-advice/years-7-9/why-do-years-7-9-matter-before-gcses/)
+- [What Maths foundations matter in Years 8 and 9?](/parent-advice/years-7-9/what-maths-foundations-matter-in-years-8-and-9/)
+- [Why does my child lack confidence in Maths?](/parent-advice/years-7-9/why-does-my-child-lack-confidence-in-maths/)
 ## Final thought
 
 Year 7 and Year 8 are not GCSE years.

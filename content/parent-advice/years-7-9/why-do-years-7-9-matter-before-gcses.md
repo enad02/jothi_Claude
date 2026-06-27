@@ -152,6 +152,11 @@ By the time GCSE pressure arrives, it is much harder to repair years of weak hab
 
 Starting earlier does not mean creating pressure. It means creating the right environment.
 
+## Related reading
+
+- [What should Year 7 and Year 8 students build before GCSEs?](/parent-advice/primary-to-secondary/what-should-year-7-and-year-8-students-build-before-gcses/)
+- [What Maths foundations matter in Years 8 and 9?](/parent-advice/years-7-9/what-maths-foundations-matter-in-years-8-and-9/)
+- [Should my child move ahead or strengthen foundations first?](/parent-advice/years-7-9/should-my-child-move-ahead-or-strengthen-foundations-first/)
 ## How Jothi can help
 
 At Jothi Learning, we see Years 7–9 as foundation years.

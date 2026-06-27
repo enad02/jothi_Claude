@@ -3,7 +3,7 @@ title: "How hard is A-Level Maths compared with GCSE Maths?"
 description: "A-Level Maths is not just harder GCSE. See why pace, independence, algebra fluency and problem-solving change quickly, and how to judge whether a student is ready."
 slug: "how-hard-is-a-level-maths-compared-with-gcse"
 category: "a-level-maths"
-category_label: "A-Level Maths"
+category_label: "A-Level"
 year_groups:
   - "Year 11"
   - "Year 12"

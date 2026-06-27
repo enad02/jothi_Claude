@@ -247,6 +247,12 @@ These resources can help students explore subjects beyond school:
 
 These are not a checklist. They are starting points for exploration.
 
+## Related reading
+
+- [How should students choose their A-Level subjects?](/parent-advice/a-level-maths/how-should-students-choose-their-a-level-subjects/)
+- [Which GCSEs matter most for A-Levels and university options?](/parent-advice/gcse/which-gcses-matter-most-for-a-levels-and-university-options/)
+- [When should parents start planning for Medicine, Dentistry or competitive university courses?](/parent-advice/sat-university/when-should-parents-start-planning-for-medicine-dentistry-or-competitive-university-courses/)
+- [University vs degree apprenticeship: which route should my child consider?](/parent-advice/sat-university/university-vs-degree-apprenticeship-which-route-should-my-child-consider/)
 ## Final thought
 
 Academic curiosity is not about looking impressive.

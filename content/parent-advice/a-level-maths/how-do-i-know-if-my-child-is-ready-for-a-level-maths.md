@@ -3,7 +3,7 @@ title: "How do I know if my child is ready for A-Level Maths?"
 description: "A strong GCSE grade helps, but A-Level Maths readiness also depends on independence, algebra confidence, resilience and the ability to learn without being spoon-fed."
 slug: "how-do-i-know-if-my-child-is-ready-for-a-level-maths"
 category: "a-level-maths"
-category_label: "A-Level Maths"
+category_label: "A-Level"
 year_groups:
   - "Year 11"
   - "Year 12"
