@@ -1,7 +1,7 @@
 ---
 title: "What Is Academic Curiosity, and Why Does It Matter for University?"
 slug: "what-is-academic-curiosity-and-why-does-it-matter-for-university"
-category: "sat-university"
+category: "university-admissions"
 category_label: "University Admissions"
 description: "A practical guide for parents on academic curiosity, super-curricular learning and how students can build genuine subject interest before university applications."
 last_updated: "2026-06-27"

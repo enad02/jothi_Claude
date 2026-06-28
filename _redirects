@@ -1,0 +1,4 @@
+/parent-advice/a-level-maths/ /parent-advice/a-level/ 301
+/parent-advice/a-level-maths/* /parent-advice/a-level/:splat 301
+/parent-advice/sat-university/ /parent-advice/university-admissions/ 301
+/parent-advice/sat-university/* /parent-advice/university-admissions/:splat 301

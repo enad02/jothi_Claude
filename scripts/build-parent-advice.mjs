@@ -14,9 +14,8 @@ const approvedCategories = new Map([
   ["primary-to-secondary", "Primary to Secondary"],
   ["years-7-9", "Years 7-9"],
   ["gcse", "GCSE"],
-  ["maths-confidence", "Maths Confidence"],
-  ["a-level-maths", "A-Level"],
-  ["sat-university", "University Admissions"],
+  ["a-level", "A-Level"],
+  ["university-admissions", "University Admissions"],
   ["uk-school-system", "UK School System"]
 ]);
 
@@ -24,8 +23,8 @@ const categoryDescriptions = new Map([
   ["primary-to-secondary", "Support for the move from Year 6 into secondary school, including routines, confidence, independence and early learning habits."],
   ["years-7-9", "Guidance for the quiet but important KS3 years, when foundations, confidence and learning habits are built before GCSE pressure begins."],
   ["gcse", "Practical advice on mocks, revision, Year 10 preparation and how parents can respond calmly before exam pressure builds."],
-  ["a-level-maths", "Guidance for families navigating A-Level choices, workload, sixth form independence, predicted grades, UCAS and preparation for competitive university routes."],
-  ["sat-university", "Early guidance on competitive courses, subject choices, predicted grades, entrance exams and planning before deadlines create pressure."],
+  ["a-level", "Guidance for families navigating A-Level choices, workload, sixth form independence, predicted grades, UCAS and preparation for competitive university routes."],
+  ["university-admissions", "Early guidance on competitive courses, subject choices, predicted grades, entrance exams and planning before deadlines create pressure."],
   ["uk-school-system", "Simple explanations of key stages, school structure and how parents can understand where their child is in the journey."]
 ]);
 
@@ -342,8 +341,7 @@ function writeIndexPage(articles) {
   const canonicalUrl = `${siteUrl}/parent-advice/`;
   const title = "Parent Advice | Jothi Learning";
   const description = "Clear parent guidance from Jothi Learning on Maths, Science, GCSE choices, confidence and school decisions.";
-  const categories = [...approvedCategories.entries()]
-    .filter(([slug]) => slug !== "maths-confidence");
+  const categories = [...approvedCategories.entries()];
   const content = `
     <section class="section-shell parent-advice-hero">
       <div class="wrap">
@@ -400,6 +398,11 @@ function writeSitemap(articles, categoryPages) {
   for (const article of articles) {
     if (article.status === "published" && article.indexing === "index") {
       nextUrls.add(article.canonicalUrl);
+    }
+  }
+  for (const url of [...nextUrls]) {
+    if (url.startsWith(`${siteUrl}/parent-advice/a-level-maths/`) || url.startsWith(`${siteUrl}/parent-advice/sat-university/`)) {
+      nextUrls.delete(url);
     }
   }
   for (const page of categoryPages) {

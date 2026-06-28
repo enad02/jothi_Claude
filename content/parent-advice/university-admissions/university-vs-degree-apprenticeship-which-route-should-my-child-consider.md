@@ -1,7 +1,7 @@
 ---
 title: "University vs degree apprenticeship: which route should my child consider?"
 slug: "university-vs-degree-apprenticeship-which-route-should-my-child-consider"
-category: "sat-university"
+category: "university-admissions"
 category_label: "University Admissions"
 description: "A practical guide for parents comparing the traditional university route with degree apprenticeships, including suitability, competition, workload and future choices."
 status: "published"

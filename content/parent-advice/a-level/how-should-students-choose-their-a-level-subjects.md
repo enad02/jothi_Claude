@@ -1,7 +1,7 @@
 ---
 title: "How Should Students Choose Their A-Level Subjects? A Parent Guide"
 slug: "how-should-students-choose-their-a-level-subjects"
-category: "a-level-maths"
+category: "a-level"
 category_label: "A-Level"
 description: "A practical guide for parents and Year 11 students on choosing A-Level subjects, balancing university requirements, workload, strengths and future flexibility."
 last_updated: "2026-06-26"

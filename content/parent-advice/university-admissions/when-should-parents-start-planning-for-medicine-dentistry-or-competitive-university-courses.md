@@ -2,7 +2,7 @@
 title: "When should parents start planning for Medicine, Dentistry or competitive university courses?"
 description: "Competitive university courses often need early subject choices, predicted grades, entrance exams and preparation. Learn why early clarity reduces panic later."
 slug: "when-should-parents-start-planning-for-medicine-dentistry-or-competitive-university-courses"
-category: "sat-university"
+category: "university-admissions"
 category_label: "University Admissions"
 year_groups:
   - "Year 10"
