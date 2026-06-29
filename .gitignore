@@ -18,6 +18,8 @@ desktop.ini
 node_modules/
 
 # Local QA / archive artefacts
+.npm-cache/
+_qa-parent-advice/
 _archive/
 _qa-header-screens/
 *.patch
