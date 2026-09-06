@@ -159,6 +159,10 @@
   color: var(--slate-500);
 }
 
+.scheduler-page .scheduler-identity {
+  font-size: 0.82rem;
+}
+
 .scheduler-page .scheduler-button {
   flex: 0 0 auto;
   min-height: 48px;

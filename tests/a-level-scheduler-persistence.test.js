@@ -2,14 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import {
-  createSchedulerStaffMiddleware
+  createALevelAccessMiddleware
 } from "../functions/_lib/scheduler-access.js";
+import { A_LEVEL_USERS, principalFromAccess } from "../functions/_lib/a-level-users.js";
 import {
   requireSchedulerWriteAccess,
   schedulerWritesAllowed
 } from "../functions/_lib/scheduler-write-guard.js";
 import { toScheduleApiState, upsertBatchConfiguration } from "../functions/_lib/scheduler-db.js";
 import { onRequestGet as getPublicScheduleState } from "../functions/api/a-level-scheduler/[academicYear]/state.js";
+import { onRequestGet as getALevelIdentity } from "../functions/api/a-level/me.js";
 import {
   assertAccelerationInsideBreak,
   assertAcademicYear,
@@ -25,6 +27,11 @@ const baseline = JSON.parse(await readFile(new URL("../data/a-level-maths/2026-2
 const curriculum = JSON.parse(await readFile(new URL("../data/a-level-maths/year12-curriculum.json", import.meta.url), "utf8"));
 const accessDomain = "https://jothi-test.cloudflareaccess.com";
 const accessAudience = "scheduler-test-audience";
+const accessEnv = { ACCESS_DOMAIN: accessDomain, ACCESS_AUD: accessAudience };
+const syntheticUsers = Object.freeze({
+  "admin.user@example.test": Object.freeze({ code: "ADMIN-TEST", label: "Test Admin", role: "admin" }),
+  "viewer.user@example.test": Object.freeze({ code: "VIEWER-TEST", label: "Test Viewer", role: "viewer" })
+});
 
 function staffContext(url, method = "GET", env = {}, next = async () => new Response("ok"), body) {
   const context = {
@@ -57,7 +64,7 @@ async function signedAccessFixture(payloadOverrides = {}) {
     iss: accessDomain,
     aud: [accessAudience],
     sub: "verified-human-id",
-    email: "verified.staff@example.com",
+    email: " Admin.User@Example.Test ",
     iat: Math.floor(Date.now() / 1000) - 10,
     exp: Math.floor(Date.now() / 1000) + 300,
     ...payloadOverrides
@@ -71,6 +78,15 @@ async function signedAccessFixture(payloadOverrides = {}) {
     jwt: `${header}.${payload}.${Buffer.from(signature).toString("base64url")}`,
     publicKey
   };
+}
+
+async function runAuthenticated(context, payloadOverrides = {}, users = syntheticUsers) {
+  const fixture = await signedAccessFixture(payloadOverrides);
+  context.request.headers.set("Cf-Access-Jwt-Assertion", fixture.jwt);
+  return withAccessSigningKey(
+    fixture.publicKey,
+    () => createALevelAccessMiddleware({ users })(context)
+  );
 }
 
 async function withAccessSigningKey(publicKey, callback) {
@@ -138,47 +154,100 @@ test("write guard denies by default and accepts only the exact local QA value", 
   assert.equal(await schedulerWritesAllowed("local-founder-qa"), true);
 });
 
-test("local bypass works only on localhost with the exact QA value", async () => {
-  const middleware = createSchedulerStaffMiddleware();
+test("local bypass supplies a synthetic admin principal only on localhost with the exact value", async () => {
+  const middleware = createALevelAccessMiddleware();
   const allowed = staffContext("http://localhost/api/staff/a-level-scheduler/2026-27/state", "GET", {
     SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES: "local-founder-qa"
   });
   assert.equal((await middleware(allowed)).status, 200);
-  assert.equal(allowed.data.schedulerActorIdentifier, "local-founder-qa");
+  assert.deepEqual(allowed.data.aLevelPrincipal, {
+    email: "local-founder-qa@localhost.invalid",
+    code: "local-founder-qa",
+    label: "Local founder QA",
+    role: "admin"
+  });
 
   const wrongValue = staffContext("http://127.0.0.1/api/staff/a-level-scheduler/2026-27/state", "GET", {
     SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES: "local-founder-qa "
   });
-  assert.equal((await middleware(wrongValue)).status, 403);
+  assert.equal((await middleware(wrongValue)).status, 503);
 });
 
-test("local bypass fails closed on jothi.uk even if accidentally configured", async () => {
-  const context = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/state", "GET", {
-    SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES: "local-founder-qa"
+test("local bypass cannot operate on jothi.uk or pages.dev", async () => {
+  for (const hostname of ["jothi.uk", "jothi2026.pages.dev"]) {
+    const context = staffContext(`https://${hostname}/api/staff/a-level-scheduler/2026-27/state`, "GET", {
+      SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES: "local-founder-qa"
+    });
+    assert.equal((await createALevelAccessMiddleware()(context)).status, 503);
+    assert.equal(context.data.aLevelPrincipal, undefined);
+  }
+});
+
+test("missing ACCESS_DOMAIN or ACCESS_AUD returns 503", async () => {
+  const missingDomain = staffContext("https://jothi.uk/api/a-level/me", "GET", { ACCESS_AUD: accessAudience });
+  const missingAudience = staffContext("https://jothi.uk/api/a-level/me", "GET", { ACCESS_DOMAIN: accessDomain });
+  assert.equal((await createALevelAccessMiddleware()(missingDomain)).status, 503);
+  assert.equal((await createALevelAccessMiddleware()(missingAudience)).status, 503);
+});
+
+test("mapped admins and viewers authenticate with normalised verified Access email", async () => {
+  for (const [email, expected] of [
+    [" Admin.User@Example.Test ", { code: "ADMIN-TEST", role: "admin" }],
+    ["VIEWER.USER@EXAMPLE.TEST", { code: "VIEWER-TEST", role: "viewer" }]
+  ]) {
+    const context = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/state", "GET", accessEnv, async () => {
+      return Response.json(context.data.aLevelPrincipal);
+    });
+    const response = await runAuthenticated(context, { email });
+    assert.equal(response.status, 200);
+    const principal = await response.json();
+    assert.equal(principal.code, expected.code);
+    assert.equal(principal.role, expected.role);
+    assert.equal(principal.email, email.trim().toLowerCase());
+  }
+});
+
+test("principalFromAccess ignores non-Access identity fields and unmapped users return null", () => {
+  const data = {
+    email: "admin.user@example.test",
+    actor_identifier: "admin.user@example.test",
+    cloudflareAccess: { JWT: { payload: { email: "unknown.user@example.test" } } }
+  };
+  assert.equal(principalFromAccess(data, syntheticUsers), null);
+});
+
+test("an authenticated but unmapped Cloudflare user receives 403", async () => {
+  const context = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/state", "GET", accessEnv);
+  assert.equal((await runAuthenticated(context, { email: "unmapped.user@example.test" })).status, 403);
+});
+
+test("viewer writes receive 403 while admin writes are allowed", async () => {
+  let viewerNextCalled = false;
+  const viewer = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch", "PATCH", accessEnv, async () => {
+    viewerNextCalled = true;
+    return new Response("must not run");
+  }, {});
+  assert.equal((await runAuthenticated(viewer, { email: "viewer.user@example.test" })).status, 403);
+  assert.equal(viewerNextCalled, false);
+
+  const admin = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch", "PATCH", accessEnv, async () => {
+    return Response.json({ actor: requireSchedulerWriteAccess(admin) });
+  }, {});
+  const adminResponse = await runAuthenticated(admin);
+  assert.equal(adminResponse.status, 200);
+  assert.equal((await adminResponse.json()).actor, "ADMIN-TEST");
+});
+
+test("/api/a-level/me returns mapped code, label, and role without email", async () => {
+  const context = staffContext("https://jothi.uk/api/a-level/me", "GET", accessEnv, async () => getALevelIdentity(context));
+  const response = await runAuthenticated(context, { email: "viewer.user@example.test" });
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    user: { code: "VIEWER-TEST", label: "Test Viewer", role: "viewer" }
   });
-  assert.equal((await createSchedulerStaffMiddleware()(context)).status, 403);
-  assert.equal(context.data.schedulerActorIdentifier, undefined);
 });
 
-test("local bypass fails closed on pages.dev even if accidentally configured", async () => {
-  const context = staffContext("https://jothi2026.pages.dev/api/staff/a-level-scheduler/2026-27/state", "GET", {
-    SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES: "local-founder-qa"
-  });
-  assert.equal((await createSchedulerStaffMiddleware()(context)).status, 403);
-  assert.equal(context.data.schedulerActorIdentifier, undefined);
-});
-
-test("deployed staff GET and write requests without a valid Access JWT fail closed", async () => {
-  const env = { CF_ACCESS_TEAM_DOMAIN: accessDomain, CF_ACCESS_AUD: accessAudience };
-  const middleware = createSchedulerStaffMiddleware();
-  const getContext = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/state", "GET", env);
-  const writeContext = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch", "PATCH", env, undefined, {});
-  assert.equal((await middleware(getContext)).status, 403);
-  assert.equal((await middleware(writeContext)).status, 403);
-});
-
-test("a cryptographically validated Access email becomes the audit actor and client identity cannot override it", async () => {
-  const fixture = await signedAccessFixture();
+test("audit uses admin principal code and browser-supplied identity cannot override it", async () => {
   let statements;
   const db = {
     prepare(sql) {
@@ -203,37 +272,27 @@ test("a cryptographically validated Access email becomes the audit actor and cli
     topic_test: { weekday: 5, start_time: "19:00", end_time: "20:00" }
   };
   const context = staffContext(
-    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch?actor_identifier=attacker@example.com",
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch?actor_identifier=attacker@example.test",
     "PATCH",
-    { CF_ACCESS_TEAM_DOMAIN: accessDomain, CF_ACCESS_AUD: accessAudience },
+    accessEnv,
     async () => {
       const actor = requireSchedulerWriteAccess(context);
       await upsertBatchConfiguration(db, current, input, actor, "2026-09-06T12:00:00.000Z");
       return Response.json({ actor });
     },
-    { ...input, actor_identifier: "attacker@example.com" }
+    { ...input, actor_identifier: "attacker@example.test" }
   );
-  context.request.headers.set("Cf-Access-Jwt-Assertion", fixture.jwt);
-
-  const response = await withAccessSigningKey(fixture.publicKey, () => createSchedulerStaffMiddleware()(context));
+  context.request.headers.set("X-Staff-Email", "attacker@example.test");
+  const response = await runAuthenticated(context);
   assert.equal(response.status, 200);
-  assert.equal((await response.json()).actor, "verified.staff@example.com");
-  assert.equal(statements[1].args[0], "verified.staff@example.com");
-  assert.notEqual(statements[1].args[0], "attacker@example.com");
+  assert.equal((await response.json()).actor, "ADMIN-TEST");
+  assert.equal(statements[1].args[0], "ADMIN-TEST");
+  assert.notEqual(statements[1].args[0], "attacker@example.test");
 });
 
-test("a valid Access service token without a human email cannot write", async () => {
-  const fixture = await signedAccessFixture({ email: undefined, sub: "" });
-  const context = staffContext(
-    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch",
-    "PATCH",
-    { CF_ACCESS_TEAM_DOMAIN: accessDomain, CF_ACCESS_AUD: accessAudience },
-    async () => new Response("must not run"),
-    {}
-  );
-  context.request.headers.set("Cf-Access-Jwt-Assertion", fixture.jwt);
-  const response = await withAccessSigningKey(fixture.publicKey, () => createSchedulerStaffMiddleware()(context));
-  assert.equal(response.status, 403);
+test("deployed request without a valid Access JWT fails closed", async () => {
+  const context = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/state", "GET", accessEnv);
+  assert.equal((await createALevelAccessMiddleware({ users: syntheticUsers })(context)).status, 403);
 });
 
 test("public state excludes database IDs, override reasons, actors, and audit history", () => {
@@ -282,6 +341,28 @@ test("schema, seed, and public state contain no Classkick, Zoom, or resource URL
   const seed = await readFile(new URL("../scripts/a-level-scheduler/seed-2026-27.sql", import.meta.url), "utf8");
   const serialized = `${schema}\n${seed}\n${JSON.stringify(toScheduleApiState(databaseState()))}`;
   assert.doesNotMatch(serialized, /classkick|zoom|resource[_ -]?url|https?:\/\//i);
+});
+
+test("staff UI loads mapped identity and displays its label without rendering an email", async () => {
+  const controller = await readFile(new URL("../a-level-scheduler.js", import.meta.url), "utf8");
+  const template = await readFile(new URL("../a-level-year12-scheduler.html", import.meta.url), "utf8");
+  assert.match(controller, /fetch\("\/api\/a-level\/me"/);
+  assert.match(controller, /Signed in as \$\{identity\.user\.label\}/);
+  assert.doesNotMatch(controller, /identity\.user\.email/);
+  assert.match(template, /id="scheduler-identity"/);
+});
+
+test("production allow-list is empty and auth sources contain no credentials or legacy environment names", async () => {
+  const accessSource = await readFile(new URL("../functions/_lib/scheduler-access.js", import.meta.url), "utf8");
+  const usersSource = await readFile(new URL("../functions/_lib/a-level-users.js", import.meta.url), "utf8");
+  const design = await readFile(new URL("../docs/A_LEVEL_SCHEDULER_PERSISTENCE_DESIGN.md", import.meta.url), "utf8");
+  const combined = `${accessSource}\n${usersSource}\n${design}`;
+  assert.deepEqual(Object.keys(A_LEVEL_USERS), []);
+  assert.match(combined, /ACCESS_DOMAIN/);
+  assert.match(combined, /ACCESS_AUD/);
+  assert.equal(combined.includes(["CF", "ACCESS", "TEAM", "DOMAIN"].join("_")), false);
+  assert.equal(combined.includes(["CF", "ACCESS", "AUD"].join("_")), false);
+  assert.doesNotMatch(combined, /Bearer\s+[A-Za-z0-9._-]+|eyJ[A-Za-z0-9_-]+\./);
 });
 
 test("API state maps onto the Git baseline without duplicating curriculum records", () => {

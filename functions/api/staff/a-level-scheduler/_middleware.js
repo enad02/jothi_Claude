@@ -1,3 +1,3 @@
-import { createSchedulerStaffMiddleware } from "../../../_lib/scheduler-access.js";
+import { createALevelAccessMiddleware } from "../../../_lib/scheduler-access.js";
 
-export const onRequest = createSchedulerStaffMiddleware();
+export const onRequest = createALevelAccessMiddleware();

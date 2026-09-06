@@ -24,6 +24,8 @@ const curriculumPath = "./data/a-level-maths/year12-curriculum.json";
 const programmePath = "./data/a-level-maths/2026-27.json";
 
 const elements = {
+  identity: document.querySelector("#scheduler-identity"),
+  staffControls: document.querySelector(".staff-controls"),
   form: document.querySelector("#scheduler-setup"),
   programmeStart: document.querySelector("#programme-start"),
   targetCompletion: document.querySelector("#target-completion"),
@@ -54,6 +56,7 @@ let generatedSchedule;
 let displayedSchedule;
 let eventOverrides = [];
 let editingEvent = null;
+let canWrite = false;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -230,7 +233,7 @@ function renderCurrentSchedule(note) {
   displayedSchedule = applyEventOverrides(generatedSchedule, curriculum, currentProgramme, eventOverrides);
   activeBatchId = resolveActiveBatchId(displayedSchedule, activeBatchId);
   elements.batchTabs.innerHTML = renderScheduleView(displayedSchedule, currentProgramme, activeBatchId, {
-    editableEvents: true,
+    editableEvents: canWrite,
     hasEventOverride,
     lessonColumnLabel: "Lesson pill",
     showAcceleration: true,
@@ -520,17 +523,23 @@ elements.eventEditor.addEventListener("click", (event) => {
 
 async function initialise() {
   try {
-    const [curriculumResponse, programmeResponse, state] = await Promise.all([
+    const [curriculumResponse, programmeResponse, identityResponse, state] = await Promise.all([
       fetch(curriculumPath),
       fetch(programmePath),
+      fetch("/api/a-level/me", { headers: { Accept: "application/json" } }),
       loadSchedulerApiState(STAFF_SCHEDULER_STATE_URL)
     ]);
-    if (!curriculumResponse.ok || !programmeResponse.ok) {
+    if (!curriculumResponse.ok || !programmeResponse.ok || !identityResponse.ok) {
       throw new Error("The schedule files could not be loaded.");
     }
 
+    const identity = await identityResponse.json();
     curriculum = await curriculumResponse.json();
     baselineProgramme = await programmeResponse.json();
+    canWrite = identity.user.role === "admin";
+    elements.identity.textContent = `Signed in as ${identity.user.label}`;
+    elements.identity.hidden = false;
+    elements.staffControls.hidden = !canWrite;
     activeBatchId = state.batches[0]?.batch_key;
     applyPersistedState(state, "Schedule ready");
   } catch (error) {

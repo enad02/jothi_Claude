@@ -1,23 +1,33 @@
 import cloudflareAccessPlugin from "@cloudflare/pages-plugin-cloudflare-access";
 import {
-  LOCAL_SCHEDULER_ACTOR,
+  A_LEVEL_USERS,
+  LOCAL_A_LEVEL_PRINCIPAL,
+  principalFromAccess
+} from "./a-level-users.js";
+import {
   localSchedulerBypassAllowed
 } from "./scheduler-write-guard.js";
 
-const WRITE_METHODS = new Set(["PATCH", "POST", "PUT", "DELETE"]);
-
-function deniedResponse() {
-  return Response.json({ error: "Staff authentication is required." }, {
-    status: 403,
+function errorResponse(status, message) {
+  return Response.json({ error: message }, {
+    status,
     headers: { "Cache-Control": "no-store" }
   });
 }
 
+function deniedResponse() {
+  return errorResponse(403, "A-Level access is not authorised.");
+}
+
+function unavailableResponse() {
+  return errorResponse(503, "A-Level authentication is not configured.");
+}
+
 export function accessConfiguration(env) {
-  const domain = typeof env.CF_ACCESS_TEAM_DOMAIN === "string"
-    ? env.CF_ACCESS_TEAM_DOMAIN.trim()
+  const domain = typeof env.ACCESS_DOMAIN === "string"
+    ? env.ACCESS_DOMAIN.trim()
     : "";
-  const aud = typeof env.CF_ACCESS_AUD === "string" ? env.CF_ACCESS_AUD.trim() : "";
+  const aud = typeof env.ACCESS_AUD === "string" ? env.ACCESS_AUD.trim() : "";
 
   try {
     const url = new URL(domain);
@@ -44,26 +54,21 @@ export function hasValidatedAccessPayload(data, configuration) {
     && payload.exp > Date.now() / 1000;
 }
 
-export function actorIdentifierFromValidatedAccess(data, configuration) {
-  if (!hasValidatedAccessPayload(data, configuration)) {
-    return null;
-  }
-  const email = data.cloudflareAccess.JWT.payload.email;
-  return typeof email === "string" && email.trim() ? email.trim() : null;
-}
-
-export function createSchedulerStaffMiddleware(pluginFactory = cloudflareAccessPlugin) {
-  return async function schedulerStaffMiddleware(context) {
+export function createALevelAccessMiddleware({
+  pluginFactory = cloudflareAccessPlugin,
+  users = A_LEVEL_USERS
+} = {}) {
+  return async function aLevelAccessMiddleware(context) {
     context.data ||= {};
 
     if (await localSchedulerBypassAllowed(context.request, context.env)) {
-      context.data.schedulerActorIdentifier = LOCAL_SCHEDULER_ACTOR;
+      context.data.aLevelPrincipal = { ...LOCAL_A_LEVEL_PRINCIPAL };
       return context.next();
     }
 
     const configuration = accessConfiguration(context.env);
     if (!configuration) {
-      return deniedResponse();
+      return unavailableResponse();
     }
 
     const accessMiddleware = pluginFactory(configuration);
@@ -73,10 +78,13 @@ export function createSchedulerStaffMiddleware(pluginFactory = cloudflareAccessP
         if (!hasValidatedAccessPayload(context.data, configuration)) {
           return deniedResponse();
         }
-        const actorIdentifier = actorIdentifierFromValidatedAccess(context.data, configuration);
-        if (actorIdentifier) {
-          context.data.schedulerActorIdentifier = actorIdentifier;
-        } else if (WRITE_METHODS.has(context.request.method.toUpperCase())) {
+        const principal = principalFromAccess(context.data, users);
+        if (!principal) {
+          return deniedResponse();
+        }
+        context.data.aLevelPrincipal = principal;
+        if (!["GET", "HEAD"].includes(context.request.method.toUpperCase())
+          && principal.role !== "admin") {
           return deniedResponse();
         }
         return context.next(...args);

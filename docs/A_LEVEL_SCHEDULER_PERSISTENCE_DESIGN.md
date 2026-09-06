@@ -70,6 +70,7 @@ The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It se
 Read routes:
 
 - `GET /api/a-level-scheduler/2026-27/state` — explicit public DTO only;
+- `GET /api/a-level/me` — authenticated, allow-listed A-Level principal DTO without email;
 - `GET /api/staff/a-level-scheduler/2026-27/state` — current staff operational state.
 
 Staff write routes:
@@ -95,16 +96,25 @@ It does not return database IDs, override reasons, audit records, actor identifi
 
 ## Staff authentication and local write guard
 
-All routes under `/api/staff/a-level-scheduler/*`, including staff GET routes, deny deployed access unless the Cloudflare Access JWT has been validated by `@cloudflare/pages-plugin-cloudflare-access`. Deployed validation requires both server-side Pages environment variables:
+All routes under `/api/a-level/*` and `/api/staff/a-level-scheduler/*`, including staff GET routes, deny deployed access unless the Cloudflare Access JWT has been validated by `@cloudflare/pages-plugin-cloudflare-access`. Deployed validation requires both server-side Pages environment variables:
 
-- `CF_ACCESS_TEAM_DOMAIN`
-- `CF_ACCESS_AUD`
+- `ACCESS_DOMAIN`
+- `ACCESS_AUD`
 
-Missing or invalid configuration fails closed. Preview and Production may use different Access audience values. Actual values must be configured in the relevant Pages environment and must not be committed. They must not be placed in client-side JavaScript or returned to the browser merely to perform authentication.
+Missing or invalid configuration returns `503` and fails closed. Preview and Production may use different Access audience values. Actual values must be configured in the relevant Pages environment and must not be committed. They must not be placed in client-side JavaScript or returned to the browser merely to perform authentication.
 
-For authenticated human writes, `actor_identifier` is the verified email claim from the validated Access JWT. Client request bodies, query strings, and unvalidated identity headers are never used as audit identity. A validated Access request without a usable human email is denied for writes.
+### Gate 2: A-Level application allow-list
 
-The local founder-QA bypass remains available only when both conditions hold: the request hostname is exactly `localhost` or `127.0.0.1`, and `SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES` equals the exact value documented in `.dev.vars.example`. The compared values are SHA-256 digests checked without an early exit. Setting the bypass variable on `jothi.uk` or any `pages.dev` hostname cannot enable the bypass.
+Cloudflare Access authentication is Gate 1. Gate 2 resolves the normalised verified email (`trim()` then lowercase) against the dedicated `A_LEVEL_USERS` map. This map is separate from Mathematics workspace users and is empty until the approved A-Level list is supplied. Each entry must define a durable `code`, display `label`, and supported role (`viewer` or `admin`). Authenticated but unmapped users receive `403`.
+
+- `viewer`: may read the authenticated A-Level identity and staff schedule views;
+- `admin`: has viewer access and may change programme/batch settings, reschedule/reset events, and configure acceleration.
+
+`GET /api/a-level/me` returns only the mapped `code`, `label`, and `role`. It does not return email or expose the allow-list. The staff page shows the mapped label and removes write affordances for viewers; server-side role enforcement remains authoritative.
+
+For authenticated admin writes, `actor_identifier` is the resolved principal's durable `code`. Client request bodies, query strings, browser-supplied headers, local storage, and form fields are never used as identity. A validated Access request without a mapped principal is denied.
+
+The local founder-QA bypass remains available only when both conditions hold: the request hostname is exactly `localhost` or `127.0.0.1`, and `SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES` equals the exact value documented in `.dev.vars.example`. The compared values are SHA-256 digests checked without an early exit. Local QA receives a synthetic admin principal; it does not pretend that a real Access JWT exists. Setting the bypass variable on `jothi.uk` or any `pages.dev` hostname cannot enable the bypass.
 
 The actual `.dev.vars` and `.wrangler/` local state are ignored by Git. The enabling value is not present in the Wrangler configuration and must never be configured in preview or production.
 
@@ -113,6 +123,7 @@ The actual `.dev.vars` and `.wrangler/` local state are ignored by Git. The enab
 JavaScript is not used to hide or protect the staff HTML page. Step 2C1-B must protect this route at the Cloudflare Access layer in both intended environments:
 
 - `/a-level-year12-scheduler.html`
+- `/api/a-level/*`
 - `/api/staff/a-level-scheduler/*`
 
 The public page `/a-level-year12-schedule.html` and public read-only API `/api/a-level-scheduler/2026-27/state` remain outside the staff middleware.
@@ -143,7 +154,7 @@ Step 2C1-B will initially add this binding only to the **Preview** environment. 
 - seed rerun result: idempotent, zero additional rows
 - Access JWT validation code: prepared, not deployed
 - local bypass: restricted to localhost and exact QA value
-- audit actor: validated Access email for deployed human writes
+- audit actor: resolved A-Level principal code for deployed admin writes
 - remote baseline: one programme, two batches, two breaks, zero overrides, zero acceleration cycles
 
 No Pages binding, Access application, Access policy, Preview deployment, or Production change was made in Step 2C1-A.
