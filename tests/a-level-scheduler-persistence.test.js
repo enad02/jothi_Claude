@@ -413,6 +413,43 @@ test("mapped viewers, editors, and admins can read authenticated schedule data",
   }
 });
 
+test("Sruthi authenticates as a viewer, can read the schedule, and cannot perform scheduler writes", async () => {
+  const readContext = staffContext(
+    "https://jothi.uk/api/a-level-scheduler/2026-27/state",
+    "GET",
+    { ...accessEnv, DB: scheduleDatabase() },
+    async () => getPublicScheduleState(readContext)
+  );
+  readContext.params = { academicYear: "2026-27" };
+  const readResponse = await runAuthenticated(readContext, { email: "sruthi@jothi.uk" }, A_LEVEL_USERS);
+  assert.equal(readResponse.status, 200);
+  assert.equal((await readResponse.json()).programme.academic_year, "2026-27");
+
+  for (const [method, handler, path] of [
+    ["PATCH", patchProgramme, "programme"],
+    ["PATCH", patchBatch, "batch"],
+    ["PUT", putEventOverride, "event-override"],
+    ["DELETE", deleteEventOverride, "event-override"],
+    ["PUT", putAcceleration, "acceleration"],
+    ["DELETE", deleteAcceleration, "acceleration"]
+  ]) {
+    let context;
+    context = staffContext(
+      `https://jothi.uk/api/staff/a-level-scheduler/2026-27/${path}`,
+      method,
+      accessEnv,
+      async () => handler(context),
+      {}
+    );
+    context.params = { academicYear: "2026-27" };
+    assert.equal(
+      (await runAuthenticated(context, { email: "sruthi@jothi.uk" }, A_LEVEL_USERS)).status,
+      403,
+      `${method} ${path} must remain unavailable to Sruthi`
+    );
+  }
+});
+
 test("read-only schedule API rejects unauthenticated and unmapped deployed requests", async () => {
   const next = async () => new Response("schedule must not be returned");
   const unauthenticated = staffContext(
@@ -469,11 +506,15 @@ test("approved production allow-list is exact and excludes unapproved users", as
     "ashwin@jothi.uk": { code: "ashwin", label: "Ashwin", role: "editor" },
     "kiran@jothi.uk": { code: "kiran", label: "Kiran", role: "editor" },
     "miriyam@jothi.uk": { code: "miriyam", label: "Miriyam", role: "editor" },
-    "radhika@jothi.uk": { code: "radhika", label: "Radhika", role: "viewer" }
+    "radhika@jothi.uk": { code: "radhika", label: "Radhika", role: "viewer" },
+    "sruthi@jothi.uk": { code: "sruthi", label: "Sruthi", role: "viewer" }
   });
   assert.deepEqual(principalFromAccess({
     cloudflareAccess: { JWT: { payload: { email: " PRAKASH@JOTHI.UK " } } }
   }), { email: "prakash@jothi.uk", code: "prakash", label: "Prakash", role: "admin" });
+  assert.equal(principalFromAccess({
+    cloudflareAccess: { JWT: { payload: { email: "saranya@jothi.uk" } } }
+  }), null);
   assert.match(combined, /ACCESS_DOMAIN/);
   assert.match(combined, /ACCESS_AUD/);
   assert.equal(combined.includes(["CF", "ACCESS", "TEAM", "DOMAIN"].join("_")), false);

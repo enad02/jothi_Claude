@@ -4,7 +4,8 @@ export const A_LEVEL_USERS = Object.freeze({
   "ashwin@jothi.uk": Object.freeze({ code: "ashwin", label: "Ashwin", role: "editor" }),
   "kiran@jothi.uk": Object.freeze({ code: "kiran", label: "Kiran", role: "editor" }),
   "miriyam@jothi.uk": Object.freeze({ code: "miriyam", label: "Miriyam", role: "editor" }),
-  "radhika@jothi.uk": Object.freeze({ code: "radhika", label: "Radhika", role: "viewer" })
+  "radhika@jothi.uk": Object.freeze({ code: "radhika", label: "Radhika", role: "viewer" }),
+  "sruthi@jothi.uk": Object.freeze({ code: "sruthi", label: "Sruthi", role: "viewer" })
 });
 
 const SUPPORTED_ROLES = new Set(["viewer", "editor", "admin"]);
