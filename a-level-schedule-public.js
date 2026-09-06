@@ -1,9 +1,15 @@
-import { generateSchedule } from "./a-level-scheduler-engine.js";
+import { applyEventOverrides, generateSchedule } from "./a-level-scheduler-engine.js";
 import {
   activateScheduleTab,
   renderScheduleView,
   resolveActiveBatchId
 } from "./a-level-scheduler-view.js";
+import {
+  PUBLIC_SCHEDULER_STATE_URL,
+  eventOverridesFromApiState,
+  loadSchedulerApiState,
+  programmeFromApiState
+} from "./a-level-scheduler-state.js";
 
 const curriculumPath = "./data/a-level-maths/year12-curriculum.json";
 const programmePath = "./data/a-level-maths/2026-27.json";
@@ -51,24 +57,32 @@ export async function initialisePublicSchedule(page = document, load = fetch) {
   });
 
   try {
-    const [curriculumResponse, programmeResponse] = await Promise.all([
+    const [curriculumResponse, programmeResponse, persistedState] = await Promise.all([
       load(curriculumPath),
-      load(programmePath)
+      load(programmePath),
+      loadSchedulerApiState(PUBLIC_SCHEDULER_STATE_URL, load)
     ]);
     if (!curriculumResponse.ok || !programmeResponse.ok) {
       throw new Error("The schedule files could not be loaded.");
     }
 
     const curriculum = await curriculumResponse.json();
-    programme = await programmeResponse.json();
-    schedule = generateSchedule(curriculum, programme);
+    const baselineProgramme = await programmeResponse.json();
+    programme = programmeFromApiState(persistedState, baselineProgramme);
+    const generatedSchedule = generateSchedule(curriculum, programme);
+    schedule = applyEventOverrides(
+      generatedSchedule,
+      curriculum,
+      programme,
+      eventOverridesFromApiState(persistedState)
+    );
     activeBatchId = resolveActiveBatchId(schedule, programme.batches[0]?.batch_id);
     batchTabs.innerHTML = renderPublicSchedule(schedule, programme, activeBatchId);
     error.hidden = true;
     error.textContent = "";
   } catch (loadError) {
     console.error(loadError);
-    error.textContent = "The lesson schedule is temporarily unavailable. Please try again later.";
+    error.textContent = "Schedule information is temporarily unavailable.";
     error.hidden = false;
   }
 }

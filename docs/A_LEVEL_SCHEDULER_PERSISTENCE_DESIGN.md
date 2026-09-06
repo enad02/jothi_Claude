@@ -1,214 +1,131 @@
 # A-Level Scheduler Persistence Design
 
-Status: design only. This document defines the intended public/staff and persistence boundaries. It does not create infrastructure, APIs, authentication, D1 databases, or migrations.
+Status: **LOCAL PERSISTENCE PROTOTYPE IMPLEMENTED**. The implementation is local-only. No production or preview database, binding, authentication policy, deployment, or remote Cloudflare resource has been created.
 
 ## Boundary rule
 
 > Hiding a staff control with CSS or JavaScript is not access control.
 
-The public schedule is a genuinely read-only application view. It must not import or initialise staff editing behaviour, and its HTML must not contain hidden staff controls. Later authentication will protect the staff page and staff API. Sensitive URLs or operational data must never be sent to a public browser and merely hidden.
+The public schedule is a genuinely read-only application. It has its own controller, does not initialise staff editing behaviour, and contains no staff controls in its DOM. Staff writes are implemented only behind a local kill switch pending Cloudflare Access. Sensitive operational data and protected URLs must never be sent to the public browser and merely hidden.
 
-Both views use the same curriculum library, academic-year configuration, scheduling engine, lesson sequence, and stable lesson IDs:
+Both views continue to share:
 
-- `data/a-level-maths/year12-curriculum.json`
-- `data/a-level-maths/2026-27.json`
-- `a-level-scheduler-engine.js`
-- `a-level-scheduler-view.js`
+- the Git-owned curriculum library at `data/a-level-maths/year12-curriculum.json`;
+- the MVP baseline at `data/a-level-maths/2026-27.json`;
+- `a-level-scheduler-engine.js` for schedule generation; and
+- `a-level-scheduler-view.js` for shared rendering helpers.
 
-The public controller is read-only. The staff controller owns configuration, regeneration, in-memory rescheduling, and optional holiday scheduling interactions.
+D1 stores operational scheduling state only. It does not duplicate lesson titles, lesson sequence, or curriculum duration.
 
-## Recommended future architecture
+## Implemented local architecture
 
 ```text
 Public browser
-    ↓ GET
-Public schedule API
-    ↓
-Cloudflare Pages Function
-    ↓
-D1 schedule data
+    -> GET public state API
+    -> Cloudflare Pages Function
+    -> local D1 operational state
 
 Staff browser
-    ↓ authenticated GET/POST/PATCH/DELETE
-Staff API
-    ↓
-Cloudflare Pages Function
-    ↓
-D1 schedule data
+    -> GET / guarded writes
+    -> Cloudflare Pages Functions
+    -> local D1 operational state + audit log
 ```
 
-Cloudflare Access should later protect the staff route and every staff API operation. Public reads must use a separately defined response contract rather than returning staff records and filtering them in the browser.
+The public and staff controllers combine the API state with the same Git curriculum and run the same scheduling engine. The public controller shows a restrained unavailable message instead of silently falling back to potentially stale baseline data.
 
 ## Data ownership
 
 ### Curriculum library: Git
 
-`data/a-level-maths/year12-curriculum.json` remains version-controlled and is the source for:
+`data/a-level-maths/year12-curriculum.json` remains the source for stable lesson IDs, titles, sequence, and two-hour curriculum duration. Operational changes never write to this file.
 
-- stable lesson IDs;
-- lesson titles and sequence;
-- curriculum duration; and
-- future generic resource references only.
+### Academic-year baseline: Git
 
-Operational schedule edits must not be written into curriculum JSON.
+`data/a-level-maths/2026-27.json` remains the approved seed/default source. The local seed creates the corresponding operational programme, batch, and break records without copying curriculum records.
 
-### Academic-year default configuration: Git for MVP
+### Operational state: D1
 
-`data/a-level-maths/2026-27.json` remains the baseline/default configuration during the MVP. A future production workflow may seed an academic-year programme record from it. The file is not the future write target for day-to-day schedule operation.
+Local D1 now owns programme and batch operating configuration, public break dates, individual event overrides, batch-specific acceleration cycles, and the write audit trail.
 
-### Operational schedule state: D1 later
+## Actual local D1 schema
 
-The following mutable state should eventually live in D1:
+The initial migration is `migrations/a-level-scheduler/0001_initial_schema.sql`. It creates:
 
-- individual event reschedules;
-- schedule override dates and times;
-- acceleration cycles;
-- batch-specific operating changes; and
-- the published/current schedule state.
+- `programme_instances`: programme/year identity, taster, start, target completion, status, timestamps, unique by programme and academic year;
+- `batches`: recurring teaching/revision/Topic Test rules and timestamps, unique by programme instance and batch key;
+- `programme_breaks`: public break range and acceleration flag, unique by programme instance and break key;
+- `event_overrides`: one override per batch, stable lesson ID, and event type, with event-type validation;
+- `acceleration_cycles`: one enabled/disabled cycle per batch and stable lesson ID; and
+- `schedule_audit_log`: actor, action, entity, before/after JSON, and timestamp.
 
-## Lean proposed D1 schema
+Foreign keys and useful lookup indexes are included. Student, parent, resource, payment, and attendance tables are excluded.
 
-No SQL migration is created in this step. Field types, constraints, indexes, retention, and publication workflow should be finalised when persistence is implemented.
+The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and no event overrides or acceleration cycles.
 
-### `programme_instances`
+## Actual route contract
 
-- `id`
-- `programme_id`
-- `academic_year`
-- `programme_start_date`
-- `target_completion_date`
-- `status`
-- `created_at`
-- `updated_at`
+Read routes:
 
-Recommended identity rule: one programme instance per `programme_id` and `academic_year` unless a later business requirement introduces parallel cohorts.
+- `GET /api/a-level-scheduler/2026-27/state` — explicit public DTO only;
+- `GET /api/staff/a-level-scheduler/2026-27/state` — current staff operational state.
 
-### `batches`
+Staff write routes:
 
-- `id`
-- `programme_instance_id`
-- `batch_key`
-- `display_name`
-- `teaching_weekday`
-- `teaching_start`
-- `teaching_end`
-- `revision_weekday`
-- `revision_start`
-- `revision_end`
-- `topic_test_weekday`
-- `topic_test_start`
-- `topic_test_end`
+- `PATCH /api/staff/a-level-scheduler/2026-27/programme`;
+- `PATCH /api/staff/a-level-scheduler/2026-27/batch`;
+- `PUT` or `DELETE /api/staff/a-level-scheduler/2026-27/event-override`;
+- `PUT` or `DELETE /api/staff/a-level-scheduler/2026-27/acceleration`.
 
-`programme_instance_id` links to `programme_instances`. `batch_key` preserves stable values such as `BATCH-1` independently of the parent-facing display name.
+Every write validates the academic year, writable fields, batch, stable lesson ID, event type, dates, time ranges, and operation-specific data on the server. Successful writes and their audit insert are submitted in the same D1 batch. Browser-safe responses do not expose SQL error details.
 
-### `event_overrides`
+## Public data boundary
 
-- `id`
-- `batch_id`
-- `lesson_id`
-- `event_type`
-- `original_date`
-- `override_date`
-- `override_start`
-- `override_end`
-- `reason`
-- `created_at`
-- `updated_at`
+The public response contains only:
 
-Recommended uniqueness rule: one active override per `batch_id`, `lesson_id`, and `event_type`. `lesson_id` references the Git-owned curriculum identity; curriculum content is not copied into this table.
+- programme ID, academic year, taster date, start date, target completion date, and status;
+- batch key/display name and recurring teaching, revision, and Topic Test rules;
+- public break key/name/date range;
+- event override fields required to render the current schedule; and
+- enabled acceleration-cycle fields required to render the current schedule.
 
-### `acceleration_cycles`
+It does not return database IDs, override reasons, audit records, actor identifiers, internal notes, tutor costs, authentication data, Classkick or Zoom data, resource URLs, or resource tokens.
 
-- `id`
-- `batch_id`
-- `lesson_id`
-- `break_key`
-- `teaching_date`
-- `teaching_start`
-- `teaching_end`
-- `revision_date`
-- `revision_start`
-- `revision_end`
-- `topic_test_date`
-- `topic_test_start`
-- `topic_test_end`
-- `enabled`
-- `created_at`
-- `updated_at`
+## Local write guard
 
-### `schedule_audit_log`
+All staff write Functions deny access by default. A write is permitted only when `SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES` equals the exact local founder-QA value documented in `.dev.vars.example`. The compared values are SHA-256 digests checked without an early exit.
 
-- `id`
-- `actor_identifier`
-- `action`
-- `entity_type`
-- `entity_id`
-- `before_json`
-- `after_json`
-- `created_at`
+The actual `.dev.vars` and `.wrangler/` local state are ignored by Git. The enabling value is not present in the Wrangler configuration and must never be configured in preview or production. Staff GET remains locally available for this prototype; Cloudflare Access protection is Step 2C.
 
-The audit log belongs only to the protected staff boundary. It must never be returned by the public schedule API.
+## Local Wrangler configuration
 
-Student, enrolment, and resource tables are deliberately excluded from this phase.
+`wrangler.scheduler.local.jsonc` is labelled local-development-only and contains the local `DB` binding, placeholder UUIDs, root Pages output, the module migration directory, and compatibility date `2026-09-06`. It is not production configuration.
 
-## Future public API contract
-
-Conceptual read-only endpoint:
-
-```http
-GET /api/programmes/a-level-maths/year12/2026-27/schedule
-```
-
-The response may contain only:
-
-- programme title;
-- programme commitment;
-- public break dates;
-- batch display names;
-- lesson titles;
-- teaching, revision, and Topic Test dates and times; and
-- public schedule status.
-
-It must not return:
-
-- Classkick URLs;
-- Zoom URLs;
-- internal notes;
-- tutor costs;
-- staff identities;
-- audit history;
-- resource tokens; or
-- authentication data.
-
-The public endpoint should expose an explicit public response model assembled server-side. It must not serialise a staff/domain record and rely on client-side deletion or hiding.
-
-## Future staff API contract
-
-Conceptual protected operations:
-
-- `GET` the current schedule and staff-operational state;
-- `PATCH` an individual event override;
-- `DELETE` an event override to reset that event;
-- `POST` an acceleration cycle; and
-- `PATCH` programme or batch configuration.
-
-All staff operations will require authenticated staff access. Authorisation, validation, concurrency handling, audit writes, and publication rules must be designed before implementation. No endpoint is implemented in this step.
+Wrangler 4.129.0 accepts this configuration for local D1 migration and seed commands. Its `pages dev` command does not accept a custom `--config` path, so local Pages QA uses equivalent explicit `--d1`, compatibility, port, and persistence flags. No command uses remote mode.
 
 ## Classkick and protected resources
 
-Classkick and other resource URLs are not part of the public schedule API. They should eventually live in a separate protected resource layer.
+Classkick and other resource URLs are not part of either schedule-state response and are not stored in scheduler D1. They will eventually live in a separate protected resource layer.
 
-Schedule records reference only the stable `lesson_id`. This preserves the relationship:
+Schedule records reference stable `lesson_id` only. This preserves:
 
 ```text
 one lesson pill
-    → many batches
-    → many academic years
-    → one protected resource record later
+    -> many batches
+    -> many academic years
+    -> one protected resource record later
 ```
 
-The protected resource record can later associate a stable lesson ID with authorised resources without duplicating curriculum or schedule records and without shipping sensitive links to the public browser.
+## Remaining Step 2C work
 
-## Deferred work
+The following work is not completed:
 
-This design deliberately defers Cloudflare configuration, Pages Functions, D1 creation, migrations, Cloudflare Access, authentication, API endpoints, student/enrolment records, and protected resource records.
+- create the real Cloudflare D1 resource;
+- add production and preview bindings;
+- protect the staff route and API with Cloudflare Access;
+- derive the audit actor identity from the authenticated user;
+- remove the local-only unauthenticated write bypass;
+- run controlled production migration and seed procedures;
+- perform a controlled deployment; and
+- decide public indexing, navigation, and publication timing.
+
+Production work should also define concurrency/conflict handling and an atomic multi-entity workflow for the staff configuration regeneration sequence.

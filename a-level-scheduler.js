@@ -2,10 +2,7 @@ import {
   EVENT_LABELS,
   WEEKDAYS,
   applyEventOverrides,
-  clearEventOverrides,
   generateSchedule,
-  resetEventOverride,
-  upsertEventOverride,
   validateEventOverride
 } from "./a-level-scheduler-engine.js";
 import {
@@ -14,6 +11,14 @@ import {
   renderScheduleView,
   resolveActiveBatchId
 } from "./a-level-scheduler-view.js";
+import {
+  STAFF_SCHEDULER_STATE_URL,
+  eventOverridesFromApiState,
+  loadSchedulerApiState,
+  programmeFromApiState,
+  recurringRuleToApi,
+  requestSchedulerWrite
+} from "./a-level-scheduler-state.js";
 
 const curriculumPath = "./data/a-level-maths/year12-curriculum.json";
 const programmePath = "./data/a-level-maths/2026-27.json";
@@ -41,7 +46,9 @@ const elements = {
 };
 
 let curriculum;
+let baselineProgramme;
 let currentProgramme;
+let persistedState;
 let activeBatchId;
 let generatedSchedule;
 let displayedSchedule;
@@ -248,6 +255,97 @@ function generateAndRender(programme, note) {
   }
 }
 
+function applyPersistedState(state, note) {
+  persistedState = state;
+  currentProgramme = programmeFromApiState(state, baselineProgramme);
+  eventOverrides = eventOverridesFromApiState(state);
+  activeBatchId = resolveActiveBatchId({ batches: currentProgramme.batches }, activeBatchId);
+  renderSetup(currentProgramme);
+  generateAndRender(currentProgramme, note);
+}
+
+async function refreshPersistedState(note) {
+  const state = await loadSchedulerApiState(STAFF_SCHEDULER_STATE_URL);
+  applyPersistedState(state, note);
+}
+
+function accelerationPayloads(programme) {
+  const result = generateSchedule(curriculum, programme);
+  return result.batches.flatMap((batch) => batch.cycles
+    .filter((cycle) => cycle.status === "Acceleration")
+    .map((cycle) => ({
+      batch_key: batch.batch_id,
+      lesson_id: cycle.lesson_id,
+      break_key: cycle.break_id,
+      teaching: {
+        date: cycle.teaching.date,
+        start_time: cycle.teaching.start_time,
+        end_time: cycle.teaching.end_time
+      },
+      revision: {
+        date: cycle.revision.date,
+        start_time: cycle.revision.start_time,
+        end_time: cycle.revision.end_time
+      },
+      topic_test: {
+        date: cycle.topic_test.date,
+        start_time: cycle.topic_test.start_time,
+        end_time: cycle.topic_test.end_time
+      },
+      enabled: true
+    })));
+}
+
+async function persistConfiguration(programme) {
+  const desiredAccelerations = accelerationPayloads(programme);
+  await requestSchedulerWrite("programme", "PATCH", {
+    taster_date: programme.taster_date,
+    programme_start_date: programme.programme_start,
+    target_completion_date: programme.target_completion,
+    breaks: programme.closures.map((closure) => ({
+      break_key: closure.break_id,
+      start_date: closure.start_date,
+      end_date: closure.end_date
+    }))
+  });
+
+  for (const batch of programme.batches) {
+    await requestSchedulerWrite("batch", "PATCH", {
+      batch_key: batch.batch_id,
+      teaching: recurringRuleToApi(batch.teaching),
+      revision: recurringRuleToApi(batch.revision),
+      topic_test: recurringRuleToApi(batch.topic_test)
+    });
+  }
+
+  for (const override of eventOverrides) {
+    await requestSchedulerWrite("event-override", "DELETE", {
+      batch_key: override.batch_id,
+      lesson_id: override.lesson_id,
+      event_type: override.event_type
+    });
+  }
+
+  for (const batch of persistedState.batches) {
+    for (const cycle of batch.acceleration_cycles) {
+      await requestSchedulerWrite("acceleration", "DELETE", {
+        batch_key: batch.batch_key,
+        lesson_id: cycle.lesson_id
+      });
+    }
+  }
+
+  for (const cycle of desiredAccelerations) {
+    await requestSchedulerWrite("acceleration", "PUT", cycle);
+  }
+}
+
+function showScheduleSaveError(error) {
+  elements.error.textContent = error.message || "The schedule change could not be saved.";
+  elements.error.hidden = false;
+  elements.generationNote.textContent = "Schedule change not saved";
+}
+
 function findCycle(schedule, batchId, lessonId) {
   return schedule.batches
     .find((batch) => batch.batch_id === batchId)
@@ -297,16 +395,23 @@ function showEditorFeedback(validation) {
 
 elements.form.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (
-    eventOverrides.length > 0 &&
-    !window.confirm("Regenerating will clear individual rescheduled dates.")
-  ) {
-    return;
-  }
+  void (async () => {
+    if (
+      eventOverrides.length > 0 &&
+      !window.confirm("Regenerating will clear individual rescheduled dates.")
+    ) {
+      return;
+    }
 
-  eventOverrides = clearEventOverrides();
-  currentProgramme = readProgrammeFromForm();
-  generateAndRender(currentProgramme, "Schedule regenerated");
+    try {
+      const programme = readProgrammeFromForm();
+      generateSchedule(curriculum, programme);
+      await persistConfiguration(programme);
+      await refreshPersistedState("Schedule regenerated and saved");
+    } catch (error) {
+      showScheduleSaveError(error);
+    }
+  })();
 });
 
 elements.batchTabs.addEventListener("click", (event) => {
@@ -350,29 +455,44 @@ elements.eventEditForm.addEventListener("input", (event) => {
 
 elements.eventEditForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (!editingEvent) {
-    return;
-  }
+  void (async () => {
+    if (!editingEvent) {
+      return;
+    }
 
-  const override = {
-    ...editingEvent,
-    new_date: elements.eventDate.value,
-    new_start_time: elements.eventStart.value,
-    new_end_time: elements.eventEnd.value
-  };
-  const validation = validateEventOverride(override, generatedSchedule, currentProgramme, eventOverrides);
-  showEditorFeedback(validation);
+    const override = {
+      ...editingEvent,
+      new_date: elements.eventDate.value,
+      new_start_time: elements.eventStart.value,
+      new_end_time: elements.eventEnd.value
+    };
+    const validation = validateEventOverride(override, generatedSchedule, currentProgramme, eventOverrides);
+    showEditorFeedback(validation);
 
-  if (validation.errors.length > 0) {
-    return;
-  }
-  if (validation.warnings.length > 0 && !elements.warningConfirm.checked) {
-    return;
-  }
+    if (validation.errors.length > 0) {
+      return;
+    }
+    if (validation.warnings.length > 0 && !elements.warningConfirm.checked) {
+      return;
+    }
 
-  eventOverrides = upsertEventOverride(eventOverrides, override);
-  elements.eventEditor.close();
-  renderCurrentSchedule(`${EVENT_LABELS[override.event_type]} rescheduled for ${findCycle(displayedSchedule, override.batch_id, override.lesson_id).title}`);
+    const lessonTitle = findCycle(displayedSchedule, override.batch_id, override.lesson_id).title;
+    try {
+      const state = await requestSchedulerWrite("event-override", "PUT", {
+        batch_key: override.batch_id,
+        lesson_id: override.lesson_id,
+        event_type: override.event_type,
+        override_date: override.new_date,
+        override_start: override.new_start_time,
+        override_end: override.new_end_time
+      });
+      elements.eventEditor.close();
+      applyPersistedState(state, `${EVENT_LABELS[override.event_type]} rescheduled for ${lessonTitle}`);
+    } catch (error) {
+      elements.eventErrors.hidden = false;
+      elements.eventErrors.textContent = error.message || "The event could not be rescheduled.";
+    }
+  })();
 });
 
 elements.eventEditor.addEventListener("click", (event) => {
@@ -381,27 +501,38 @@ elements.eventEditor.addEventListener("click", (event) => {
     elements.eventEditor.close();
   }
   if (action === "reset" && editingEvent) {
-    eventOverrides = resetEventOverride(eventOverrides, editingEvent);
-    elements.eventEditor.close();
-    renderCurrentSchedule("Event restored to the original schedule");
+    void (async () => {
+      try {
+        const state = await requestSchedulerWrite("event-override", "DELETE", {
+          batch_key: editingEvent.batch_id,
+          lesson_id: editingEvent.lesson_id,
+          event_type: editingEvent.event_type
+        });
+        elements.eventEditor.close();
+        applyPersistedState(state, "Event restored to the original schedule");
+      } catch (error) {
+        elements.eventErrors.hidden = false;
+        elements.eventErrors.textContent = error.message || "The event could not be reset.";
+      }
+    })();
   }
 });
 
 async function initialise() {
   try {
-    const [curriculumResponse, programmeResponse] = await Promise.all([
+    const [curriculumResponse, programmeResponse, state] = await Promise.all([
       fetch(curriculumPath),
-      fetch(programmePath)
+      fetch(programmePath),
+      loadSchedulerApiState(STAFF_SCHEDULER_STATE_URL)
     ]);
     if (!curriculumResponse.ok || !programmeResponse.ok) {
       throw new Error("The schedule files could not be loaded.");
     }
 
     curriculum = await curriculumResponse.json();
-    currentProgramme = await programmeResponse.json();
-    activeBatchId = currentProgramme.batches[0]?.batch_id;
-    renderSetup(currentProgramme);
-    generateAndRender(currentProgramme, "Schedule ready");
+    baselineProgramme = await programmeResponse.json();
+    activeBatchId = state.batches[0]?.batch_key;
+    applyPersistedState(state, "Schedule ready");
   } catch (error) {
     elements.error.textContent = `${error.message} Open this page through the site server.`;
     elements.error.hidden = false;

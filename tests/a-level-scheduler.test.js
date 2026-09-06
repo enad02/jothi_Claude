@@ -25,6 +25,34 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function persistedState() {
+  return {
+    programme: {
+      programme_id: programme.programme_id,
+      academic_year: programme.academic_year,
+      taster_date: programme.taster_date,
+      programme_start_date: programme.programme_start,
+      target_completion_date: programme.target_completion,
+      status: programme.status
+    },
+    breaks: programme.closures.map((item) => ({
+      break_key: item.break_id,
+      display_name: item.label,
+      start_date: item.start_date,
+      end_date: item.end_date
+    })),
+    batches: programme.batches.map((item) => ({
+      batch_key: item.batch_id,
+      display_name: item.name,
+      teaching: { weekday: 1 + programme.batches.indexOf(item), start_time: item.teaching.start_time, end_time: "20:00" },
+      revision: { weekday: 4, start_time: item.revision.start_time, end_time: item.batch_id === "BATCH-1" ? "19:00" : "20:00" },
+      topic_test: { weekday: 5, start_time: item.topic_test.start_time, end_time: "20:00" },
+      event_overrides: [],
+      acceleration_cycles: []
+    }))
+  };
+}
+
 function batch(result, batchId) {
   return result.batches.find((item) => item.batch_id === batchId);
 }
@@ -352,8 +380,9 @@ test("Step 2A G: staff rendering retains editable event controls and staff templ
   assert.match(staffController, /elements\.batchTabs\.addEventListener\("click"/);
   assert.match(staffController, /openEventEditor\(eventTrigger\)/);
   assert.match(staffController, /elements\.eventEditForm\.addEventListener\("submit"/);
-  assert.match(staffController, /eventOverrides = upsertEventOverride/);
-  assert.match(staffController, /eventOverrides = clearEventOverrides/);
+  assert.match(staffController, /requestSchedulerWrite\("event-override", "PUT"/);
+  assert.match(staffController, /requestSchedulerWrite\("event-override", "DELETE"/);
+  assert.match(staffController, /loadSchedulerApiState\(STAFF_SCHEDULER_STATE_URL\)/);
   assert.match(staffController, /renderAccelerationEditors/);
 });
 
@@ -399,7 +428,9 @@ test("Step 2A: public controller loads the shared sources and mounts the read-on
   const load = async (path) => ({
     ok: true,
     async json() {
-      return clone(path.includes("curriculum") ? curriculum : programme);
+      if (path.includes("curriculum")) return clone(curriculum);
+      if (path.startsWith("/api/")) return persistedState();
+      return clone(programme);
     }
   });
 
@@ -412,4 +443,31 @@ test("Step 2A: public controller loads the shared sources and mounts the read-on
   assert.doesNotMatch(batchTabs.innerHTML, /data-event-edit/);
   assert.equal(error.hidden, true);
   assert.equal(error.textContent, "");
+});
+
+test("Step 2B: public controller never renders stale baseline data when persisted state is unavailable", async () => {
+  const batchTabs = { innerHTML: "", addEventListener() {} };
+  const error = { hidden: true, textContent: "" };
+  const page = {
+    querySelector(selector) {
+      return selector === "#batch-tabs" ? batchTabs : error;
+    }
+  };
+  const load = async (path) => ({
+    ok: !path.startsWith("/api/"),
+    async json() {
+      return clone(path.includes("curriculum") ? curriculum : programme);
+    }
+  });
+  const originalConsoleError = console.error;
+  console.error = () => {};
+  try {
+    await initialisePublicSchedule(page, load);
+  } finally {
+    console.error = originalConsoleError;
+  }
+
+  assert.equal(batchTabs.innerHTML, "");
+  assert.equal(error.hidden, false);
+  assert.equal(error.textContent, "Schedule information is temporarily unavailable.");
 });
