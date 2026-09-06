@@ -28,7 +28,7 @@
 }
 
 .scheduler-page .scheduler-intro {
-  padding: clamp(26px, 4vw, 40px) 0 22px;
+  padding: 18px 0 10px;
 }
 
 .scheduler-page .scheduler-eyebrow,
@@ -41,14 +41,8 @@
   text-transform: uppercase;
 }
 
-.scheduler-page .scheduler-intro h1 {
-  max-width: none;
+.scheduler-page .scheduler-intro .scheduler-eyebrow {
   margin: 0;
-  color: var(--navy-950);
-  font-size: clamp(2.35rem, 5vw, 4.4rem);
-  line-height: 1;
-  letter-spacing: -0.035em;
-  white-space: nowrap;
 }
 
 .scheduler-page .scheduler-intro-copy {
@@ -138,12 +132,14 @@
   margin-bottom: 16px;
 }
 
+.scheduler-page .panel-heading h1,
 .scheduler-page .panel-heading h2,
 .scheduler-page .setup-subheading {
   margin: 0;
   color: var(--navy-950);
 }
 
+.scheduler-page .panel-heading h1,
 .scheduler-page .panel-heading h2 {
   font-size: clamp(1.65rem, 3vw, 2.35rem);
 }
@@ -633,11 +629,13 @@
 
 .scheduler-page .lesson-pill {
   justify-content: flex-start;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   min-height: 48px;
   padding: 8px 12px;
   background: var(--navy-900);
   color: var(--white);
+  overflow-wrap: break-word;
   white-space: normal;
 }
 
@@ -878,15 +876,6 @@
 
   .scheduler-page .scheduler-header-inner {
     align-items: center;
-  }
-
-  .scheduler-page .scheduler-intro {
-    padding-top: 24px;
-  }
-
-  .scheduler-page .scheduler-intro h1 {
-    font-size: clamp(2.15rem, 11vw, 3.2rem);
-    white-space: normal;
   }
 
   .scheduler-page .programme-summary,
