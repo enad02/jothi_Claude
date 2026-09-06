@@ -362,7 +362,11 @@ function renderTabs(result, programme) {
   }
 
   const batchById = new Map(programme.batches.map((batch) => [batch.batch_id, batch]));
+  const activeBatch = result.batches.find((batch) => batch.batch_id === activeBatchId);
   elements.batchTabs.innerHTML = `
+    <div class="batch-commitment-host" id="batch-commitment">
+      ${renderProgrammeCommitment(activeBatch.progress, programme)}
+    </div>
     <div class="tab-list" role="tablist" aria-label="Batch schedules">
       ${result.batches.map((batch) => {
         const active = batch.batch_id === activeBatchId;
@@ -375,7 +379,6 @@ function renderTabs(result, programme) {
       return `
         <section id="panel-${batch.batch_id}" role="tabpanel" aria-labelledby="tab-${batch.batch_id}"${active ? "" : " hidden"}>
           ${renderTable(batch.cycles, batch.name, batch.batch_id)}
-          ${renderProgrammeCommitment(batch.progress, programme)}
           ${renderBreaks(programme, programmeBatch)}
           ${renderValidation(batch.errors)}
         </section>
@@ -396,6 +399,11 @@ function activateTab(batchId, focus = false) {
   }
   for (const panel of elements.batchTabs.querySelectorAll('[role="tabpanel"]')) {
     panel.hidden = panel.id !== `panel-${batchId}`;
+  }
+  const selectedBatch = displayedSchedule?.batches.find((batch) => batch.batch_id === batchId);
+  const commitmentHost = elements.batchTabs.querySelector("#batch-commitment");
+  if (selectedBatch && commitmentHost) {
+    commitmentHost.innerHTML = renderProgrammeCommitment(selectedBatch.progress, currentProgramme);
   }
 }
 

@@ -330,7 +330,7 @@
 }
 
 .scheduler-page .programme-commitment {
-  margin-top: 28px;
+  margin: 0 0 22px;
   padding: 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
