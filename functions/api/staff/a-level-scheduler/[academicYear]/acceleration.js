@@ -33,7 +33,7 @@ export async function onRequestPut(context) {
   return handleSchedulerRequest(context, async () => {
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    await requireSchedulerWriteAccess(context.env);
+    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateAccelerationPayload(body);
     const { programme, batch } = await loadEntities(context, academicYear, body);
@@ -43,7 +43,7 @@ export async function onRequestPut(context) {
     }
     assertAccelerationInsideBreak(body, programmeBreak);
     const before = await loadAccelerationCycle(context.env.DB, batch.id, body.lesson_id);
-    await upsertAccelerationCycle(context.env.DB, batch, body, before, new Date().toISOString());
+    await upsertAccelerationCycle(context.env.DB, batch, body, before, actorIdentifier, new Date().toISOString());
     const state = await loadScheduleState(context.env.DB, academicYear);
     return jsonResponse(toScheduleApiState(state));
   });
@@ -53,7 +53,7 @@ export async function onRequestDelete(context) {
   return handleSchedulerRequest(context, async () => {
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    await requireSchedulerWriteAccess(context.env);
+    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateAccelerationDeletePayload(body);
     const { batch } = await loadEntities(context, academicYear, body);
@@ -61,7 +61,7 @@ export async function onRequestDelete(context) {
     if (!before) {
       throw new SchedulerHttpError(404, "Acceleration cycle not found.");
     }
-    await deleteAccelerationCycle(context.env.DB, before, new Date().toISOString());
+    await deleteAccelerationCycle(context.env.DB, before, actorIdentifier, new Date().toISOString());
     const state = await loadScheduleState(context.env.DB, academicYear);
     return jsonResponse(toScheduleApiState(state));
   });

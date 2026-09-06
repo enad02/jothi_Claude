@@ -13,7 +13,7 @@ export async function onRequestPatch(context) {
   return handleSchedulerRequest(context, async () => {
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    await requireSchedulerWriteAccess(context.env);
+    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateBatchPatch(body);
 
@@ -26,7 +26,7 @@ export async function onRequestPatch(context) {
       throw new SchedulerHttpError(404, "Schedule batch not found.");
     }
 
-    await upsertBatchConfiguration(context.env.DB, batch, body, new Date().toISOString());
+    await upsertBatchConfiguration(context.env.DB, batch, body, actorIdentifier, new Date().toISOString());
     const state = await loadScheduleState(context.env.DB, academicYear);
     return jsonResponse(toScheduleApiState(state));
   });

@@ -13,7 +13,7 @@ export async function onRequestPatch(context) {
   return handleSchedulerRequest(context, async () => {
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    await requireSchedulerWriteAccess(context.env);
+    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateProgrammePatch(body);
 
@@ -30,7 +30,7 @@ export async function onRequestPatch(context) {
       throw new SchedulerHttpError(404, "Programme break not found.");
     }
 
-    await upsertProgrammeConfiguration(context.env.DB, programme, currentBreaks, body, new Date().toISOString());
+    await upsertProgrammeConfiguration(context.env.DB, programme, currentBreaks, body, actorIdentifier, new Date().toISOString());
     const state = await loadScheduleState(context.env.DB, academicYear);
     return jsonResponse(toScheduleApiState(state));
   });

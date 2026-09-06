@@ -1,5 +1,4 @@
 export const PROGRAMME_ID = "ALEVEL-MATHS-Y12";
-export const AUDIT_ACTOR = "local-founder-qa";
 
 function rows(result) {
   return result?.results || [];
@@ -195,13 +194,13 @@ export async function loadAccelerationCycle(db, batchId, lessonId) {
   `).bind(batchId, lessonId).first();
 }
 
-function auditStatement(db, { action, entityType, entityId, before, after, timestamp }) {
+function auditStatement(db, { actorIdentifier, action, entityType, entityId, before, after, timestamp }) {
   return db.prepare(`
     INSERT INTO schedule_audit_log (
       actor_identifier, action, entity_type, entity_id, before_json, after_json, created_at
     ) VALUES (?, ?, ?, ?, ?, ?, ?)
   `).bind(
-    AUDIT_ACTOR,
+    actorIdentifier,
     action,
     entityType,
     entityId,
@@ -215,7 +214,7 @@ export async function appendAuditRecord(db, record) {
   return auditStatement(db, record).run();
 }
 
-export async function upsertProgrammeConfiguration(db, current, currentBreaks, input, timestamp) {
+export async function upsertProgrammeConfiguration(db, current, currentBreaks, input, actorIdentifier, timestamp) {
   const breakByKey = new Map(currentBreaks.map((item) => [item.break_key, item]));
   const statements = [db.prepare(`
     INSERT INTO programme_instances (
@@ -249,6 +248,7 @@ export async function upsertProgrammeConfiguration(db, current, currentBreaks, i
     breaks: currentBreaks.map((item) => ({ break_key: item.break_key, start_date: item.start_date, end_date: item.end_date }))
   };
   statements.push(auditStatement(db, {
+    actorIdentifier,
     action: "programme.configuration.updated",
     entityType: "programme_instance",
     entityId: current.id,
@@ -259,7 +259,7 @@ export async function upsertProgrammeConfiguration(db, current, currentBreaks, i
   return db.batch(statements);
 }
 
-export async function upsertBatchConfiguration(db, current, input, timestamp) {
+export async function upsertBatchConfiguration(db, current, input, actorIdentifier, timestamp) {
   const after = {
     batch_key: current.batch_key,
     teaching: input.teaching,
@@ -300,6 +300,7 @@ export async function upsertBatchConfiguration(db, current, input, timestamp) {
       current.created_at, timestamp
     ),
     auditStatement(db, {
+      actorIdentifier,
       action: "batch.configuration.updated",
       entityType: "batch",
       entityId: current.id,
@@ -310,7 +311,7 @@ export async function upsertBatchConfiguration(db, current, input, timestamp) {
   ]);
 }
 
-export async function upsertEventOverride(db, batch, input, before, timestamp) {
+export async function upsertEventOverride(db, batch, input, before, actorIdentifier, timestamp) {
   const id = `${batch.id}:${input.lesson_id}:${input.event_type}`;
   const after = { ...input };
   await db.batch([
@@ -330,6 +331,7 @@ export async function upsertEventOverride(db, batch, input, before, timestamp) {
       input.override_start, input.override_end, before?.created_at || timestamp, timestamp
     ),
     auditStatement(db, {
+      actorIdentifier,
       action: before ? "event_override.updated" : "event_override.created",
       entityType: "event_override",
       entityId: id,
@@ -341,10 +343,11 @@ export async function upsertEventOverride(db, batch, input, before, timestamp) {
   return id;
 }
 
-export async function deleteEventOverride(db, before, timestamp) {
+export async function deleteEventOverride(db, before, actorIdentifier, timestamp) {
   await db.batch([
     db.prepare("DELETE FROM event_overrides WHERE id = ?").bind(before.id),
     auditStatement(db, {
+      actorIdentifier,
       action: "event_override.deleted",
       entityType: "event_override",
       entityId: before.id,
@@ -355,7 +358,7 @@ export async function deleteEventOverride(db, before, timestamp) {
   ]);
 }
 
-export async function upsertAccelerationCycle(db, batch, input, before, timestamp) {
+export async function upsertAccelerationCycle(db, batch, input, before, actorIdentifier, timestamp) {
   const id = `${batch.id}:${input.lesson_id}`;
   const after = { ...input };
   await db.batch([
@@ -388,6 +391,7 @@ export async function upsertAccelerationCycle(db, batch, input, before, timestam
       before?.created_at || timestamp, timestamp
     ),
     auditStatement(db, {
+      actorIdentifier,
       action: before ? "acceleration_cycle.updated" : "acceleration_cycle.created",
       entityType: "acceleration_cycle",
       entityId: id,
@@ -399,10 +403,11 @@ export async function upsertAccelerationCycle(db, batch, input, before, timestam
   return id;
 }
 
-export async function deleteAccelerationCycle(db, before, timestamp) {
+export async function deleteAccelerationCycle(db, before, actorIdentifier, timestamp) {
   await db.batch([
     db.prepare("DELETE FROM acceleration_cycles WHERE id = ?").bind(before.id),
     auditStatement(db, {
+      actorIdentifier,
       action: "acceleration_cycle.deleted",
       entityType: "acceleration_cycle",
       entityId: before.id,

@@ -5,5 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-parent-advice.mjs"
+  },
+  "dependencies": {
+    "@cloudflare/pages-plugin-cloudflare-access": "^1.0.5"
   }
 }

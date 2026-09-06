@@ -31,12 +31,12 @@ export async function onRequestPut(context) {
   return handleSchedulerRequest(context, async () => {
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    await requireSchedulerWriteAccess(context.env);
+    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateEventOverridePayload(body);
     const { batch } = await loadEntities(context, academicYear, body);
     const before = await loadEventOverride(context.env.DB, batch.id, body.lesson_id, body.event_type);
-    await upsertEventOverride(context.env.DB, batch, body, before, new Date().toISOString());
+    await upsertEventOverride(context.env.DB, batch, body, before, actorIdentifier, new Date().toISOString());
     const state = await loadScheduleState(context.env.DB, academicYear);
     return jsonResponse(toScheduleApiState(state));
   });
@@ -46,7 +46,7 @@ export async function onRequestDelete(context) {
   return handleSchedulerRequest(context, async () => {
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    await requireSchedulerWriteAccess(context.env);
+    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateEventOverrideDeletePayload(body);
     const { batch } = await loadEntities(context, academicYear, body);
@@ -54,7 +54,7 @@ export async function onRequestDelete(context) {
     if (!before) {
       throw new SchedulerHttpError(404, "Event override not found.");
     }
-    await deleteEventOverride(context.env.DB, before, new Date().toISOString());
+    await deleteEventOverride(context.env.DB, before, actorIdentifier, new Date().toISOString());
     const state = await loadScheduleState(context.env.DB, academicYear);
     return jsonResponse(toScheduleApiState(state));
   });

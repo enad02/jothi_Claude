@@ -1,6 +1,8 @@
 # A-Level Scheduler Persistence Design
 
-Status: **LOCAL PERSISTENCE PROTOTYPE IMPLEMENTED**. The implementation is local-only. No production or preview database, binding, authentication policy, deployment, or remote Cloudflare resource has been created.
+Status: **REAL D1 RESOURCE PROVISIONED — NOT YET BOUND OR DEPLOYED**.
+
+The real `jothi-a-level-scheduler` D1 database has been created in Cloudflare Western Europe. Migration `0001_initial_schema.sql` and the idempotent 2026–27 baseline seed have been applied. The database is not bound to Preview or Production, and no scheduler code has been deployed.
 
 ## Boundary rule
 
@@ -26,9 +28,10 @@ Public browser
     -> local D1 operational state
 
 Staff browser
-    -> GET / guarded writes
+    -> Cloudflare Access JWT validation
+    -> authenticated GET / guarded writes
     -> Cloudflare Pages Functions
-    -> local D1 operational state + audit log
+    -> D1 operational state + audit log
 ```
 
 The public and staff controllers combine the API state with the same Git curriculum and run the same scheduling engine. The public controller shows a restrained unavailable message instead of silently falling back to potentially stale baseline data.
@@ -90,17 +93,60 @@ The public response contains only:
 
 It does not return database IDs, override reasons, audit records, actor identifiers, internal notes, tutor costs, authentication data, Classkick or Zoom data, resource URLs, or resource tokens.
 
-## Local write guard
+## Staff authentication and local write guard
 
-All staff write Functions deny access by default. A write is permitted only when `SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES` equals the exact local founder-QA value documented in `.dev.vars.example`. The compared values are SHA-256 digests checked without an early exit.
+All routes under `/api/staff/a-level-scheduler/*`, including staff GET routes, deny deployed access unless the Cloudflare Access JWT has been validated by `@cloudflare/pages-plugin-cloudflare-access`. Deployed validation requires both server-side Pages environment variables:
 
-The actual `.dev.vars` and `.wrangler/` local state are ignored by Git. The enabling value is not present in the Wrangler configuration and must never be configured in preview or production. Staff GET remains locally available for this prototype; Cloudflare Access protection is Step 2C.
+- `CF_ACCESS_TEAM_DOMAIN`
+- `CF_ACCESS_AUD`
+
+Missing or invalid configuration fails closed. Preview and Production may use different Access audience values. Actual values must be configured in the relevant Pages environment and must not be committed. They must not be placed in client-side JavaScript or returned to the browser merely to perform authentication.
+
+For authenticated human writes, `actor_identifier` is the verified email claim from the validated Access JWT. Client request bodies, query strings, and unvalidated identity headers are never used as audit identity. A validated Access request without a usable human email is denied for writes.
+
+The local founder-QA bypass remains available only when both conditions hold: the request hostname is exactly `localhost` or `127.0.0.1`, and `SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES` equals the exact value documented in `.dev.vars.example`. The compared values are SHA-256 digests checked without an early exit. Setting the bypass variable on `jothi.uk` or any `pages.dev` hostname cannot enable the bypass.
+
+The actual `.dev.vars` and `.wrangler/` local state are ignored by Git. The enabling value is not present in the Wrangler configuration and must never be configured in preview or production.
+
+## Staff static route contract
+
+JavaScript is not used to hide or protect the staff HTML page. Step 2C1-B must protect this route at the Cloudflare Access layer in both intended environments:
+
+- `/a-level-year12-scheduler.html`
+- `/api/staff/a-level-scheduler/*`
+
+The public page `/a-level-year12-schedule.html` and public read-only API `/api/a-level-scheduler/2026-27/state` remain outside the staff middleware.
 
 ## Local Wrangler configuration
 
 `wrangler.scheduler.local.jsonc` is labelled local-development-only and contains the local `DB` binding, placeholder UUIDs, root Pages output, the module migration directory, and compatibility date `2026-09-06`. It is not production configuration.
 
-Wrangler 4.129.0 accepts this configuration for local D1 migration and seed commands. Its `pages dev` command does not accept a custom `--config` path, so local Pages QA uses equivalent explicit `--d1`, compatibility, port, and persistence flags. No command uses remote mode.
+Wrangler 4.129.0 accepts this configuration for local D1 migration and seed commands. Its `pages dev` command does not accept a custom `--config` path, so local Pages QA uses equivalent explicit `--d1`, compatibility, port, and persistence flags. Local QA commands do not use remote mode.
+
+## Dashboard-managed Pages D1 binding contract
+
+Deployment remains dashboard-managed for Pages project `jothi2026`. No production Wrangler file, Worker deployment configuration, or deployment workflow is introduced.
+
+The required Pages binding is:
+
+- variable name: `DB`
+- database: `jothi-a-level-scheduler`
+
+Step 2C1-B will initially add this binding only to the **Preview** environment. The Production binding must wait for the later controlled production gate. The real database UUID is deliberately absent from committed Wrangler configuration.
+
+## Step 2C1-A provisioning record
+
+- real database: `jothi-a-level-scheduler`
+- region: Western Europe (`WEUR`)
+- migration applied: `0001_initial_schema.sql`
+- baseline seed applied: `scripts/a-level-scheduler/seed-2026-27.sql`
+- seed rerun result: idempotent, zero additional rows
+- Access JWT validation code: prepared, not deployed
+- local bypass: restricted to localhost and exact QA value
+- audit actor: validated Access email for deployed human writes
+- remote baseline: one programme, two batches, two breaks, zero overrides, zero acceleration cycles
+
+No Pages binding, Access application, Access policy, Preview deployment, or Production change was made in Step 2C1-A.
 
 ## Classkick and protected resources
 
@@ -115,17 +161,18 @@ one lesson pill
     -> one protected resource record later
 ```
 
-## Remaining Step 2C work
+## Step 2C1-B gate
 
-The following work is not completed:
+**STEP 2C1-B REQUIRES:**
 
-- create the real Cloudflare D1 resource;
-- add production and preview bindings;
-- protect the staff route and API with Cloudflare Access;
-- derive the audit actor identity from the authenticated user;
-- remove the local-only unauthenticated write bypass;
-- run controlled production migration and seed procedures;
-- perform a controlled deployment; and
-- decide public indexing, navigation, and publication timing.
+- Preview D1 binding (`DB` to `jothi-a-level-scheduler`);
+- Preview Access configuration;
+- approved staff email allow-list;
+- Access team domain;
+- Preview Access audience value;
+- feature-branch push; and
+- protected Preview deployment QA.
+
+Production binding, production environment changes, merge/deployment, public navigation, and indexing remain later controlled gates.
 
 Production work should also define concurrency/conflict handling and an atomic multi-entity workflow for the staff configuration regeneration sequence.

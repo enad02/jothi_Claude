@@ -1,6 +1,7 @@
 import { SchedulerHttpError } from "./scheduler-http.js";
 
 const LOCAL_WRITE_VALUE = "local-founder-qa";
+export const LOCAL_SCHEDULER_ACTOR = LOCAL_WRITE_VALUE;
 
 async function digest(value) {
   return new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(value)));
@@ -23,8 +24,20 @@ export async function schedulerWritesAllowed(value) {
   return constantTimeEqual(providedHash, expectedHash);
 }
 
-export async function requireSchedulerWriteAccess(env) {
-  if (!await schedulerWritesAllowed(env.SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES)) {
+export function isLocalSchedulerHostname(request) {
+  const hostname = new URL(request.url).hostname;
+  return hostname === "localhost" || hostname === "127.0.0.1";
+}
+
+export async function localSchedulerBypassAllowed(request, env) {
+  return isLocalSchedulerHostname(request)
+    && await schedulerWritesAllowed(env.SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES);
+}
+
+export function requireSchedulerWriteAccess(context) {
+  const actorIdentifier = context.data?.schedulerActorIdentifier;
+  if (typeof actorIdentifier !== "string" || actorIdentifier.trim() === "") {
     throw new SchedulerHttpError(403, "Scheduler writes are disabled.");
   }
+  return actorIdentifier;
 }
