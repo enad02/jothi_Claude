@@ -58,14 +58,12 @@ Primary destination:
 
 ## Locked pricing
 
-The public pricing model is monthly programme-cycle pricing.
+The public pricing model shows the total programme fee for the defined academic cycle.
 
-Do not show programme totals in public copy.
+Payment plans are agreed after consultation. A payment plan spreads the programme fee across an agreed period; it does not represent a fixed monthly allocation of lesson hours.
 Do not describe pricing as hourly tuition.
 Do not lead with the previous crash-course-first model as the future-facing public A-Level offer.
-Do not use annual-only pricing on the homepage.
 Do not invent further pricing breakdowns unless Prakash provides them.
-If old annual figures remain anywhere, flag them for review rather than silently mixing them with the monthly model.
 
 ### Programme format
 
@@ -74,42 +72,50 @@ If old annual figures remain anywhere, flag them for review rather than silently
 - Groups are matched by level, confidence, ambition, and regular test performance.
 - One-to-one support is primarily used for the Diagnostic Bridge where closer assessment is needed before placement.
 
-### Monthly programme-cycle fees
+### Programme fees
 
-- Two-subject pathways follow standard combined monthly pricing with no reduction. Full Core three-subject pathways include a small combined-programme reduction for families paying by monthly standing order. Public copy should describe this as combined-programme pricing, not as a discount.
+- Two-subject pathways use the approved combined programme fee. Full Core three-subject pathways include a small combined-programme reduction. Public copy should describe this as combined-programme pricing, not as a discount.
+- KS2–Year 11 amounts were converted from the existing approved commercial economics; this standardisation did not conduct a new pricing review.
+- A future commercial review may consider whether converted totals should be rounded, but no repricing or rounding is approved here.
 
 #### KS2 Years 5-6 (Maths-first)
 - Programme cycle: September-July
-- 1 subject (Maths Foundations): £75/month
-- 2-subject pathway (Maths + SATs English support, Year 6 only where appropriate): £150/month
+- 1 subject (Maths Foundations): £825 programme fee
+- 2-subject pathway (Maths + SATs English support, Year 6 only where appropriate): £1,650 programme fee
 - KS2 is positioned as Maths-first. English is focused SATs English support for Year 6 where appropriate, not a full English pillar.
 - No Full Core option at KS2.
 
 #### KS3 Years 7-8
 - Programme cycle: September-July
-- 1 subject / standard pathway: £80/month
-- 2-session pathway: £160/month
-- Full Core Foundations: £220/month
+- 1 subject / standard pathway: £880 programme fee
+- 2-session pathway: £1,760 programme fee
+- Full Core Foundations: £2,420 programme fee
 
 #### Years 9-10 GCSE preparation
 - Programme cycle: September-July
-- 1 subject: £100/month
-- 2-subject pathway: £200/month
-- GCSE Full Core: £275/month
+- 1 subject: £1,100 programme fee
+- 2-subject pathway: £2,200 programme fee
+- GCSE Full Core: £3,025 programme fee
 
 #### Year 11 GCSE exam year
 - Programme cycle: September-April
-- 1 subject: £125/month
-- 2-subject pathway: £250/month
-- Full Core Exam Programme: £345/month
+- 1 subject: £1,000 programme fee
+- 2-subject pathway: £2,000 programme fee
+- Full Core Exam Programme: £2,760 programme fee
 
-#### AS / Year 12 Maths
+#### Year 12 A-Level Maths
 - Programme cycle: September-May
-- AS / Year 12 Maths: £150/month
+- Programme fee: £2,200
+- Curriculum teaching is completed by the end of April; May is reserved for teacher-supervised revision, formative assessment, full-paper practice, error correction and consolidation.
+- Year 12 should not generally be described as an AS qualification. `First-year A-Level / AS-equivalent content` may be used where academically useful.
 
-#### A-Level / Year 13 Maths
-- Programme cycle: September-May
-- Year 13 A-Level Maths: £225/month
+#### Year 13 A-Level Maths
+- Programme cycle: September-April
+- Programme fee: £2,500
+- Curriculum teaching is completed by the end of March; April is reserved for targeted revision, error correction and a three-paper final mock series.
+- The standard programme finishes at the end of April, protecting May for independent preparation before the main A-Level examinations.
+
+Teacher-supervised curriculum teaching, revision, formative assessment, mocks, mock review and error correction are programme activities included in the programme fee. They are not unpaid extras.
 
 ### Specialist A-Level routes
 
@@ -129,19 +135,19 @@ The Diagnostic Bridge is a short one-to-one entry pathway for students joining p
 ### Public-facing pricing rule
 
 Homepage pricing should stay light. Do not show a full pricing table on the homepage.
-Homepage pricing should use monthly parent-facing figures.
+Homepage pricing should use concise programme-fee `from` figures and state that payment plans are available after consultation.
 
 Homepage pricing should use these `from` prices (4 cards only):
-- KS3 from £80/month
-- GCSE Prep from £100/month
-- Year 11 from £125/month
-- A-Level Maths from £150/month
+- KS3 from £880 programme fee
+- GCSE Prep from £1,100 programme fee
+- Year 11 from £1,000 programme fee
+- A-Level Maths from £2,200 programme fee
 
 KS2 is approved commercially and appears on the Programmes page, but is not shown in the homepage pricing cards. KS2 may be promoted separately through the Programmes page, a dedicated landing page, or campaign.
 
-The Programmes page should show stage-based monthly pricing by pathway.
-Programme detail pages may explain pathway details, but pricing must not contradict the monthly model.
-Explain that each monthly payment contributes to the full academic programme: teaching, testing, progress tracking, parent communication, and pathway guidance.
+The Programmes page should show stage-based programme fees by pathway, the programme cycle, and payment-plan availability after consultation.
+Programme detail pages may explain pathway details, but pricing must not contradict the programme-fee model.
+Explain that a payment plan spreads the programme fee across an agreed period and does not redefine the programme as monthly hourly tuition.
 
 ## Locked public positioning points
 
@@ -205,7 +211,7 @@ Our public copy should reflect that our core academic offer is built around the 
 
 ## Do not change without explicit approval
 
-- Monthly programme-cycle pricing
+- Public programme-fee pricing and consultation-based payment plans
 - Programme format and Diagnostic Bridge rules
 - Specialist A-Level route positioning
 - CTA hierarchy

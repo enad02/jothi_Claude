@@ -29,8 +29,8 @@ Older Claude-specific references should not control current implementation if th
 - Accessibility and mobile polish have been applied to navigation, focus states, form messaging, and small-screen behaviour.
 - WhatsApp green is now reserved for WhatsApp UI only.
 - The homepage now includes a section-jump navigation block to reduce long-scroll fatigue.
-- The homepage pricing summary now uses monthly programme-cycle `from` pricing rather than the previous fixed-fee model.
-- The Programmes page now follows a parent decision flow: stage, pathway, monthly fee, joining route.
+- The homepage pricing summary uses concise programme-fee `from` pricing, with payment plans available after consultation.
+- The Programmes page follows a parent decision flow: stage, pathway, programme fee, joining route.
 - The student and tutor gateway pages have been visually polished but remain practical access pages rather than marketing pages.
 - The About page now includes a Vision / Mission / Purpose section, but its final placement and visual prominence still need review during the full premium About page pass.
 
@@ -55,7 +55,7 @@ Older Claude-specific references should not control current implementation if th
 ## What is already settled in the build
 
 - CTA wording has been standardised across the site.
-- Monthly programme-cycle pricing is the approved public model.
+- Total programme-fee pricing is the approved public model; payment plans are agreed after consultation.
 - Standard programmes are live small-group lessons with up to four students per batch.
 - The Diagnostic Bridge is the one-to-one entry route where closer assessment is needed before placement.
 - Legal pages have been aligned more closely with actual site behaviour.
