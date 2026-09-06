@@ -33,12 +33,18 @@ export async function localSchedulerBypassAllowed(request, env) {
     && await schedulerWritesAllowed(env.SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES);
 }
 
-export function requireSchedulerWriteAccess(context) {
+const ROLE_PERMISSIONS = Object.freeze({
+  viewer: new Set(),
+  editor: new Set(["event_override"]),
+  admin: new Set(["event_override", "programme_configuration", "batch_configuration", "acceleration"])
+});
+
+export function requireSchedulerWriteAccess(context, permission) {
   const principal = context.data?.aLevelPrincipal;
-  if (principal?.role !== "admin"
+  if (!ROLE_PERMISSIONS[principal?.role]?.has(permission)
     || typeof principal.code !== "string"
     || principal.code.trim() === "") {
-    throw new SchedulerHttpError(403, "Administrator access is required.");
+    throw new SchedulerHttpError(403, "This A-Level action is not authorised.");
   }
   return principal.code;
 }

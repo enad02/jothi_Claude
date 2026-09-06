@@ -11,9 +11,9 @@ import { requireSchedulerWriteAccess } from "../../../../_lib/scheduler-write-gu
 
 export async function onRequestPatch(context) {
   return handleSchedulerRequest(context, async () => {
+    const actorIdentifier = requireSchedulerWriteAccess(context, "batch_configuration");
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateBatchPatch(body);
 

@@ -105,12 +105,13 @@ Missing or invalid configuration returns `503` and fails closed. Preview and Pro
 
 ### Gate 2: A-Level application allow-list
 
-Cloudflare Access authentication is Gate 1. Gate 2 resolves the normalised verified email (`trim()` then lowercase) against the dedicated `A_LEVEL_USERS` map. This map is separate from Mathematics workspace users and is empty until the approved A-Level list is supplied. Each entry must define a durable `code`, display `label`, and supported role (`viewer` or `admin`). Authenticated but unmapped users receive `403`.
+Cloudflare Access authentication is Gate 1. Gate 2 resolves the normalised verified email (`trim()` then lowercase) against the dedicated `A_LEVEL_USERS` map. This map is separate from Mathematics workspace users and contains only the approved A-Level users. Each entry defines a durable `code`, display `label`, and supported role (`viewer`, `editor`, or `admin`). Authenticated but unmapped users receive `403`.
 
 - `viewer`: may read the authenticated A-Level identity and staff schedule views;
-- `admin`: has viewer access and may change programme/batch settings, reschedule/reset events, and configure acceleration.
+- `editor`: has viewer access and may create, update, delete, and reset individual teaching, revision, and Topic Test event overrides;
+- `admin`: has editor access and may also change programme configuration, recurring batch rules, and acceleration cycles.
 
-`GET /api/a-level/me` returns only the mapped `code`, `label`, and `role`. It does not return email or expose the allow-list. The staff page shows the mapped label and removes write affordances for viewers; server-side role enforcement remains authoritative.
+`GET /api/a-level/me` returns only the mapped `code`, `label`, and `role`. It does not return email or expose the allow-list. The staff page shows the mapped label, enables event editing for editors and admins, and shows programme/batch/acceleration controls only to admins. Server-side endpoint permission checks remain authoritative.
 
 For authenticated admin writes, `actor_identifier` is the resolved principal's durable `code`. Client request bodies, query strings, browser-supplied headers, local storage, and form fields are never used as identity. A validated Access request without a mapped principal is denied.
 
@@ -178,7 +179,6 @@ one lesson pill
 
 - Preview D1 binding (`DB` to `jothi-a-level-scheduler`);
 - Preview Access configuration;
-- approved staff email allow-list;
 - Access team domain;
 - Preview Access audience value;
 - feature-branch push; and

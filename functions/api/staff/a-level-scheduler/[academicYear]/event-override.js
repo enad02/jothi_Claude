@@ -29,9 +29,9 @@ async function loadEntities(context, academicYear, body) {
 
 export async function onRequestPut(context) {
   return handleSchedulerRequest(context, async () => {
+    const actorIdentifier = requireSchedulerWriteAccess(context, "event_override");
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateEventOverridePayload(body);
     const { batch } = await loadEntities(context, academicYear, body);
@@ -44,9 +44,9 @@ export async function onRequestPut(context) {
 
 export async function onRequestDelete(context) {
   return handleSchedulerRequest(context, async () => {
+    const actorIdentifier = requireSchedulerWriteAccess(context, "event_override");
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateEventOverrideDeletePayload(body);
     const { batch } = await loadEntities(context, academicYear, body);

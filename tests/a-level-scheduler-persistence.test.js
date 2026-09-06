@@ -12,6 +12,16 @@ import {
 import { toScheduleApiState, upsertBatchConfiguration } from "../functions/_lib/scheduler-db.js";
 import { onRequestGet as getPublicScheduleState } from "../functions/api/a-level-scheduler/[academicYear]/state.js";
 import { onRequestGet as getALevelIdentity } from "../functions/api/a-level/me.js";
+import { onRequestPatch as patchProgramme } from "../functions/api/staff/a-level-scheduler/[academicYear]/programme.js";
+import { onRequestPatch as patchBatch } from "../functions/api/staff/a-level-scheduler/[academicYear]/batch.js";
+import {
+  onRequestDelete as deleteEventOverride,
+  onRequestPut as putEventOverride
+} from "../functions/api/staff/a-level-scheduler/[academicYear]/event-override.js";
+import {
+  onRequestDelete as deleteAcceleration,
+  onRequestPut as putAcceleration
+} from "../functions/api/staff/a-level-scheduler/[academicYear]/acceleration.js";
 import {
   assertAccelerationInsideBreak,
   assertAcademicYear,
@@ -30,6 +40,7 @@ const accessAudience = "scheduler-test-audience";
 const accessEnv = { ACCESS_DOMAIN: accessDomain, ACCESS_AUD: accessAudience };
 const syntheticUsers = Object.freeze({
   "admin.user@example.test": Object.freeze({ code: "ADMIN-TEST", label: "Test Admin", role: "admin" }),
+  "editor.user@example.test": Object.freeze({ code: "EDITOR-TEST", label: "Test Editor", role: "editor" }),
   "viewer.user@example.test": Object.freeze({ code: "VIEWER-TEST", label: "Test Viewer", role: "viewer" })
 });
 
@@ -190,9 +201,10 @@ test("missing ACCESS_DOMAIN or ACCESS_AUD returns 503", async () => {
   assert.equal((await createALevelAccessMiddleware()(missingAudience)).status, 503);
 });
 
-test("mapped admins and viewers authenticate with normalised verified Access email", async () => {
+test("mapped admins, editors, and viewers authenticate with normalised verified Access email", async () => {
   for (const [email, expected] of [
     [" Admin.User@Example.Test ", { code: "ADMIN-TEST", role: "admin" }],
+    ["EDITOR.USER@EXAMPLE.TEST", { code: "EDITOR-TEST", role: "editor" }],
     ["VIEWER.USER@EXAMPLE.TEST", { code: "VIEWER-TEST", role: "viewer" }]
   ]) {
     const context = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/state", "GET", accessEnv, async () => {
@@ -221,21 +233,74 @@ test("an authenticated but unmapped Cloudflare user receives 403", async () => {
   assert.equal((await runAuthenticated(context, { email: "unmapped.user@example.test" })).status, 403);
 });
 
-test("viewer writes receive 403 while admin writes are allowed", async () => {
+test("viewer event writes receive 403 while editor and admin event writes are allowed", async () => {
   let viewerNextCalled = false;
-  const viewer = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch", "PATCH", accessEnv, async () => {
+  const viewer = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/event-override", "PUT", accessEnv, async () => {
     viewerNextCalled = true;
-    return new Response("must not run");
+    try {
+      requireSchedulerWriteAccess(viewer, "event_override");
+      return new Response("must not run");
+    } catch (error) {
+      return new Response(null, { status: error.status });
+    }
   }, {});
   assert.equal((await runAuthenticated(viewer, { email: "viewer.user@example.test" })).status, 403);
-  assert.equal(viewerNextCalled, false);
+  assert.equal(viewerNextCalled, true);
+
+  const editor = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/event-override", "PUT", accessEnv, async () => {
+    return Response.json({ actor: requireSchedulerWriteAccess(editor, "event_override") });
+  }, {});
+  const editorResponse = await runAuthenticated(editor, { email: "editor.user@example.test" });
+  assert.equal(editorResponse.status, 200);
+  assert.equal((await editorResponse.json()).actor, "EDITOR-TEST");
 
   const admin = staffContext("https://jothi.uk/api/staff/a-level-scheduler/2026-27/batch", "PATCH", accessEnv, async () => {
-    return Response.json({ actor: requireSchedulerWriteAccess(admin) });
+    return Response.json({ actor: requireSchedulerWriteAccess(admin, "event_override") });
   }, {});
   const adminResponse = await runAuthenticated(admin);
   assert.equal(adminResponse.status, 200);
   assert.equal((await adminResponse.json()).actor, "ADMIN-TEST");
+});
+
+test("editors cannot change programme, recurring batch, or acceleration configuration while admins can", () => {
+  const editorContext = { data: { aLevelPrincipal: { code: "EDITOR-TEST", role: "editor" } } };
+  const adminContext = { data: { aLevelPrincipal: { code: "ADMIN-TEST", role: "admin" } } };
+  for (const permission of ["programme_configuration", "batch_configuration", "acceleration"]) {
+    assert.throws(
+      () => requireSchedulerWriteAccess(editorContext, permission),
+      (error) => error.status === 403
+    );
+    assert.equal(requireSchedulerWriteAccess(adminContext, permission), "ADMIN-TEST");
+  }
+});
+
+test("every scheduler write endpoint declares its server-side permission", async () => {
+  const programme = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/programme.js", import.meta.url), "utf8");
+  const batch = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/batch.js", import.meta.url), "utf8");
+  const override = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/event-override.js", import.meta.url), "utf8");
+  const acceleration = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/acceleration.js", import.meta.url), "utf8");
+  assert.match(programme, /requireSchedulerWriteAccess\(context, "programme_configuration"\)/);
+  assert.match(batch, /requireSchedulerWriteAccess\(context, "batch_configuration"\)/);
+  assert.equal((override.match(/requireSchedulerWriteAccess\(context, "event_override"\)/g) || []).length, 2);
+  assert.equal((acceleration.match(/requireSchedulerWriteAccess\(context, "acceleration"\)/g) || []).length, 2);
+
+  const viewerData = { aLevelPrincipal: { code: "VIEWER-TEST", role: "viewer" } };
+  for (const [method, handler] of [
+    ["PATCH", patchProgramme],
+    ["PATCH", patchBatch],
+    ["PUT", putEventOverride],
+    ["DELETE", deleteEventOverride],
+    ["PUT", putAcceleration],
+    ["DELETE", deleteAcceleration]
+  ]) {
+    const response = await handler({
+      request: new Request("https://jothi.uk/api/staff/a-level-scheduler/unknown", { method }),
+      params: { academicYear: "unknown" },
+      env: {},
+      data: viewerData
+    });
+    assert.equal(response.status, 403);
+  }
 });
 
 test("/api/a-level/me returns mapped code, label, and role without email", async () => {
@@ -276,7 +341,7 @@ test("audit uses admin principal code and browser-supplied identity cannot overr
     "PATCH",
     accessEnv,
     async () => {
-      const actor = requireSchedulerWriteAccess(context);
+      const actor = requireSchedulerWriteAccess(context, "batch_configuration");
       await upsertBatchConfiguration(db, current, input, actor, "2026-09-06T12:00:00.000Z");
       return Response.json({ actor });
     },
@@ -348,16 +413,27 @@ test("staff UI loads mapped identity and displays its label without rendering an
   const template = await readFile(new URL("../a-level-year12-scheduler.html", import.meta.url), "utf8");
   assert.match(controller, /fetch\("\/api\/a-level\/me"/);
   assert.match(controller, /Signed in as \$\{identity\.user\.label\}/);
+  assert.match(controller, /\["editor", "admin"\]\.includes\(identity\.user\.role\)/);
+  assert.match(controller, /canConfigureSchedule = identity\.user\.role === "admin"/);
   assert.doesNotMatch(controller, /identity\.user\.email/);
   assert.match(template, /id="scheduler-identity"/);
 });
 
-test("production allow-list is empty and auth sources contain no credentials or legacy environment names", async () => {
+test("approved production allow-list is exact and excludes unapproved users", async () => {
   const accessSource = await readFile(new URL("../functions/_lib/scheduler-access.js", import.meta.url), "utf8");
   const usersSource = await readFile(new URL("../functions/_lib/a-level-users.js", import.meta.url), "utf8");
   const design = await readFile(new URL("../docs/A_LEVEL_SCHEDULER_PERSISTENCE_DESIGN.md", import.meta.url), "utf8");
   const combined = `${accessSource}\n${usersSource}\n${design}`;
-  assert.deepEqual(Object.keys(A_LEVEL_USERS), []);
+  assert.deepEqual(A_LEVEL_USERS, {
+    "prakash@jothi.uk": { code: "prakash", label: "Prakash", role: "admin" },
+    "ashwin@jothi.uk": { code: "ashwin", label: "Ashwin", role: "editor" },
+    "kiran@jothi.uk": { code: "kiran", label: "Kiran", role: "editor" },
+    "miriyam@jothi.uk": { code: "miriyam", label: "Miriyam", role: "editor" },
+    "radhika@jothi.uk": { code: "radhika", label: "Radhika", role: "viewer" }
+  });
+  assert.deepEqual(principalFromAccess({
+    cloudflareAccess: { JWT: { payload: { email: " PRAKASH@JOTHI.UK " } } }
+  }), { email: "prakash@jothi.uk", code: "prakash", label: "Prakash", role: "admin" });
   assert.match(combined, /ACCESS_DOMAIN/);
   assert.match(combined, /ACCESS_AUD/);
   assert.equal(combined.includes(["CF", "ACCESS", "TEAM", "DOMAIN"].join("_")), false);

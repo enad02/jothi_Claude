@@ -56,7 +56,8 @@ let generatedSchedule;
 let displayedSchedule;
 let eventOverrides = [];
 let editingEvent = null;
-let canWrite = false;
+let canEditEvents = false;
+let canConfigureSchedule = false;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -233,7 +234,7 @@ function renderCurrentSchedule(note) {
   displayedSchedule = applyEventOverrides(generatedSchedule, curriculum, currentProgramme, eventOverrides);
   activeBatchId = resolveActiveBatchId(displayedSchedule, activeBatchId);
   elements.batchTabs.innerHTML = renderScheduleView(displayedSchedule, currentProgramme, activeBatchId, {
-    editableEvents: canWrite,
+    editableEvents: canEditEvents,
     hasEventOverride,
     lessonColumnLabel: "Lesson pill",
     showAcceleration: true,
@@ -536,10 +537,11 @@ async function initialise() {
     const identity = await identityResponse.json();
     curriculum = await curriculumResponse.json();
     baselineProgramme = await programmeResponse.json();
-    canWrite = identity.user.role === "admin";
+    canEditEvents = ["editor", "admin"].includes(identity.user.role);
+    canConfigureSchedule = identity.user.role === "admin";
     elements.identity.textContent = `Signed in as ${identity.user.label}`;
     elements.identity.hidden = false;
-    elements.staffControls.hidden = !canWrite;
+    elements.staffControls.hidden = !canConfigureSchedule;
     activeBatchId = state.batches[0]?.batch_key;
     applyPersistedState(state, "Schedule ready");
   } catch (error) {

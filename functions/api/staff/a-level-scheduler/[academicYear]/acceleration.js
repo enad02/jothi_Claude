@@ -31,9 +31,9 @@ async function loadEntities(context, academicYear, body) {
 
 export async function onRequestPut(context) {
   return handleSchedulerRequest(context, async () => {
+    const actorIdentifier = requireSchedulerWriteAccess(context, "acceleration");
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateAccelerationPayload(body);
     const { programme, batch } = await loadEntities(context, academicYear, body);
@@ -51,9 +51,9 @@ export async function onRequestPut(context) {
 
 export async function onRequestDelete(context) {
   return handleSchedulerRequest(context, async () => {
+    const actorIdentifier = requireSchedulerWriteAccess(context, "acceleration");
     const academicYear = context.params.academicYear;
     assertAcademicYear(academicYear);
-    const actorIdentifier = requireSchedulerWriteAccess(context);
     const body = await readJsonBody(context.request);
     validateAccelerationDeletePayload(body);
     const { batch } = await loadEntities(context, academicYear, body);

@@ -83,10 +83,6 @@ export function createALevelAccessMiddleware({
           return deniedResponse();
         }
         context.data.aLevelPrincipal = principal;
-        if (!["GET", "HEAD"].includes(context.request.method.toUpperCase())
-          && principal.role !== "admin") {
-          return deniedResponse();
-        }
         return context.next(...args);
       }
     });
