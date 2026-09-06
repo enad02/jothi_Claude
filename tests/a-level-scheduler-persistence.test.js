@@ -10,6 +10,7 @@ import {
   schedulerWritesAllowed
 } from "../functions/_lib/scheduler-write-guard.js";
 import { toScheduleApiState, upsertBatchConfiguration } from "../functions/_lib/scheduler-db.js";
+import { onRequest as protectScheduleApi } from "../functions/api/a-level-scheduler/_middleware.js";
 import { onRequestGet as getPublicScheduleState } from "../functions/api/a-level-scheduler/[academicYear]/state.js";
 import { onRequestGet as getALevelIdentity } from "../functions/api/a-level/me.js";
 import { onRequestPatch as patchProgramme } from "../functions/api/staff/a-level-scheduler/[academicYear]/programme.js";
@@ -156,6 +157,30 @@ function databaseState() {
       reason: "private staff note"
     }],
     accelerationCycles: []
+  };
+}
+
+function scheduleDatabase(state = databaseState()) {
+  return {
+    prepare(sql) {
+      return {
+        sql,
+        bind() {
+          return {
+            sql,
+            first: async () => state.programme
+          };
+        }
+      };
+    },
+    async batch() {
+      return [
+        { results: state.batches },
+        { results: state.breaks },
+        { results: state.eventOverrides },
+        { results: state.accelerationCycles }
+      ];
+    }
   };
 }
 
@@ -369,36 +394,51 @@ test("public state excludes database IDs, override reasons, actors, and audit hi
   assert.doesNotMatch(serialized, /private staff note|actor|audit/i);
 });
 
-test("public GET remains outside staff authentication and returns its read-only DTO", async () => {
-  const state = databaseState();
-  const db = {
-    prepare(sql) {
-      return {
-        sql,
-        bind() {
-          return {
-            sql,
-            first: async () => state.programme
-          };
-        }
-      };
-    },
-    async batch() {
-      return [
-        { results: state.batches },
-        { results: state.breaks },
-        { results: state.eventOverrides },
-        { results: state.accelerationCycles }
-      ];
-    }
-  };
-  const response = await getPublicScheduleState({
-    request: new Request("https://jothi.uk/api/a-level-scheduler/2026-27/state"),
-    params: { academicYear: "2026-27" },
-    env: { DB: db }
-  });
-  assert.equal(response.status, 200);
-  assert.equal((await response.json()).programme.academic_year, "2026-27");
+test("mapped viewers, editors, and admins can read authenticated schedule data", async () => {
+  for (const email of [
+    "viewer.user@example.test",
+    "editor.user@example.test",
+    "admin.user@example.test"
+  ]) {
+    const context = staffContext(
+      "https://jothi.uk/api/a-level-scheduler/2026-27/state",
+      "GET",
+      { ...accessEnv, DB: scheduleDatabase() },
+      async () => getPublicScheduleState(context)
+    );
+    context.params = { academicYear: "2026-27" };
+    const response = await runAuthenticated(context, { email });
+    assert.equal(response.status, 200);
+    assert.equal((await response.json()).programme.academic_year, "2026-27");
+  }
+});
+
+test("read-only schedule API rejects unauthenticated and unmapped deployed requests", async () => {
+  const next = async () => new Response("schedule must not be returned");
+  const unauthenticated = staffContext(
+    "https://jothi.uk/api/a-level-scheduler/2026-27/state",
+    "GET",
+    { ...accessEnv, DB: scheduleDatabase() },
+    next
+  );
+  assert.equal((await protectScheduleApi(unauthenticated)).status, 403);
+
+  const unmapped = staffContext(
+    "https://jothi.uk/api/a-level-scheduler/2026-27/state",
+    "GET",
+    { ...accessEnv, DB: scheduleDatabase() },
+    next
+  );
+  assert.equal((await runAuthenticated(unmapped, { email: "unmapped.user@example.test" })).status, 403);
+});
+
+test("no anonymous A-Level schedule-data API remains", async () => {
+  const middleware = await readFile(new URL("../functions/api/a-level-scheduler/_middleware.js", import.meta.url), "utf8");
+  const design = await readFile(new URL("../docs/A_LEVEL_SCHEDULER_PERSISTENCE_DESIGN.md", import.meta.url), "utf8");
+  assert.match(middleware, /createALevelAccessMiddleware\(\)/);
+  assert.match(design, /No A-Level schedule JSON is anonymously retrievable\./);
+  assert.match(design, /`\/a-level-year12-schedule\.html`/);
+  assert.match(design, /`\/api\/a-level-scheduler\/\*`/);
 });
 
 test("schema, seed, and public state contain no Classkick, Zoom, or resource URLs", async () => {

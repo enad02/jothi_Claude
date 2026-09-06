@@ -8,7 +8,7 @@ The real `jothi-a-level-scheduler` D1 database has been created in Cloudflare We
 
 > Hiding a staff control with CSS or JavaScript is not access control.
 
-The public schedule is a genuinely read-only application. It has its own controller, does not initialise staff editing behaviour, and contains no staff controls in its DOM. Staff writes are implemented only behind a local kill switch pending Cloudflare Access. Sensitive operational data and protected URLs must never be sent to the public browser and merely hidden.
+The schedule-facing application is read-only but authenticated. It has its own controller, does not initialise staff editing behaviour, and contains no staff controls in its DOM. Both schedule views and every A-Level API require Cloudflare Access authentication plus the A-Level application allow-list. Sensitive operational data and protected URLs must never be sent to the browser and merely hidden.
 
 Both views continue to share:
 
@@ -22,8 +22,9 @@ D1 stores operational scheduling state only. It does not duplicate lesson titles
 ## Implemented local architecture
 
 ```text
-Public browser
-    -> GET public state API
+Authenticated schedule browser
+    -> Cloudflare Access JWT validation + A-Level allow-list
+    -> GET read-only state API
     -> Cloudflare Pages Function
     -> local D1 operational state
 
@@ -34,7 +35,7 @@ Staff browser
     -> D1 operational state + audit log
 ```
 
-The public and staff controllers combine the API state with the same Git curriculum and run the same scheduling engine. The public controller shows a restrained unavailable message instead of silently falling back to potentially stale baseline data.
+The read-only and staff controllers combine the API state with the same Git curriculum and run the same scheduling engine. The read-only controller shows a restrained unavailable message instead of silently falling back to potentially stale baseline data.
 
 ## Data ownership
 
@@ -69,7 +70,7 @@ The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It se
 
 Read routes:
 
-- `GET /api/a-level-scheduler/2026-27/state` — explicit public DTO only;
+- `GET /api/a-level-scheduler/2026-27/state` — authenticated, allow-listed read-only DTO;
 - `GET /api/a-level/me` — authenticated, allow-listed A-Level principal DTO without email;
 - `GET /api/staff/a-level-scheduler/2026-27/state` — current staff operational state.
 
@@ -82,9 +83,9 @@ Staff write routes:
 
 Every write validates the academic year, writable fields, batch, stable lesson ID, event type, dates, time ranges, and operation-specific data on the server. Successful writes and their audit insert are submitted in the same D1 batch. Browser-safe responses do not expose SQL error details.
 
-## Public data boundary
+## Read-only data boundary
 
-The public response contains only:
+The authenticated read-only response contains only:
 
 - programme ID, academic year, taster date, start date, target completion date, and status;
 - batch key/display name and recurring teaching, revision, and Topic Test rules;
@@ -96,7 +97,7 @@ It does not return database IDs, override reasons, audit records, actor identifi
 
 ## Staff authentication and local write guard
 
-All routes under `/api/a-level/*` and `/api/staff/a-level-scheduler/*`, including staff GET routes, deny deployed access unless the Cloudflare Access JWT has been validated by `@cloudflare/pages-plugin-cloudflare-access`. Deployed validation requires both server-side Pages environment variables:
+All routes under `/api/a-level-scheduler/*`, `/api/a-level/*`, and `/api/staff/a-level-scheduler/*` deny deployed access unless the Cloudflare Access JWT has been validated by `@cloudflare/pages-plugin-cloudflare-access`. Deployed validation requires both server-side Pages environment variables:
 
 - `ACCESS_DOMAIN`
 - `ACCESS_AUD`
@@ -107,7 +108,7 @@ Missing or invalid configuration returns `503` and fails closed. Preview and Pro
 
 Cloudflare Access authentication is Gate 1. Gate 2 resolves the normalised verified email (`trim()` then lowercase) against the dedicated `A_LEVEL_USERS` map. This map is separate from Mathematics workspace users and contains only the approved A-Level users. Each entry defines a durable `code`, display `label`, and supported role (`viewer`, `editor`, or `admin`). Authenticated but unmapped users receive `403`.
 
-- `viewer`: may read the authenticated A-Level identity and staff schedule views;
+- `viewer`: may read the authenticated A-Level identity and schedule views;
 - `editor`: has viewer access and may create, update, delete, and reset individual teaching, revision, and Topic Test event overrides;
 - `admin`: has editor access and may also change programme configuration, recurring batch rules, and acceleration cycles.
 
@@ -119,15 +120,17 @@ The local founder-QA bypass remains available only when both conditions hold: th
 
 The actual `.dev.vars` and `.wrangler/` local state are ignored by Git. The enabling value is not present in the Wrangler configuration and must never be configured in preview or production.
 
-## Staff static route contract
+## Protected A-Level surface contract
 
-JavaScript is not used to hide or protect the staff HTML page. Step 2C1-B must protect this route at the Cloudflare Access layer in both intended environments:
+JavaScript is not used to hide or protect either HTML page. Step 2C1-B must protect all of these surfaces with the same Cloudflare Access application and policy in each intended environment:
 
+- `/a-level-year12-schedule.html`
 - `/a-level-year12-scheduler.html`
-- `/api/a-level/*`
+- `/api/a-level-scheduler/*`
 - `/api/staff/a-level-scheduler/*`
+- `/api/a-level/me`
 
-The public page `/a-level-year12-schedule.html` and public read-only API `/api/a-level-scheduler/2026-27/state` remain outside the staff middleware.
+The read-only and staff APIs retain separate route middleware, but both use the same verified Cloudflare Access principal and `A_LEVEL_USERS` resolver. A mapped viewer, editor, or admin may read schedule data. An authenticated but unmapped identity receives `403`; an unauthenticated deployed request fails closed. No A-Level schedule JSON is anonymously retrievable.
 
 ## Local Wrangler configuration
 
