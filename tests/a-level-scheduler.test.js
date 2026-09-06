@@ -1,7 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
-import { generateSchedule } from "../a-level-scheduler-engine.js";
+import {
+  applyEventOverrides,
+  clearEventOverrides,
+  generateSchedule,
+  lessonPillLabel,
+  resetEventOverride,
+  upsertEventOverride,
+  validateEventOverride
+} from "../a-level-scheduler-engine.js";
 
 const curriculum = JSON.parse(await readFile(new URL("../data/a-level-maths/year12-curriculum.json", import.meta.url), "utf8"));
 const programme = JSON.parse(await readFile(new URL("../data/a-level-maths/2026-27.json", import.meta.url), "utf8"));
@@ -21,6 +29,19 @@ function eventDates(cycle) {
 
 function inRange(date, start, end) {
   return date >= start && date <= end;
+}
+
+function teachingOverride(overrides = {}) {
+  return {
+    batch_id: "BATCH-1",
+    lesson_id: "Y12-01",
+    cycle: 1,
+    event_type: "teaching",
+    new_date: "2026-09-16",
+    new_start_time: "17:00",
+    new_end_time: "19:00",
+    ...overrides
+  };
 }
 
 test("A/B: generates 28 lessons for every configured batch", () => {
@@ -149,4 +170,130 @@ test("M: scheduling does not require resource references or URLs", () => {
   const result = generateSchedule(curriculumWithoutResources, programme);
   assert.equal(batch(result, "BATCH-1").cycles.length, 28);
   assert.deepEqual(batch(result, "BATCH-1").cycles.map((cycle) => cycle.lesson_id), expectedIds);
+});
+
+test("Step 1A A/B: lesson pill label hides the stable ID while the record retains it", () => {
+  const firstCycle = batch(generateSchedule(curriculum, programme), "BATCH-1").cycles[0];
+  assert.equal(lessonPillLabel(firstCycle), "Algebra and functions");
+  assert.equal(lessonPillLabel(firstCycle).includes("Y12-01"), false);
+  assert.equal(firstCycle.lesson_id, "Y12-01");
+});
+
+test("Step 1A C/D: a teaching override changes only the selected teaching event", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const originalCycle = batch(generated, "BATCH-1").cycles[0];
+  const displayedCycle = batch(
+    applyEventOverrides(generated, curriculum, programme, [teachingOverride()]),
+    "BATCH-1"
+  ).cycles[0];
+
+  assert.deepEqual(displayedCycle.teaching, {
+    ...originalCycle.teaching,
+    date: "2026-09-16",
+    start_time: "17:00",
+    end_time: "19:00"
+  });
+  assert.deepEqual(displayedCycle.revision, originalCycle.revision);
+  assert.deepEqual(displayedCycle.topic_test, originalCycle.topic_test);
+});
+
+test("Step 1A E: a Batch 1 event override does not affect Batch 2", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const displayed = applyEventOverrides(generated, curriculum, programme, [teachingOverride()]);
+  assert.deepEqual(batch(displayed, "BATCH-2"), batch(generated, "BATCH-2"));
+});
+
+test("Step 1A F: resetting an override restores the generated event", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const override = teachingOverride();
+  const withOverride = upsertEventOverride([], override);
+  const afterReset = resetEventOverride(withOverride, override);
+  const displayed = applyEventOverrides(generated, curriculum, programme, afterReset);
+
+  assert.equal(afterReset.length, 0);
+  assert.deepEqual(batch(displayed, "BATCH-1").cycles[0].teaching, batch(generated, "BATCH-1").cycles[0].teaching);
+});
+
+test("Step 1A G/H: overrides preserve lesson order and the 112-hour total", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const displayedBatch = batch(
+    applyEventOverrides(generated, curriculum, programme, [teachingOverride()]),
+    "BATCH-1"
+  );
+
+  assert.deepEqual(displayedBatch.cycles.map((cycle) => cycle.lesson_id), expectedIds);
+  assert.equal(displayedBatch.progress.total_supervised_hours, 112);
+  assert.equal(displayedBatch.progress.core_teaching_hours, 56);
+  assert.equal(displayedBatch.progress.revision_hours, 28);
+  assert.equal(displayedBatch.progress.topic_test_hours, 28);
+});
+
+test("Step 1A I: an end time that is not after the start time is rejected", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const validation = validateEventOverride(
+    teachingOverride({ new_start_time: "19:00", new_end_time: "18:00" }),
+    generated,
+    programme
+  );
+  assert.ok(validation.errors.includes("End time must be after start time."));
+});
+
+test("Step 1A J: same-batch event overlap is rejected", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const validation = validateEventOverride(
+    teachingOverride({ new_date: "2026-09-17", new_start_time: "18:00", new_end_time: "20:00" }),
+    generated,
+    programme
+  );
+  assert.ok(validation.errors.some((error) => error.includes("overlaps Revision")));
+});
+
+test("Step 1A K: a protected-break date returns a warning rather than an error", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const validation = validateEventOverride(
+    teachingOverride({ new_date: "2026-12-22", new_start_time: "10:00", new_end_time: "12:00" }),
+    generated,
+    programme
+  );
+  assert.deepEqual(validation.errors, []);
+  assert.ok(validation.warnings.includes("This date is inside a protected programme break."));
+});
+
+test("Step 1A: moving revision before teaching returns a confirmation warning", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const validation = validateEventOverride({
+    batch_id: "BATCH-1",
+    lesson_id: "Y12-01",
+    cycle: 1,
+    event_type: "revision",
+    new_date: "2026-09-13",
+    new_start_time: "18:00",
+    new_end_time: "19:00"
+  }, generated, programme);
+
+  assert.deepEqual(validation.errors, []);
+  assert.ok(validation.warnings.includes("Revision would take place before teaching."));
+});
+
+test("Step 1A: forecast uses overridden dates from the final cycle", () => {
+  const generated = generateSchedule(curriculum, programme);
+  const displayed = applyEventOverrides(generated, curriculum, programme, [{
+    batch_id: "BATCH-1",
+    lesson_id: "Y12-28",
+    cycle: 28,
+    event_type: "topic_test",
+    new_date: "2027-05-07",
+    new_start_time: "19:00",
+    new_end_time: "20:00"
+  }]);
+
+  assert.equal(batch(displayed, "BATCH-1").progress.forecast_completion_date, "2027-05-07");
+  assert.equal(batch(displayed, "BATCH-1").progress.deadline_status, "At risk");
+  assert.equal(batch(displayed, "BATCH-1").progress.total_supervised_hours, 112);
+});
+
+test("Step 1A L: regeneration clears all temporary event overrides", () => {
+  const overrides = [teachingOverride()];
+  const cleared = clearEventOverrides(overrides);
+  assert.deepEqual(cleared, []);
 });

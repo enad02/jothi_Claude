@@ -87,6 +87,44 @@
     </div>
   </footer>
 
+  <dialog class="event-editor" id="event-editor" aria-labelledby="event-editor-title">
+    <form id="event-edit-form">
+      <div class="event-editor-heading">
+        <div>
+          <p class="section-kicker">Individual event override</p>
+          <h2 id="event-editor-title">Reschedule event</h2>
+        </div>
+        <button class="event-editor-close" type="button" data-editor-action="cancel" aria-label="Close reschedule editor">×</button>
+      </div>
+
+      <dl class="event-editor-context">
+        <div><dt>Event</dt><dd id="event-editor-type"></dd></div>
+        <div><dt>Lesson</dt><dd id="event-editor-lesson"></dd></div>
+      </dl>
+
+      <div class="event-editor-fields">
+        <label>Date<input id="event-override-date" type="date" required /></label>
+        <label>Start time<input id="event-override-start" type="time" required /></label>
+        <label>End time<input id="event-override-end" type="time" required /></label>
+      </div>
+
+      <div class="event-editor-errors" id="event-editor-errors" role="alert" hidden></div>
+      <div class="event-editor-warnings" id="event-editor-warnings" hidden>
+        <ul></ul>
+        <label class="event-warning-confirm">
+          <input id="event-warning-confirm" type="checkbox" />
+          I understand the warning and want to save this override.
+        </label>
+      </div>
+
+      <div class="event-editor-actions">
+        <button class="scheduler-button" type="submit">Save</button>
+        <button class="event-editor-secondary" type="button" data-editor-action="cancel">Cancel</button>
+        <button class="event-editor-reset" type="button" data-editor-action="reset">Reset to generated schedule</button>
+      </div>
+    </form>
+  </dialog>
+
   <script type="module" src="a-level-scheduler.js"></script>
 </body>
 </html>

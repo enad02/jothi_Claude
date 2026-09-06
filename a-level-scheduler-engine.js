@@ -10,6 +10,14 @@ export const WEEKDAYS = [
   "Saturday"
 ];
 
+export const EVENT_TYPES = ["teaching", "revision", "topic_test"];
+
+export const EVENT_LABELS = {
+  teaching: "Teaching",
+  revision: "Revision",
+  topic_test: "Topic Test"
+};
+
 function parseDate(dateString) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString || "");
   if (!match) {
@@ -92,6 +100,145 @@ export function dateWithinClosure(dateString, closure) {
     dateString >= closure.start_date &&
     dateString <= closure.end_date
   );
+}
+
+export function lessonPillLabel(cycle) {
+  return cycle.title;
+}
+
+export function eventOverrideKey(override) {
+  return `${override.batch_id}:${override.lesson_id}:${override.event_type}`;
+}
+
+export function upsertEventOverride(overrides, override) {
+  const key = eventOverrideKey(override);
+  return [...overrides.filter((item) => eventOverrideKey(item) !== key), { ...override }];
+}
+
+export function resetEventOverride(overrides, target) {
+  const key = eventOverrideKey(target);
+  return overrides.filter((item) => eventOverrideKey(item) !== key);
+}
+
+export function clearEventOverrides() {
+  return [];
+}
+
+function applyOverrideToEvent(event, override) {
+  return {
+    ...event,
+    date: override.new_date,
+    start_time: override.new_start_time,
+    end_time: override.new_end_time
+  };
+}
+
+function findEventOverride(overrides, batchId, lessonId, eventType) {
+  return overrides.find((override) => (
+    override.batch_id === batchId &&
+    override.lesson_id === lessonId &&
+    override.event_type === eventType
+  ));
+}
+
+function resolveCycleEvents(cycle, batchId, overrides) {
+  const resolved = { ...cycle };
+  for (const eventType of EVENT_TYPES) {
+    const override = findEventOverride(overrides, batchId, cycle.lesson_id, eventType);
+    resolved[eventType] = override
+      ? applyOverrideToEvent(cycle[eventType], override)
+      : { ...cycle[eventType] };
+  }
+  return resolved;
+}
+
+export function applyEventOverrides(schedule, curriculum, programme, overrides = []) {
+  return {
+    ...schedule,
+    batches: schedule.batches.map((batch) => {
+      const cycles = batch.cycles.map((cycle) => resolveCycleEvents(cycle, batch.batch_id, overrides));
+      return {
+        ...batch,
+        cycles,
+        progress: calculateProgress(cycles, curriculum, programme)
+      };
+    })
+  };
+}
+
+function eventStartsBefore(left, right) {
+  return `${left.date}T${left.start_time}` < `${right.date}T${right.start_time}`;
+}
+
+function eventsOverlap(left, right) {
+  return (
+    left.date === right.date &&
+    left.start_time < right.end_time &&
+    right.start_time < left.end_time
+  );
+}
+
+export function validateEventOverride(override, generatedSchedule, programme, currentOverrides = []) {
+  const errors = [];
+  const warnings = [];
+
+  if (!override || !EVENT_TYPES.includes(override.event_type)) {
+    return { errors: ["A valid event type is required."], warnings };
+  }
+
+  const generatedBatch = generatedSchedule.batches.find((batch) => batch.batch_id === override.batch_id);
+  const generatedCycle = generatedBatch?.cycles.find((cycle) => cycle.lesson_id === override.lesson_id);
+  if (!generatedBatch || !generatedCycle) {
+    return { errors: ["The selected batch and lesson could not be found."], warnings };
+  }
+
+  if (Number(override.cycle) !== generatedCycle.cycle) {
+    errors.push("The override cannot change lesson identity or sequence.");
+  }
+
+  try {
+    parseDate(override.new_date);
+    const startMinutes = parseTime(override.new_start_time);
+    const endMinutes = parseTime(override.new_end_time);
+    if (endMinutes <= startMinutes) {
+      errors.push("End time must be after start time.");
+    }
+  } catch (error) {
+    errors.push(error.message);
+  }
+
+  if (errors.length > 0) {
+    return { errors, warnings };
+  }
+
+  const effectiveOverrides = upsertEventOverride(currentOverrides, override);
+  const candidateEvent = applyOverrideToEvent(generatedCycle[override.event_type], override);
+
+  for (const cycle of generatedBatch.cycles) {
+    const resolvedCycle = resolveCycleEvents(cycle, generatedBatch.batch_id, effectiveOverrides);
+    for (const eventType of EVENT_TYPES) {
+      if (cycle.lesson_id === override.lesson_id && eventType === override.event_type) {
+        continue;
+      }
+      if (eventsOverlap(candidateEvent, resolvedCycle[eventType])) {
+        errors.push(`This event overlaps ${EVENT_LABELS[eventType]} for ${cycle.title}.`);
+      }
+    }
+  }
+
+  if ((programme.closures || []).some((closure) => dateWithinClosure(override.new_date, closure))) {
+    warnings.push("This date is inside a protected programme break.");
+  }
+
+  const resolvedTargetCycle = resolveCycleEvents(generatedCycle, generatedBatch.batch_id, effectiveOverrides);
+  if (eventStartsBefore(resolvedTargetCycle.revision, resolvedTargetCycle.teaching)) {
+    warnings.push("Revision would take place before teaching.");
+  }
+  if (eventStartsBefore(resolvedTargetCycle.topic_test, resolvedTargetCycle.teaching)) {
+    warnings.push("Topic Test would take place before teaching.");
+  }
+
+  return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
 }
 
 function eventInsideProtectedClosure(event, closures) {
@@ -224,7 +371,9 @@ export function calculateProgress(cycles, curriculum, programme) {
   const topicTestHours = cycles.reduce((total, cycle) => total + cycle.topic_test.duration_hours, 0);
   const totalSupervisedHours = coreTeachingHours + revisionHours + topicTestHours;
   const finalCycle = cycles.at(-1);
-  const forecastCompletionDate = finalCycle ? finalCycle.topic_test.date : null;
+  const forecastCompletionDate = finalCycle
+    ? [finalCycle.teaching.date, finalCycle.revision.date, finalCycle.topic_test.date].sort().at(-1)
+    : null;
 
   return {
     lessons_scheduled: scheduledLessons,

@@ -1,4 +1,14 @@
-import { WEEKDAYS, generateSchedule } from "./a-level-scheduler-engine.js";
+import {
+  EVENT_LABELS,
+  WEEKDAYS,
+  applyEventOverrides,
+  clearEventOverrides,
+  generateSchedule,
+  lessonPillLabel,
+  resetEventOverride,
+  upsertEventOverride,
+  validateEventOverride
+} from "./a-level-scheduler-engine.js";
 
 const curriculumPath = "./data/a-level-maths/year12-curriculum.json";
 const programmePath = "./data/a-level-maths/2026-27.json";
@@ -24,12 +34,26 @@ const elements = {
   batchControls: document.querySelector("#batch-controls"),
   batchTabs: document.querySelector("#batch-tabs"),
   error: document.querySelector("#scheduler-error"),
-  generationNote: document.querySelector("#generation-note")
+  generationNote: document.querySelector("#generation-note"),
+  eventEditor: document.querySelector("#event-editor"),
+  eventEditForm: document.querySelector("#event-edit-form"),
+  eventEditorType: document.querySelector("#event-editor-type"),
+  eventEditorLesson: document.querySelector("#event-editor-lesson"),
+  eventDate: document.querySelector("#event-override-date"),
+  eventStart: document.querySelector("#event-override-start"),
+  eventEnd: document.querySelector("#event-override-end"),
+  eventErrors: document.querySelector("#event-editor-errors"),
+  eventWarnings: document.querySelector("#event-editor-warnings"),
+  warningConfirm: document.querySelector("#event-warning-confirm")
 };
 
 let curriculum;
 let currentProgramme;
 let activeBatchId;
+let generatedSchedule;
+let displayedSchedule;
+let eventOverrides = [];
+let editingEvent = null;
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -47,10 +71,6 @@ function escapeHtml(value) {
 function formatDate(dateString, includeWeekday = false) {
   const formatter = includeWeekday ? weekdayDateFormatter : dateFormatter;
   return formatter.format(new Date(`${dateString}T00:00:00Z`));
-}
-
-function formatEvent(event) {
-  return `${formatDate(event.date, true)} · ${event.start_time}–${event.end_time}`;
 }
 
 function weekdayOptions(selected) {
@@ -232,11 +252,51 @@ function renderAccelerationEditors(programme, batch) {
   `;
 }
 
-function renderTable(cycles, batchName) {
+function hasEventOverride(batchId, lessonId, eventType) {
+  return eventOverrides.some((override) => (
+    override.batch_id === batchId &&
+    override.lesson_id === lessonId &&
+    override.event_type === eventType
+  ));
+}
+
+function renderEventCell(cycle, batchId, eventType) {
+  const event = cycle[eventType];
+  const label = EVENT_LABELS[eventType];
+  const rescheduled = hasEventOverride(batchId, cycle.lesson_id, eventType);
+  return `
+    <td class="event-time-cell">
+      <button
+        class="event-time-trigger"
+        type="button"
+        data-event-edit
+        data-batch-id="${escapeHtml(batchId)}"
+        data-lesson-id="${escapeHtml(cycle.lesson_id)}"
+        data-cycle="${cycle.cycle}"
+        data-event-type="${eventType}"
+        aria-label="Edit ${label.toLowerCase()} date and time for ${escapeHtml(cycle.title)}"
+      >
+        <span class="event-date">${formatDate(event.date, true)}</span>
+        <span class="event-time">${event.start_time}–${event.end_time}</span>
+        ${rescheduled ? '<span class="rescheduled-indicator">Rescheduled</span>' : ""}
+      </button>
+    </td>
+  `;
+}
+
+function renderTable(cycles, batchName, batchId) {
   return `
     <div class="schedule-table-wrap">
       <table class="schedule-table">
         <caption class="visually-hidden">${escapeHtml(batchName)} Year 12 A-Level Maths schedule</caption>
+        <colgroup>
+          <col class="cycle-column" />
+          <col class="event-column" />
+          <col class="lesson-column" />
+          <col class="event-column" />
+          <col class="event-column" />
+          <col class="status-column" />
+        </colgroup>
         <thead>
           <tr>
             <th scope="col">Cycle</th>
@@ -251,10 +311,10 @@ function renderTable(cycles, batchName) {
           ${cycles.map((cycle) => `
             <tr>
               <td>${cycle.cycle}</td>
-              <td>${formatEvent(cycle.teaching)}</td>
-              <td><span class="lesson-pill"><span class="lesson-pill-id">${escapeHtml(cycle.lesson_id)}</span>${escapeHtml(cycle.title)}</span></td>
-              <td>${formatEvent(cycle.revision)}</td>
-              <td>${formatEvent(cycle.topic_test)}</td>
+              ${renderEventCell(cycle, batchId, "teaching")}
+              <td><span class="lesson-pill" data-lesson-id="${escapeHtml(cycle.lesson_id)}">${escapeHtml(lessonPillLabel(cycle))}</span></td>
+              ${renderEventCell(cycle, batchId, "revision")}
+              ${renderEventCell(cycle, batchId, "topic_test")}
               <td><span class="status-pill${cycle.status === "Acceleration" ? " is-acceleration" : ""}">${cycle.status}</span></td>
             </tr>
           `).join("")}
@@ -293,7 +353,7 @@ function renderTabs(result, programme) {
           ${renderBreaks(programme, programmeBatch)}
           ${renderAccelerationEditors(programme, programmeBatch)}
           ${renderValidation(batch.errors)}
-          ${renderTable(batch.cycles, batch.name)}
+          ${renderTable(batch.cycles, batch.name, batch.batch_id)}
         </section>
       `;
     }).join("")}
@@ -315,16 +375,21 @@ function activateTab(batchId, focus = false) {
   }
 }
 
+function renderCurrentSchedule(note) {
+  displayedSchedule = applyEventOverrides(generatedSchedule, curriculum, currentProgramme, eventOverrides);
+  renderTabs(displayedSchedule, currentProgramme);
+  elements.generationNote.textContent = note;
+}
+
 function generateAndRender(programme, note) {
   try {
     if (programme.closures.some((closure) => closure.end_date < closure.start_date)) {
       throw new Error("Each protected closure must end on or after its start date.");
     }
-    const result = generateSchedule(curriculum, programme);
-    renderTabs(result, programme);
+    generatedSchedule = generateSchedule(curriculum, programme);
+    renderCurrentSchedule(note);
     elements.error.hidden = true;
     elements.error.textContent = "";
-    elements.generationNote.textContent = note;
   } catch (error) {
     elements.error.textContent = error.message;
     elements.error.hidden = false;
@@ -332,13 +397,74 @@ function generateAndRender(programme, note) {
   }
 }
 
+function findCycle(schedule, batchId, lessonId) {
+  return schedule.batches
+    .find((batch) => batch.batch_id === batchId)
+    ?.cycles.find((cycle) => cycle.lesson_id === lessonId);
+}
+
+function hideEditorFeedback() {
+  elements.eventErrors.hidden = true;
+  elements.eventErrors.textContent = "";
+  elements.eventWarnings.hidden = true;
+  elements.eventWarnings.querySelector("ul").innerHTML = "";
+  elements.warningConfirm.checked = false;
+}
+
+function openEventEditor(trigger) {
+  const batchId = trigger.dataset.batchId;
+  const lessonId = trigger.dataset.lessonId;
+  const eventType = trigger.dataset.eventType;
+  const cycle = findCycle(displayedSchedule, batchId, lessonId);
+  if (!cycle || !EVENT_LABELS[eventType]) {
+    return;
+  }
+
+  editingEvent = {
+    batch_id: batchId,
+    lesson_id: lessonId,
+    cycle: Number(trigger.dataset.cycle),
+    event_type: eventType
+  };
+  elements.eventEditorType.textContent = EVENT_LABELS[eventType];
+  elements.eventEditorLesson.textContent = cycle.title;
+  elements.eventDate.value = cycle[eventType].date;
+  elements.eventStart.value = cycle[eventType].start_time;
+  elements.eventEnd.value = cycle[eventType].end_time;
+  hideEditorFeedback();
+  elements.eventEditor.showModal();
+}
+
+function showEditorFeedback(validation) {
+  elements.eventErrors.hidden = validation.errors.length === 0;
+  elements.eventErrors.textContent = validation.errors.join(" ");
+  elements.eventWarnings.hidden = validation.warnings.length === 0;
+  elements.eventWarnings.querySelector("ul").innerHTML = validation.warnings
+    .map((warning) => `<li>${escapeHtml(warning)}</li>`)
+    .join("");
+}
+
 elements.form.addEventListener("submit", (event) => {
   event.preventDefault();
+  if (
+    eventOverrides.length > 0 &&
+    !window.confirm("Regenerating will clear individual rescheduled dates.")
+  ) {
+    return;
+  }
+
+  eventOverrides = clearEventOverrides();
   currentProgramme = readProgrammeFromForm();
   generateAndRender(currentProgramme, "Regenerated with in-memory configuration");
 });
 
 elements.batchTabs.addEventListener("click", (event) => {
+  const eventTrigger = event.target.closest("[data-event-edit]");
+  if (eventTrigger) {
+    openEventEditor(eventTrigger);
+    return;
+  }
+
   const tab = event.target.closest('[role="tab"]');
   if (tab) {
     activateTab(tab.dataset.tabBatch);
@@ -360,6 +486,54 @@ elements.batchTabs.addEventListener("keydown", (event) => {
   if (event.key === "End") nextIndex = tabs.length - 1;
   event.preventDefault();
   activateTab(tabs[nextIndex].dataset.tabBatch, true);
+});
+
+elements.eventEditForm.addEventListener("input", (event) => {
+  if (event.target === elements.warningConfirm) {
+    return;
+  }
+  elements.warningConfirm.checked = false;
+  elements.eventErrors.hidden = true;
+  elements.eventWarnings.hidden = true;
+});
+
+elements.eventEditForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  if (!editingEvent) {
+    return;
+  }
+
+  const override = {
+    ...editingEvent,
+    new_date: elements.eventDate.value,
+    new_start_time: elements.eventStart.value,
+    new_end_time: elements.eventEnd.value
+  };
+  const validation = validateEventOverride(override, generatedSchedule, currentProgramme, eventOverrides);
+  showEditorFeedback(validation);
+
+  if (validation.errors.length > 0) {
+    return;
+  }
+  if (validation.warnings.length > 0 && !elements.warningConfirm.checked) {
+    return;
+  }
+
+  eventOverrides = upsertEventOverride(eventOverrides, override);
+  elements.eventEditor.close();
+  renderCurrentSchedule(`${EVENT_LABELS[override.event_type]} rescheduled for ${findCycle(displayedSchedule, override.batch_id, override.lesson_id).title}`);
+});
+
+elements.eventEditor.addEventListener("click", (event) => {
+  const action = event.target.closest("[data-editor-action]")?.dataset.editorAction;
+  if (action === "cancel") {
+    elements.eventEditor.close();
+  }
+  if (action === "reset" && editingEvent) {
+    eventOverrides = resetEventOverride(eventOverrides, editingEvent);
+    elements.eventEditor.close();
+    renderCurrentSchedule("Event restored to the generated schedule");
+  }
 });
 
 async function initialise() {
