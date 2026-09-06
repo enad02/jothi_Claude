@@ -18,6 +18,12 @@ const dateFormatter = new Intl.DateTimeFormat("en-GB", {
   year: "numeric",
   timeZone: "UTC"
 });
+const longDateFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC"
+});
 const weekdayDateFormatter = new Intl.DateTimeFormat("en-GB", {
   weekday: "short",
   day: "numeric",
@@ -32,6 +38,7 @@ const elements = {
   targetCompletion: document.querySelector("#target-completion"),
   closureControls: document.querySelector("#closure-controls"),
   batchControls: document.querySelector("#batch-controls"),
+  accelerationControls: document.querySelector("#acceleration-controls"),
   batchTabs: document.querySelector("#batch-tabs"),
   error: document.querySelector("#scheduler-error"),
   generationNote: document.querySelector("#generation-note"),
@@ -73,6 +80,10 @@ function formatDate(dateString, includeWeekday = false) {
   return formatter.format(new Date(`${dateString}T00:00:00Z`));
 }
 
+function formatLongDate(dateString) {
+  return longDateFormatter.format(new Date(`${dateString}T00:00:00Z`));
+}
+
 function weekdayOptions(selected) {
   return WEEKDAYS.map((weekday) => (
     `<option value="${weekday}"${weekday === selected ? " selected" : ""}>${weekday}</option>`
@@ -112,6 +123,11 @@ function renderSetup(programme) {
         </div>
       </div>
     `).join("")}
+  `;
+
+  elements.accelerationControls.innerHTML = `
+    <h3 class="setup-subheading">Optional holiday scheduling</h3>
+    ${programme.batches.map((batch) => renderAccelerationEditors(programme, batch)).join("")}
   `;
 }
 
@@ -156,7 +172,7 @@ function readProgrammeFromForm() {
 
   for (const batch of programme.batches) {
     batch.acceleration_overrides = [];
-    for (const editor of elements.batchTabs.querySelectorAll(`[data-acceleration-batch="${batch.batch_id}"]`)) {
+    for (const editor of elements.accelerationControls.querySelectorAll(`[data-acceleration-batch="${batch.batch_id}"]`)) {
       const enabled = editor.querySelector('[data-field="enabled"]').checked;
       if (!enabled) {
         continue;
@@ -176,26 +192,32 @@ function readProgrammeFromForm() {
   return programme;
 }
 
-function renderProgress(progress) {
+function renderProgrammeCommitment(progress, programme) {
   const values = [
-    ["Lessons scheduled", `${progress.lessons_scheduled} / ${progress.lessons_total}`],
-    ["Core teaching hours", `${progress.core_teaching_hours} / ${progress.core_teaching_hours_total}`],
-    ["Revision hours", `${progress.revision_hours} / ${progress.revision_hours_total}`],
-    ["Topic Test hours", `${progress.topic_test_hours} / ${progress.topic_test_hours_total}`],
-    ["Total supervised hours", `${progress.total_supervised_hours} / ${progress.total_supervised_hours_total}`],
-    ["Forecast completion", formatDate(progress.forecast_completion_date)],
-    ["Acceleration cycles used", String(progress.acceleration_cycles_used)],
-    ["Deadline status", progress.deadline_status]
+    ["Curriculum lessons", progress.lessons_scheduled],
+    ["Curriculum teaching", `${progress.core_teaching_hours}h`],
+    ["Supervised revision", `${progress.revision_hours}h`],
+    ["Topic Tests", `${progress.topic_test_hours}h`],
+    ["Supervised student hours", `${progress.total_supervised_hours}h`]
   ];
 
-  return `<dl class="progress-grid">
-    ${values.map(([label, value]) => {
-      const statusClass = label === "Deadline status"
-        ? ` is-status-${value.toLowerCase().replaceAll(" ", "-")}`
-        : "";
-      return `<div class="progress-card${statusClass}"><dt>${label}</dt><dd>${value}</dd></div>`;
-    }).join("")}
-  </dl>`;
+  return `
+    <section class="programme-commitment" aria-label="Programme commitment">
+      <div class="commitment-heading">
+        <h3>Programme commitment</h3>
+        <span class="deadline-status is-status-${progress.deadline_status.toLowerCase().replaceAll(" ", "-")}">${progress.deadline_status}</span>
+      </div>
+      <dl class="commitment-grid">
+        ${values.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("")}
+      </dl>
+      <dl class="programme-dates">
+        <div><dt>Taster</dt><dd>${formatLongDate(programme.taster_date)}</dd></div>
+        <div><dt>Programme start</dt><dd>${formatLongDate(programme.programme_start)}</dd></div>
+        <div><dt>Forecast completion</dt><dd>${formatLongDate(progress.forecast_completion_date)}</dd></div>
+        <div><dt>Acceleration cycles used</dt><dd>${progress.acceleration_cycles_used}</dd></div>
+      </dl>
+    </section>
+  `;
 }
 
 function findOverride(batch, breakId) {
@@ -207,18 +229,21 @@ function toDateTimeValue(event) {
 }
 
 function renderBreaks(programme, batch) {
-  return `<div class="break-grid" aria-label="Protected closure windows">
+  return `<section class="programme-breaks" aria-label="Programme breaks">
+    <h3>Programme breaks</h3>
+    <div class="break-grid">
     ${programme.closures.map((closure) => {
       const enabled = Boolean(findOverride(batch, closure.break_id)?.enabled);
       return `
         <article class="break-card">
-          <strong>${escapeHtml(closure.label)} protected window</strong>
-          <span>${formatDate(closure.start_date)} – ${formatDate(closure.end_date)}</span>
+          <strong>${escapeHtml(closure.label)} break</strong>
+          <span>${formatLongDate(closure.start_date)} – ${formatLongDate(closure.end_date)}</span>
           <small>Optional acceleration: ${enabled ? "Agreed / enabled" : "Not agreed"}</small>
         </article>
       `;
     }).join("")}
-  </div>`;
+    </div>
+  </section>`;
 }
 
 function renderAccelerationEditors(programme, batch) {
@@ -349,11 +374,10 @@ function renderTabs(result, programme) {
       const programmeBatch = batchById.get(batch.batch_id);
       return `
         <section id="panel-${batch.batch_id}" role="tabpanel" aria-labelledby="tab-${batch.batch_id}"${active ? "" : " hidden"}>
-          ${renderProgress(batch.progress)}
-          ${renderBreaks(programme, programmeBatch)}
-          ${renderAccelerationEditors(programme, programmeBatch)}
-          ${renderValidation(batch.errors)}
           ${renderTable(batch.cycles, batch.name, batch.batch_id)}
+          ${renderProgrammeCommitment(batch.progress, programme)}
+          ${renderBreaks(programme, programmeBatch)}
+          ${renderValidation(batch.errors)}
         </section>
       `;
     }).join("")}
@@ -455,7 +479,7 @@ elements.form.addEventListener("submit", (event) => {
 
   eventOverrides = clearEventOverrides();
   currentProgramme = readProgrammeFromForm();
-  generateAndRender(currentProgramme, "Regenerated with in-memory configuration");
+  generateAndRender(currentProgramme, "Schedule regenerated");
 });
 
 elements.batchTabs.addEventListener("click", (event) => {
@@ -532,7 +556,7 @@ elements.eventEditor.addEventListener("click", (event) => {
   if (action === "reset" && editingEvent) {
     eventOverrides = resetEventOverride(eventOverrides, editingEvent);
     elements.eventEditor.close();
-    renderCurrentSchedule("Event restored to the generated schedule");
+    renderCurrentSchedule("Event restored to the original schedule");
   }
 });
 
@@ -543,18 +567,18 @@ async function initialise() {
       fetch(programmePath)
     ]);
     if (!curriculumResponse.ok || !programmeResponse.ok) {
-      throw new Error("The scheduler JSON files could not be loaded.");
+      throw new Error("The schedule files could not be loaded.");
     }
 
     curriculum = await curriculumResponse.json();
     currentProgramme = await programmeResponse.json();
     activeBatchId = currentProgramme.batches[0]?.batch_id;
     renderSetup(currentProgramme);
-    generateAndRender(currentProgramme, "Generated from the 2026–27 JSON defaults");
+    generateAndRender(currentProgramme, "Schedule ready");
   } catch (error) {
-    elements.error.textContent = `${error.message} Run this preview through a local HTTP server.`;
+    elements.error.textContent = `${error.message} Open this page through the site server.`;
     elements.error.hidden = false;
-    elements.generationNote.textContent = "Unable to load configuration";
+    elements.generationNote.textContent = "Unable to load schedule";
   }
 }
 

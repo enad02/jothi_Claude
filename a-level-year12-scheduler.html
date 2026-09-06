@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,follow" />
   <meta name="theme-color" content="#10233f" />
-  <title>Year 12 A-Level Maths | Scheduler Preview</title>
-  <meta name="description" content="Local preview of the reusable Jothi Learning Year 12 A-Level Maths scheduler." />
+  <title>Year 12 A-Level Maths | Lesson Schedule 2026–27</title>
+  <meta name="description" content="Year 12 A-Level Maths lesson schedule for the 2026–27 programme." />
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="a-level-scheduler.css" />
 </head>
@@ -23,7 +23,6 @@
           <span class="brand-tag">Serious teaching. Visible progress.</span>
         </span>
       </a>
-      <span class="preview-label">Local preview · Noindex</span>
     </div>
   </header>
 
@@ -31,46 +30,15 @@
     <section class="scheduler-intro">
       <div class="wrap">
         <p class="scheduler-eyebrow">Year 12 A-Level Maths</p>
-        <h1>2026–27 Scheduler Preview</h1>
-        <p class="scheduler-intro-copy">A reusable curriculum-led schedule for independent batch planning.</p>
-
-        <dl class="programme-summary" aria-label="Programme summary">
-          <div><dt>Taster</dt><dd>8 September 2026</dd></div>
-          <div><dt>Programme start</dt><dd>14 September 2026</dd></div>
-          <div><dt>Curriculum lessons</dt><dd>28</dd></div>
-          <div><dt>Curriculum teaching</dt><dd>56h</dd></div>
-          <div><dt>Supervised revision</dt><dd>28h</dd></div>
-          <div><dt>Topic Tests</dt><dd>28h</dd></div>
-          <div class="programme-summary-total"><dt>Supervised student hours</dt><dd>112h</dd></div>
-        </dl>
+        <h1>Lesson Schedule 2026–27</h1>
       </div>
     </section>
 
-    <section class="wrap scheduler-workspace" aria-labelledby="setup-heading">
-      <form class="setup-panel" id="scheduler-setup">
-        <div class="panel-heading">
-          <div>
-            <p class="section-kicker">Configuration</p>
-            <h2 id="setup-heading">Regenerate the preview</h2>
-            <p>Changes remain in this browser session and reset on reload.</p>
-          </div>
-          <button class="scheduler-button" type="submit">Generate / Regenerate Schedule</button>
-        </div>
-
-        <div class="setup-grid setup-grid-programme">
-          <label>Programme start date<input id="programme-start" name="programme_start" type="date" required /></label>
-          <label>Target completion date<input id="target-completion" name="target_completion" type="date" required /></label>
-        </div>
-
-        <div id="closure-controls" class="setup-section"></div>
-        <div id="batch-controls" class="setup-section"></div>
-      </form>
-
+    <section class="wrap scheduler-workspace" aria-labelledby="schedule-heading">
       <section class="schedule-panel" aria-labelledby="schedule-heading">
         <div class="panel-heading schedule-heading">
           <div>
-            <p class="section-kicker">Generated schedule</p>
-            <h2 id="schedule-heading">Batch plan</h2>
+            <h2 id="schedule-heading">Lesson schedule</h2>
           </div>
           <p class="generation-note" id="generation-note" aria-live="polite"></p>
         </div>
@@ -78,12 +46,31 @@
         <div id="scheduler-error" class="scheduler-error" role="alert" hidden></div>
         <div id="batch-tabs"></div>
       </section>
+
+      <details class="staff-controls">
+        <summary>Staff schedule controls</summary>
+        <form class="setup-panel" id="scheduler-setup">
+          <div class="panel-heading">
+            <p>Adjust programme dates and batch timings.</p>
+            <button class="scheduler-button" type="submit">Generate / Regenerate Schedule</button>
+          </div>
+
+          <div class="setup-grid setup-grid-programme">
+            <label>Programme start date<input id="programme-start" name="programme_start" type="date" required /></label>
+            <label>Target completion date<input id="target-completion" name="target_completion" type="date" required /></label>
+          </div>
+
+          <div id="closure-controls" class="setup-section"></div>
+          <div id="batch-controls" class="setup-section"></div>
+          <div id="acceleration-controls" class="setup-section"></div>
+        </form>
+      </details>
     </section>
   </main>
 
   <footer class="scheduler-footer">
     <div class="wrap">
-      <p><strong>Jothi Learning</strong> · Scheduler foundation MVP · Local review only</p>
+      <p><strong>Jothi Learning</strong> · Year 12 A-Level Maths lesson schedule</p>
     </div>
   </footer>
 
@@ -91,7 +78,7 @@
     <form id="event-edit-form">
       <div class="event-editor-heading">
         <div>
-          <p class="section-kicker">Individual event override</p>
+          <p class="section-kicker">Schedule adjustment</p>
           <h2 id="event-editor-title">Reschedule event</h2>
         </div>
         <button class="event-editor-close" type="button" data-editor-action="cancel" aria-label="Close reschedule editor">×</button>
@@ -113,14 +100,14 @@
         <ul></ul>
         <label class="event-warning-confirm">
           <input id="event-warning-confirm" type="checkbox" />
-          I understand the warning and want to save this override.
+          I understand the warning and want to save this change.
         </label>
       </div>
 
       <div class="event-editor-actions">
         <button class="scheduler-button" type="submit">Save</button>
         <button class="event-editor-secondary" type="button" data-editor-action="cancel">Cancel</button>
-        <button class="event-editor-reset" type="button" data-editor-action="reset">Reset to generated schedule</button>
+        <button class="event-editor-reset" type="button" data-editor-action="reset">Reset to original schedule</button>
       </div>
     </form>
   </dialog>

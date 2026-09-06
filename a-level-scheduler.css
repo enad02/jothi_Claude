@@ -13,7 +13,7 @@
 .scheduler-page .scheduler-header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 24px;
   padding-block: 8px;
 }
@@ -27,23 +27,8 @@
   height: 72px;
 }
 
-.scheduler-page .preview-label {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 6px 12px;
-  border: 1px solid rgba(194, 163, 95, 0.55);
-  border-radius: 999px;
-  color: var(--navy-800);
-  background: var(--ivory-50);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
 .scheduler-page .scheduler-intro {
-  padding: clamp(48px, 7vw, 84px) 0 44px;
+  padding: clamp(26px, 4vw, 40px) 0 22px;
 }
 
 .scheduler-page .scheduler-eyebrow,
@@ -57,12 +42,13 @@
 }
 
 .scheduler-page .scheduler-intro h1 {
-  max-width: 760px;
+  max-width: none;
   margin: 0;
   color: var(--navy-950);
-  font-size: clamp(2.5rem, 7vw, 5.4rem);
-  line-height: 0.98;
+  font-size: clamp(2.35rem, 5vw, 4.4rem);
+  line-height: 1;
   letter-spacing: -0.035em;
+  white-space: nowrap;
 }
 
 .scheduler-page .scheduler-intro-copy {
@@ -123,11 +109,10 @@
 
 .scheduler-page .scheduler-workspace {
   display: grid;
-  gap: 28px;
+  gap: 24px;
   padding-bottom: 64px;
 }
 
-.scheduler-page .setup-panel,
 .scheduler-page .schedule-panel {
   padding: clamp(22px, 4vw, 38px);
   border: 1px solid var(--line);
@@ -136,12 +121,21 @@
   box-shadow: var(--shadow-soft);
 }
 
+.scheduler-page .setup-panel {
+  padding: 0 24px 28px;
+}
+
 .scheduler-page .panel-heading {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 28px;
+}
+
+.scheduler-page .schedule-heading {
+  align-items: baseline;
+  margin-bottom: 16px;
 }
 
 .scheduler-page .panel-heading h2,
@@ -320,6 +314,100 @@
   display: none;
 }
 
+.scheduler-page .programme-commitment {
+  margin-top: 28px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--ivory-50);
+}
+
+.scheduler-page .commitment-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.scheduler-page .commitment-heading h3,
+.scheduler-page .programme-breaks h3 {
+  margin: 0;
+  color: var(--navy-950);
+  font-size: 1.25rem;
+}
+
+.scheduler-page .deadline-status {
+  display: inline-flex;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.scheduler-page .deadline-status.is-status-on-track {
+  background: #eaf5ee;
+  color: #236044;
+}
+
+.scheduler-page .deadline-status.is-status-at-risk {
+  background: #fff0ee;
+  color: #7d2523;
+}
+
+.scheduler-page .commitment-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--line);
+}
+
+.scheduler-page .commitment-grid > div {
+  padding: 13px 14px;
+  background: var(--white);
+}
+
+.scheduler-page .commitment-grid dt,
+.scheduler-page .programme-dates dt {
+  color: var(--slate-500);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.scheduler-page .commitment-grid dd,
+.scheduler-page .programme-dates dd {
+  margin: 5px 0 0;
+  color: var(--navy-900);
+  font-weight: 700;
+}
+
+.scheduler-page .commitment-grid dd {
+  font-size: 1.1rem;
+}
+
+.scheduler-page .programme-dates {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.scheduler-page .programme-breaks {
+  margin-top: 24px;
+}
+
+.scheduler-page .programme-breaks h3 {
+  margin-bottom: 12px;
+}
+
 .scheduler-page .progress-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -364,7 +452,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 0;
 }
 
 .scheduler-page .break-card {
@@ -573,6 +661,35 @@
   color: #7d2523;
 }
 
+.scheduler-page .staff-controls {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.scheduler-page .staff-controls > summary {
+  padding: 18px 24px;
+  color: var(--navy-900);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.scheduler-page .staff-controls[open] > summary {
+  border-bottom: 1px solid var(--line);
+  background: var(--ivory-50);
+}
+
+.scheduler-page .staff-controls .panel-heading {
+  align-items: center;
+  margin: 0;
+  padding: 22px 0;
+}
+
+.scheduler-page .staff-controls .panel-heading p {
+  margin: 0;
+}
+
 .scheduler-page .event-editor {
   width: min(calc(100% - 32px), 620px);
   padding: 0;
@@ -732,7 +849,12 @@
 
 @media (max-width: 900px) {
   .scheduler-page .programme-summary,
-  .scheduler-page .progress-grid {
+  .scheduler-page .progress-grid,
+  .scheduler-page .commitment-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .scheduler-page .programme-dates {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -758,16 +880,19 @@
     align-items: center;
   }
 
-  .scheduler-page .preview-label {
-    display: none;
+  .scheduler-page .scheduler-intro {
+    padding-top: 24px;
   }
 
-  .scheduler-page .scheduler-intro {
-    padding-top: 38px;
+  .scheduler-page .scheduler-intro h1 {
+    font-size: clamp(2.15rem, 11vw, 3.2rem);
+    white-space: normal;
   }
 
   .scheduler-page .programme-summary,
   .scheduler-page .progress-grid,
+  .scheduler-page .commitment-grid,
+  .scheduler-page .programme-dates,
   .scheduler-page .break-grid,
   .scheduler-page .setup-grid-programme {
     grid-template-columns: 1fr;
