@@ -132,6 +132,16 @@
   margin-bottom: 16px;
 }
 
+.scheduler-page .schedule-heading > div {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.scheduler-page .schedule-heading h1 {
+  max-width: none;
+  white-space: nowrap;
+}
+
 .scheduler-page .panel-heading h1,
 .scheduler-page .panel-heading h2,
 .scheduler-page .setup-subheading {
@@ -264,8 +274,17 @@
 }
 
 .scheduler-page .generation-note {
+  flex: 0 0 auto;
   max-width: 320px;
   text-align: right;
+}
+
+.scheduler-page .panel-heading.schedule-heading .generation-note {
+  margin: 0;
+  color: var(--slate-500);
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .scheduler-page .scheduler-error {
@@ -537,15 +556,15 @@
 }
 
 .scheduler-page .schedule-table .cycle-column {
-  width: 5%;
+  width: 6%;
 }
 
 .scheduler-page .schedule-table .event-column {
-  width: 17%;
+  width: 18%;
 }
 
 .scheduler-page .schedule-table .lesson-column {
-  width: 35%;
+  width: 31%;
 }
 
 .scheduler-page .schedule-table .status-column {
@@ -554,7 +573,7 @@
 
 .scheduler-page .schedule-table th,
 .scheduler-page .schedule-table td {
-  padding: 14px 13px;
+  padding: 14px 15px;
   border-bottom: 1px solid var(--line);
   text-align: left;
   vertical-align: middle;
@@ -581,7 +600,7 @@
   gap: 2px;
   width: 100%;
   min-height: 56px;
-  padding: 13px;
+  padding: 13px 15px;
   border: 0;
   border-radius: 8px;
   background: transparent;
@@ -901,7 +920,14 @@
   }
 
   .scheduler-page .generation-note {
+    align-self: flex-start;
+    margin: 0;
     text-align: left;
+  }
+
+  .scheduler-page .schedule-heading h1 {
+    max-width: 100%;
+    white-space: normal;
   }
 
   .scheduler-page .break-card {
