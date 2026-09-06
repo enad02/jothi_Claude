@@ -10,9 +10,15 @@ import {
   upsertEventOverride,
   validateEventOverride
 } from "../a-level-scheduler-engine.js";
+import { initialisePublicSchedule, renderPublicSchedule } from "../a-level-schedule-public.js";
+import { renderScheduleView } from "../a-level-scheduler-view.js";
 
 const curriculum = JSON.parse(await readFile(new URL("../data/a-level-maths/year12-curriculum.json", import.meta.url), "utf8"));
 const programme = JSON.parse(await readFile(new URL("../data/a-level-maths/2026-27.json", import.meta.url), "utf8"));
+const publicTemplate = await readFile(new URL("../a-level-year12-schedule.html", import.meta.url), "utf8");
+const publicController = await readFile(new URL("../a-level-schedule-public.js", import.meta.url), "utf8");
+const staffTemplate = await readFile(new URL("../a-level-year12-scheduler.html", import.meta.url), "utf8");
+const staffController = await readFile(new URL("../a-level-scheduler.js", import.meta.url), "utf8");
 const expectedIds = Array.from({ length: 28 }, (_, index) => `Y12-${String(index + 1).padStart(2, "0")}`);
 
 function clone(value) {
@@ -296,4 +302,114 @@ test("Step 1A L: regeneration clears all temporary event overrides", () => {
   const overrides = [teachingOverride()];
   const cleared = clearEventOverrides(overrides);
   assert.deepEqual(cleared, []);
+});
+
+test("Step 2A A/B/F: public rendering emits both batches with title-only lesson pills and ID metadata", () => {
+  const result = generateSchedule(curriculum, programme);
+  const html = renderPublicSchedule(result, programme, "BATCH-1");
+
+  assert.match(html, /id="panel-BATCH-1"/);
+  assert.match(html, /id="panel-BATCH-2"/);
+  assert.match(html, />Batch 1<\/button>/);
+  assert.match(html, />Batch 2<\/button>/);
+  assert.match(html, /class="lesson-pill" data-lesson-id="Y12-01">Algebra and functions<\/span>/);
+  assert.doesNotMatch(html, />Y12-01 · Algebra and functions</);
+});
+
+test("Step 2A C: public event cells are plain text and initialise no editing affordance", () => {
+  const html = renderPublicSchedule(generateSchedule(curriculum, programme), programme, "BATCH-1");
+
+  assert.equal((html.match(/class="event-time-static"/g) || []).length, 168);
+  assert.doesNotMatch(html, /data-event-edit/);
+  assert.doesNotMatch(html, /event-time-trigger/);
+  assert.doesNotMatch(html, /aria-label="Edit /);
+  assert.doesNotMatch(html, /override|rescheduled|Acceleration cycles used|Optional acceleration/i);
+});
+
+test("Step 2A D/E: public template contains no staff, configuration, editor, or regeneration controls", () => {
+  assert.match(publicTemplate, /<meta name="robots" content="noindex,follow" \/>/);
+  assert.match(publicTemplate, /src="a-level-schedule-public\.js"/);
+  assert.doesNotMatch(publicTemplate, /staff-controls|scheduler-setup|event-editor/i);
+  assert.doesNotMatch(publicTemplate, /generate|regenerate/i);
+  assert.doesNotMatch(publicTemplate, /<form|<input|<select|<dialog/i);
+  assert.doesNotMatch(publicTemplate, /a-level-scheduler\.js/);
+});
+
+test("Step 2A G: staff rendering retains editable event controls and staff template controls", () => {
+  const html = renderScheduleView(generateSchedule(curriculum, programme), programme, "BATCH-1", {
+    editableEvents: true,
+    lessonColumnLabel: "Lesson pill",
+    showAcceleration: true,
+    showValidation: true
+  });
+
+  assert.equal((html.match(/data-event-edit/g) || []).length, 168);
+  assert.match(html, /aria-label="Edit teaching date and time for Algebra and functions"/);
+  assert.match(staffTemplate, /class="staff-controls"/);
+  assert.match(staffTemplate, /Generate \/ Regenerate Schedule/);
+  assert.match(staffTemplate, /id="event-editor"/);
+  assert.match(staffTemplate, /<meta name="robots" content="noindex,follow" \/>/);
+  assert.match(staffController, /elements\.batchTabs\.addEventListener\("click"/);
+  assert.match(staffController, /openEventEditor\(eventTrigger\)/);
+  assert.match(staffController, /elements\.eventEditForm\.addEventListener\("submit"/);
+  assert.match(staffController, /eventOverrides = upsertEventOverride/);
+  assert.match(staffController, /eventOverrides = clearEventOverrides/);
+  assert.match(staffController, /renderAccelerationEditors/);
+});
+
+test("Step 2A A/H/I: public and staff views share lesson sequence, engine output, and 112-hour totals", () => {
+  const result = generateSchedule(curriculum, programme);
+  const beforeRender = clone(result);
+  const publicHtml = renderPublicSchedule(result, programme, "BATCH-1");
+  const staffHtml = renderScheduleView(result, programme, "BATCH-1", { editableEvents: true });
+  const lessonIdPattern = /class="lesson-pill" data-lesson-id="([^"]+)"/g;
+  const publicIds = [...publicHtml.matchAll(lessonIdPattern)].map((match) => match[1]);
+  const staffIds = [...staffHtml.matchAll(lessonIdPattern)].map((match) => match[1]);
+
+  assert.deepEqual(result, beforeRender);
+  assert.deepEqual(publicIds, [...expectedIds, ...expectedIds]);
+  assert.deepEqual(staffIds, publicIds);
+  assert.equal((publicHtml.match(/>112h<\/dd>/g) || []).length, 1);
+  assert.equal((staffHtml.match(/>112h<\/dd>/g) || []).length, 1);
+  assert.ok(result.batches.every((item) => item.progress.total_supervised_hours === 112));
+});
+
+test("Step 2A J: the public application ships no protected resource data", () => {
+  const html = renderPublicSchedule(generateSchedule(curriculum, programme), programme, "BATCH-1");
+  const publicSurface = `${publicTemplate}\n${publicController}\n${html}`;
+
+  assert.doesNotMatch(publicSurface, /classkick|zoom|tutor[ -]?cost|resource[_ -]?token/i);
+  assert.doesNotMatch(publicController, /a-level-scheduler\.js/);
+});
+
+test("Step 2A: public controller loads the shared sources and mounts the read-only schedule", async () => {
+  const listeners = new Map();
+  const batchTabs = {
+    innerHTML: "",
+    addEventListener(type, listener) {
+      listeners.set(type, listener);
+    }
+  };
+  const error = { hidden: true, textContent: "" };
+  const page = {
+    querySelector(selector) {
+      return selector === "#batch-tabs" ? batchTabs : error;
+    }
+  };
+  const load = async (path) => ({
+    ok: true,
+    async json() {
+      return clone(path.includes("curriculum") ? curriculum : programme);
+    }
+  });
+
+  await initialisePublicSchedule(page, load);
+
+  assert.ok(listeners.has("click"));
+  assert.ok(listeners.has("keydown"));
+  assert.match(batchTabs.innerHTML, /Programme commitment/);
+  assert.match(batchTabs.innerHTML, /id="panel-BATCH-2"/);
+  assert.doesNotMatch(batchTabs.innerHTML, /data-event-edit/);
+  assert.equal(error.hidden, true);
+  assert.equal(error.textContent, "");
 });

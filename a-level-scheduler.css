@@ -415,6 +415,10 @@
   border-top: 1px solid var(--line);
 }
 
+.scheduler-page .programme-dates.is-public {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .scheduler-page .programme-breaks {
   margin-top: 24px;
 }
@@ -607,6 +611,15 @@
   color: var(--slate-700);
   cursor: pointer;
   text-align: left;
+}
+
+.scheduler-page .event-time-static {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  min-height: 56px;
+  padding: 13px 15px;
+  color: var(--slate-700);
 }
 
 .scheduler-page .event-time-trigger:hover {
@@ -875,6 +888,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .scheduler-page .programme-dates.is-public {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .scheduler-page .setup-grid,
   .scheduler-page .acceleration-editor-grid,
   .scheduler-page .weekly-event {
@@ -903,6 +920,10 @@
   .scheduler-page .programme-dates,
   .scheduler-page .break-grid,
   .scheduler-page .setup-grid-programme {
+    grid-template-columns: 1fr;
+  }
+
+  .scheduler-page .programme-dates.is-public {
     grid-template-columns: 1fr;
   }
 
