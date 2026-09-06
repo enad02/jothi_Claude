@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex,follow" />
+  <meta name="theme-color" content="#10233f" />
+  <title>Year 12 A-Level Maths | Scheduler Preview</title>
+  <meta name="description" content="Local preview of the reusable Jothi Learning Year 12 A-Level Maths scheduler." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="a-level-scheduler.css" />
+</head>
+<body class="scheduler-page">
+  <a class="skip-link" href="#main">Skip to scheduler</a>
+
+  <header class="scheduler-header">
+    <div class="wrap scheduler-header-inner">
+      <a class="brand" href="index.html" aria-label="Jothi Learning home">
+        <img src="Logo%202026.png" alt="Jothi Learning logo" width="90" height="90" />
+        <span class="brand-lockup">
+          <span class="brand-name">JOTHI</span>
+          <span class="brand-subline">LEARNING</span>
+          <span class="brand-tag">Serious teaching. Visible progress.</span>
+        </span>
+      </a>
+      <span class="preview-label">Local preview · Noindex</span>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="scheduler-intro">
+      <div class="wrap">
+        <p class="scheduler-eyebrow">Year 12 A-Level Maths</p>
+        <h1>2026–27 Scheduler Preview</h1>
+        <p class="scheduler-intro-copy">A reusable curriculum-led schedule for independent batch planning.</p>
+
+        <dl class="programme-summary" aria-label="Programme summary">
+          <div><dt>Taster</dt><dd>8 September 2026</dd></div>
+          <div><dt>Programme start</dt><dd>14 September 2026</dd></div>
+          <div><dt>Curriculum lessons</dt><dd>28</dd></div>
+          <div><dt>Curriculum teaching</dt><dd>56h</dd></div>
+          <div><dt>Supervised revision</dt><dd>28h</dd></div>
+          <div><dt>Topic Tests</dt><dd>28h</dd></div>
+          <div class="programme-summary-total"><dt>Supervised student hours</dt><dd>112h</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="wrap scheduler-workspace" aria-labelledby="setup-heading">
+      <form class="setup-panel" id="scheduler-setup">
+        <div class="panel-heading">
+          <div>
+            <p class="section-kicker">Configuration</p>
+            <h2 id="setup-heading">Regenerate the preview</h2>
+            <p>Changes remain in this browser session and reset on reload.</p>
+          </div>
+          <button class="scheduler-button" type="submit">Generate / Regenerate Schedule</button>
+        </div>
+
+        <div class="setup-grid setup-grid-programme">
+          <label>Programme start date<input id="programme-start" name="programme_start" type="date" required /></label>
+          <label>Target completion date<input id="target-completion" name="target_completion" type="date" required /></label>
+        </div>
+
+        <div id="closure-controls" class="setup-section"></div>
+        <div id="batch-controls" class="setup-section"></div>
+      </form>
+
+      <section class="schedule-panel" aria-labelledby="schedule-heading">
+        <div class="panel-heading schedule-heading">
+          <div>
+            <p class="section-kicker">Generated schedule</p>
+            <h2 id="schedule-heading">Batch plan</h2>
+          </div>
+          <p class="generation-note" id="generation-note" aria-live="polite"></p>
+        </div>
+
+        <div id="scheduler-error" class="scheduler-error" role="alert" hidden></div>
+        <div id="batch-tabs"></div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="scheduler-footer">
+    <div class="wrap">
+      <p><strong>Jothi Learning</strong> · Scheduler foundation MVP · Local review only</p>
+    </div>
+  </footer>
+
+  <script type="module" src="a-level-scheduler.js"></script>
+</body>
+</html>

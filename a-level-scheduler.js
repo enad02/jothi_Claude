@@ -1,0 +1,387 @@
+import { WEEKDAYS, generateSchedule } from "./a-level-scheduler-engine.js";
+
+const curriculumPath = "./data/a-level-maths/year12-curriculum.json";
+const programmePath = "./data/a-level-maths/2026-27.json";
+const dateFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC"
+});
+const weekdayDateFormatter = new Intl.DateTimeFormat("en-GB", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC"
+});
+
+const elements = {
+  form: document.querySelector("#scheduler-setup"),
+  programmeStart: document.querySelector("#programme-start"),
+  targetCompletion: document.querySelector("#target-completion"),
+  closureControls: document.querySelector("#closure-controls"),
+  batchControls: document.querySelector("#batch-controls"),
+  batchTabs: document.querySelector("#batch-tabs"),
+  error: document.querySelector("#scheduler-error"),
+  generationNote: document.querySelector("#generation-note")
+};
+
+let curriculum;
+let currentProgramme;
+let activeBatchId;
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function formatDate(dateString, includeWeekday = false) {
+  const formatter = includeWeekday ? weekdayDateFormatter : dateFormatter;
+  return formatter.format(new Date(`${dateString}T00:00:00Z`));
+}
+
+function formatEvent(event) {
+  return `${formatDate(event.date, true)} · ${event.start_time}–${event.end_time}`;
+}
+
+function weekdayOptions(selected) {
+  return WEEKDAYS.map((weekday) => (
+    `<option value="${weekday}"${weekday === selected ? " selected" : ""}>${weekday}</option>`
+  )).join("");
+}
+
+function renderSetup(programme) {
+  elements.programmeStart.value = programme.programme_start;
+  elements.targetCompletion.value = programme.target_completion;
+
+  elements.closureControls.innerHTML = `
+    <h3 class="setup-subheading">Protected closures</h3>
+    ${programme.closures.map((closure) => `
+      <div class="closure-config" data-closure-id="${escapeHtml(closure.break_id)}">
+        <h4>${escapeHtml(closure.label)}</h4>
+        <div class="setup-grid setup-grid-programme">
+          <label>${escapeHtml(closure.label)} start
+            <input type="date" data-field="start_date" value="${escapeHtml(closure.start_date)}" required />
+          </label>
+          <label>${escapeHtml(closure.label)} end
+            <input type="date" data-field="end_date" value="${escapeHtml(closure.end_date)}" required />
+          </label>
+        </div>
+      </div>
+    `).join("")}
+  `;
+
+  elements.batchControls.innerHTML = `
+    <h3 class="setup-subheading">Weekly batch pattern</h3>
+    ${programme.batches.map((batch) => `
+      <div class="batch-config" data-batch-config="${escapeHtml(batch.batch_id)}">
+        <h4>${escapeHtml(batch.name)}</h4>
+        <div class="setup-grid">
+          ${weeklyEventControl("Teaching", "teaching", batch.teaching)}
+          ${weeklyEventControl("Revision", "revision", batch.revision)}
+          ${weeklyEventControl("Topic Test", "topic_test", batch.topic_test)}
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+
+function weeklyEventControl(label, eventName, definition) {
+  return `
+    <fieldset class="weekly-event" data-event="${eventName}">
+      <legend>${label}</legend>
+      <label>Weekday
+        <select data-field="weekday">${weekdayOptions(definition.weekday)}</select>
+      </label>
+      <label>Start time
+        <input type="time" data-field="start_time" value="${escapeHtml(definition.start_time)}" required />
+      </label>
+    </fieldset>
+  `;
+}
+
+function readDateTime(value) {
+  const [date = "", startTime = ""] = value.split("T");
+  return { date, start_time: startTime };
+}
+
+function readProgrammeFromForm() {
+  const programme = clone(currentProgramme);
+  programme.programme_start = elements.programmeStart.value;
+  programme.target_completion = elements.targetCompletion.value;
+
+  for (const closureElement of elements.closureControls.querySelectorAll("[data-closure-id]")) {
+    const closure = programme.closures.find((item) => item.break_id === closureElement.dataset.closureId);
+    closure.start_date = closureElement.querySelector('[data-field="start_date"]').value;
+    closure.end_date = closureElement.querySelector('[data-field="end_date"]').value;
+  }
+
+  for (const batchElement of elements.batchControls.querySelectorAll("[data-batch-config]")) {
+    const batch = programme.batches.find((item) => item.batch_id === batchElement.dataset.batchConfig);
+    for (const eventElement of batchElement.querySelectorAll("[data-event]")) {
+      const eventName = eventElement.dataset.event;
+      batch[eventName].weekday = eventElement.querySelector('[data-field="weekday"]').value;
+      batch[eventName].start_time = eventElement.querySelector('[data-field="start_time"]').value;
+    }
+  }
+
+  for (const batch of programme.batches) {
+    batch.acceleration_overrides = [];
+    for (const editor of elements.batchTabs.querySelectorAll(`[data-acceleration-batch="${batch.batch_id}"]`)) {
+      const enabled = editor.querySelector('[data-field="enabled"]').checked;
+      if (!enabled) {
+        continue;
+      }
+
+      batch.acceleration_overrides.push({
+        batch_id: batch.batch_id,
+        break_id: editor.dataset.accelerationBreak,
+        enabled: true,
+        teaching: readDateTime(editor.querySelector('[data-field="teaching"]').value),
+        revision: readDateTime(editor.querySelector('[data-field="revision"]').value),
+        topic_test: readDateTime(editor.querySelector('[data-field="topic_test"]').value)
+      });
+    }
+  }
+
+  return programme;
+}
+
+function renderProgress(progress) {
+  const values = [
+    ["Lessons scheduled", `${progress.lessons_scheduled} / ${progress.lessons_total}`],
+    ["Core teaching hours", `${progress.core_teaching_hours} / ${progress.core_teaching_hours_total}`],
+    ["Revision hours", `${progress.revision_hours} / ${progress.revision_hours_total}`],
+    ["Topic Test hours", `${progress.topic_test_hours} / ${progress.topic_test_hours_total}`],
+    ["Total supervised hours", `${progress.total_supervised_hours} / ${progress.total_supervised_hours_total}`],
+    ["Forecast completion", formatDate(progress.forecast_completion_date)],
+    ["Acceleration cycles used", String(progress.acceleration_cycles_used)],
+    ["Deadline status", progress.deadline_status]
+  ];
+
+  return `<dl class="progress-grid">
+    ${values.map(([label, value]) => {
+      const statusClass = label === "Deadline status"
+        ? ` is-status-${value.toLowerCase().replaceAll(" ", "-")}`
+        : "";
+      return `<div class="progress-card${statusClass}"><dt>${label}</dt><dd>${value}</dd></div>`;
+    }).join("")}
+  </dl>`;
+}
+
+function findOverride(batch, breakId) {
+  return (batch.acceleration_overrides || []).find((override) => override.break_id === breakId) || null;
+}
+
+function toDateTimeValue(event) {
+  return event?.date && event?.start_time ? `${event.date}T${event.start_time}` : "";
+}
+
+function renderBreaks(programme, batch) {
+  return `<div class="break-grid" aria-label="Protected closure windows">
+    ${programme.closures.map((closure) => {
+      const enabled = Boolean(findOverride(batch, closure.break_id)?.enabled);
+      return `
+        <article class="break-card">
+          <strong>${escapeHtml(closure.label)} protected window</strong>
+          <span>${formatDate(closure.start_date)} – ${formatDate(closure.end_date)}</span>
+          <small>Optional acceleration: ${enabled ? "Agreed / enabled" : "Not agreed"}</small>
+        </article>
+      `;
+    }).join("")}
+  </div>`;
+}
+
+function renderAccelerationEditors(programme, batch) {
+  return `
+    <details class="acceleration-panel">
+      <summary>Optional holiday acceleration · ${escapeHtml(batch.name)}</summary>
+      <div class="acceleration-editor-grid">
+        ${programme.closures.map((closure) => {
+          const override = findOverride(batch, closure.break_id);
+          return `
+            <section class="acceleration-break" data-acceleration-batch="${escapeHtml(batch.batch_id)}" data-acceleration-break="${escapeHtml(closure.break_id)}">
+              <h4>${escapeHtml(closure.label)}</h4>
+              <label class="enable-row">
+                <input type="checkbox" data-field="enabled"${override?.enabled ? " checked" : ""} />
+                Agreed and enabled for this batch
+              </label>
+              <label>Teaching date/time
+                <input type="datetime-local" data-field="teaching" value="${escapeHtml(toDateTimeValue(override?.teaching))}" />
+              </label>
+              <label>Revision date/time
+                <input type="datetime-local" data-field="revision" value="${escapeHtml(toDateTimeValue(override?.revision))}" />
+              </label>
+              <label>Topic Test date/time
+                <input type="datetime-local" data-field="topic_test" value="${escapeHtml(toDateTimeValue(override?.topic_test))}" />
+              </label>
+            </section>
+          `;
+        }).join("")}
+      </div>
+    </details>
+  `;
+}
+
+function renderTable(cycles, batchName) {
+  return `
+    <div class="schedule-table-wrap">
+      <table class="schedule-table">
+        <caption class="visually-hidden">${escapeHtml(batchName)} Year 12 A-Level Maths schedule</caption>
+        <thead>
+          <tr>
+            <th scope="col">Cycle</th>
+            <th scope="col">Teaching date/time</th>
+            <th scope="col">Lesson pill</th>
+            <th scope="col">Revision date/time</th>
+            <th scope="col">Topic Test date/time</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${cycles.map((cycle) => `
+            <tr>
+              <td>${cycle.cycle}</td>
+              <td>${formatEvent(cycle.teaching)}</td>
+              <td><span class="lesson-pill"><span class="lesson-pill-id">${escapeHtml(cycle.lesson_id)}</span>${escapeHtml(cycle.title)}</span></td>
+              <td>${formatEvent(cycle.revision)}</td>
+              <td>${formatEvent(cycle.topic_test)}</td>
+              <td><span class="status-pill${cycle.status === "Acceleration" ? " is-acceleration" : ""}">${cycle.status}</span></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderValidation(errors) {
+  if (!errors.length) {
+    return "";
+  }
+  return `<ul class="batch-validation">${errors.map((error) => `<li>${escapeHtml(error)}</li>`).join("")}</ul>`;
+}
+
+function renderTabs(result, programme) {
+  if (!activeBatchId || !result.batches.some((batch) => batch.batch_id === activeBatchId)) {
+    activeBatchId = result.batches[0]?.batch_id;
+  }
+
+  const batchById = new Map(programme.batches.map((batch) => [batch.batch_id, batch]));
+  elements.batchTabs.innerHTML = `
+    <div class="tab-list" role="tablist" aria-label="Batch schedules">
+      ${result.batches.map((batch) => {
+        const active = batch.batch_id === activeBatchId;
+        return `<button id="tab-${batch.batch_id}" type="button" role="tab" aria-selected="${active}" aria-controls="panel-${batch.batch_id}" tabindex="${active ? "0" : "-1"}" data-tab-batch="${escapeHtml(batch.batch_id)}">${escapeHtml(batch.name)}</button>`;
+      }).join("")}
+    </div>
+    ${result.batches.map((batch) => {
+      const active = batch.batch_id === activeBatchId;
+      const programmeBatch = batchById.get(batch.batch_id);
+      return `
+        <section id="panel-${batch.batch_id}" role="tabpanel" aria-labelledby="tab-${batch.batch_id}"${active ? "" : " hidden"}>
+          ${renderProgress(batch.progress)}
+          ${renderBreaks(programme, programmeBatch)}
+          ${renderAccelerationEditors(programme, programmeBatch)}
+          ${renderValidation(batch.errors)}
+          ${renderTable(batch.cycles, batch.name)}
+        </section>
+      `;
+    }).join("")}
+  `;
+}
+
+function activateTab(batchId, focus = false) {
+  activeBatchId = batchId;
+  for (const tab of elements.batchTabs.querySelectorAll('[role="tab"]')) {
+    const active = tab.dataset.tabBatch === batchId;
+    tab.setAttribute("aria-selected", String(active));
+    tab.tabIndex = active ? 0 : -1;
+    if (active && focus) {
+      tab.focus();
+    }
+  }
+  for (const panel of elements.batchTabs.querySelectorAll('[role="tabpanel"]')) {
+    panel.hidden = panel.id !== `panel-${batchId}`;
+  }
+}
+
+function generateAndRender(programme, note) {
+  try {
+    if (programme.closures.some((closure) => closure.end_date < closure.start_date)) {
+      throw new Error("Each protected closure must end on or after its start date.");
+    }
+    const result = generateSchedule(curriculum, programme);
+    renderTabs(result, programme);
+    elements.error.hidden = true;
+    elements.error.textContent = "";
+    elements.generationNote.textContent = note;
+  } catch (error) {
+    elements.error.textContent = error.message;
+    elements.error.hidden = false;
+    elements.generationNote.textContent = "Schedule not generated";
+  }
+}
+
+elements.form.addEventListener("submit", (event) => {
+  event.preventDefault();
+  currentProgramme = readProgrammeFromForm();
+  generateAndRender(currentProgramme, "Regenerated with in-memory configuration");
+});
+
+elements.batchTabs.addEventListener("click", (event) => {
+  const tab = event.target.closest('[role="tab"]');
+  if (tab) {
+    activateTab(tab.dataset.tabBatch);
+  }
+});
+
+elements.batchTabs.addEventListener("keydown", (event) => {
+  const tab = event.target.closest('[role="tab"]');
+  if (!tab || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+    return;
+  }
+
+  const tabs = [...elements.batchTabs.querySelectorAll('[role="tab"]')];
+  const currentIndex = tabs.indexOf(tab);
+  let nextIndex = currentIndex;
+  if (event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+  if (event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabs.length;
+  if (event.key === "Home") nextIndex = 0;
+  if (event.key === "End") nextIndex = tabs.length - 1;
+  event.preventDefault();
+  activateTab(tabs[nextIndex].dataset.tabBatch, true);
+});
+
+async function initialise() {
+  try {
+    const [curriculumResponse, programmeResponse] = await Promise.all([
+      fetch(curriculumPath),
+      fetch(programmePath)
+    ]);
+    if (!curriculumResponse.ok || !programmeResponse.ok) {
+      throw new Error("The scheduler JSON files could not be loaded.");
+    }
+
+    curriculum = await curriculumResponse.json();
+    currentProgramme = await programmeResponse.json();
+    activeBatchId = currentProgramme.batches[0]?.batch_id;
+    renderSetup(currentProgramme);
+    generateAndRender(currentProgramme, "Generated from the 2026–27 JSON defaults");
+  } catch (error) {
+    elements.error.textContent = `${error.message} Run this preview through a local HTTP server.`;
+    elements.error.hidden = false;
+    elements.generationNote.textContent = "Unable to load configuration";
+  }
+}
+
+initialise();
