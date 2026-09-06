@@ -11,6 +11,7 @@ import {
 } from "../functions/_lib/scheduler-write-guard.js";
 import { toScheduleApiState, upsertBatchConfiguration } from "../functions/_lib/scheduler-db.js";
 import { onRequest as protectScheduleApi } from "../functions/api/a-level-scheduler/_middleware.js";
+import { onRequest as protectStaffApi } from "../functions/api/staff/a-level-scheduler/_middleware.js";
 import { onRequestGet as getPublicScheduleState } from "../functions/api/a-level-scheduler/[academicYear]/state.js";
 import { onRequestGet as getALevelIdentity } from "../functions/api/a-level/me.js";
 import { onRequestPatch as patchProgramme } from "../functions/api/staff/a-level-scheduler/[academicYear]/programme.js";
@@ -450,32 +451,51 @@ test("Sruthi authenticates as a viewer, can read the schedule, and cannot perfor
   }
 });
 
-test("read-only schedule API rejects unauthenticated and unmapped deployed requests", async () => {
-  const next = async () => new Response("schedule must not be returned");
-  const unauthenticated = staffContext(
+test("anonymous public schedule GET returns only the approved public DTO", async () => {
+  let publicContext;
+  publicContext = staffContext(
     "https://jothi.uk/api/a-level-scheduler/2026-27/state",
     "GET",
-    { ...accessEnv, DB: scheduleDatabase() },
-    next
+    { DB: scheduleDatabase() },
+    async () => getPublicScheduleState(publicContext)
   );
-  assert.equal((await protectScheduleApi(unauthenticated)).status, 403);
-
-  const unmapped = staffContext(
-    "https://jothi.uk/api/a-level-scheduler/2026-27/state",
-    "GET",
-    { ...accessEnv, DB: scheduleDatabase() },
-    next
-  );
-  assert.equal((await runAuthenticated(unmapped, { email: "unmapped.user@example.test" })).status, 403);
+  publicContext.params = { academicYear: "2026-27" };
+  const response = await protectScheduleApi(publicContext);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body, toScheduleApiState(databaseState()));
+  assert.doesNotMatch(JSON.stringify(body), /audit|actor|reason|note|classkick|zoom|resource|email|role|token|secret/i);
 });
 
-test("no anonymous A-Level schedule-data API remains", async () => {
-  const middleware = await readFile(new URL("../functions/api/a-level-scheduler/_middleware.js", import.meta.url), "utf8");
-  const design = await readFile(new URL("../docs/A_LEVEL_SCHEDULER_PERSISTENCE_DESIGN.md", import.meta.url), "utf8");
-  assert.match(middleware, /createALevelAccessMiddleware\(\)/);
-  assert.match(design, /No A-Level schedule JSON is anonymously retrievable\./);
-  assert.match(design, /`\/a-level-year12-schedule\.html`/);
-  assert.match(design, /`\/api\/a-level-scheduler\/\*`/);
+test("anonymous public page renders while anonymous staff GET and writes remain blocked", async () => {
+  const publicTemplate = await readFile(new URL("../a-level-year12-schedule.html", import.meta.url), "utf8");
+  assert.match(publicTemplate, /src="a-level-schedule-public\.js"/);
+  assert.doesNotMatch(publicTemplate, /a-level-scheduler\.js/);
+
+  const anonymousStaffGet = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/state",
+    "GET",
+    accessEnv,
+    async () => new Response("staff route must not be reached")
+  );
+  assert.equal((await protectStaffApi(anonymousStaffGet)).status, 403);
+
+  const anonymousStaffWrite = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/event-override",
+    "PUT",
+    accessEnv,
+    async () => new Response("staff route must not be reached"),
+    {}
+  );
+  assert.equal((await protectStaffApi(anonymousStaffWrite)).status, 403);
+
+  const unmapped = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/state",
+    "GET",
+    { ...accessEnv, DB: scheduleDatabase() },
+    async () => new Response("staff route must not be reached")
+  );
+  assert.equal((await runAuthenticated(unmapped, { email: "unmapped.user@example.test" })).status, 403);
 });
 
 test("schema, seed, and public state contain no Classkick, Zoom, or resource URLs", async () => {

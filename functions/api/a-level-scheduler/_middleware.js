@@ -1,3 +1,3 @@
-import { createALevelAccessMiddleware } from "../../_lib/scheduler-access.js";
-
-export const onRequest = createALevelAccessMiddleware();
+export async function onRequest(context) {
+  return context.next();
+}
