@@ -17,6 +17,9 @@ const curriculum = JSON.parse(await readFile(new URL("../data/a-level-maths/year
 const programme = JSON.parse(await readFile(new URL("../data/a-level-maths/2026-27.json", import.meta.url), "utf8"));
 const publicTemplate = await readFile(new URL("../a-level-year12-schedule.html", import.meta.url), "utf8");
 const publicController = await readFile(new URL("../a-level-schedule-public.js", import.meta.url), "utf8");
+const publicStateModule = await readFile(new URL("../a-level-scheduler-public-state.js", import.meta.url), "utf8");
+const publicViewModule = await readFile(new URL("../a-level-scheduler-view.js", import.meta.url), "utf8");
+const publicEngineModule = await readFile(new URL("../a-level-scheduler-engine.js", import.meta.url), "utf8");
 const staffTemplate = await readFile(new URL("../a-level-year12-scheduler.html", import.meta.url), "utf8");
 const staffController = await readFile(new URL("../a-level-scheduler.js", import.meta.url), "utf8");
 const expectedIds = Array.from({ length: 28 }, (_, index) => `Y12-${String(index + 1).padStart(2, "0")}`);
@@ -411,8 +414,24 @@ test("Step 2A J: the public application ships no protected resource data", () =>
   assert.doesNotMatch(publicController, /a-level-scheduler\.js/);
 });
 
+test("Step 2A K: the public dependency graph contains no staff write surface", () => {
+  const publicGraph = `${publicController}\n${publicStateModule}\n${publicViewModule}\n${publicEngineModule}`;
+
+  assert.match(publicController, /a-level-scheduler-public-state\.js/);
+  assert.doesNotMatch(publicController, /a-level-scheduler-state\.js|requestSchedulerWrite|api\/staff\/a-level-scheduler/);
+  assert.doesNotMatch(publicGraph, /api\/staff\/a-level-scheduler|requestSchedulerWrite|STAFF_SCHEDULER|api\/a-level\/me|identity\.user|audit/i);
+});
+
+test("Step 2A L: the public controller performs only the anonymous schedule GET", () => {
+  assert.match(publicController, /PUBLIC_SCHEDULER_STATE_URL/);
+  assert.match(publicStateModule, /PUBLIC_SCHEDULER_STATE_URL\s*=\s*"\/api\/a-level-scheduler\/2026-27\/state"/);
+  assert.doesNotMatch(publicController, /fetch\([^)]*method\s*:\s*["'](?:POST|PUT|PATCH|DELETE)["']/i);
+  assert.doesNotMatch(publicController, /requestSchedulerWrite|STAFF_SCHEDULER|api\/a-level\/me|identity\.user|role\s*===|admin|editor|viewer/i);
+});
+
 test("Step 2A: public controller loads the shared sources and mounts the read-only schedule", async () => {
   const listeners = new Map();
+  const requests = [];
   const batchTabs = {
     innerHTML: "",
     addEventListener(type, listener) {
@@ -425,19 +444,23 @@ test("Step 2A: public controller loads the shared sources and mounts the read-on
       return selector === "#batch-tabs" ? batchTabs : error;
     }
   };
-  const load = async (path) => ({
-    ok: true,
-    async json() {
-      if (path.includes("curriculum")) return clone(curriculum);
-      if (path.startsWith("/api/")) return persistedState();
-      return clone(programme);
-    }
-  });
+  const load = async (path) => {
+    requests.push(path);
+    return {
+      ok: true,
+      async json() {
+        if (path.includes("curriculum")) return clone(curriculum);
+        if (path.startsWith("/api/")) return persistedState();
+        return clone(programme);
+      }
+    };
+  };
 
   await initialisePublicSchedule(page, load);
 
   assert.ok(listeners.has("click"));
   assert.ok(listeners.has("keydown"));
+  assert.ok(requests.includes("/api/a-level-scheduler/2026-27/state"));
   assert.match(batchTabs.innerHTML, /Programme commitment/);
   assert.match(batchTabs.innerHTML, /id="panel-BATCH-2"/);
   assert.doesNotMatch(batchTabs.innerHTML, /data-event-edit/);

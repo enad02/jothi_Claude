@@ -9,7 +9,7 @@ import {
   eventOverridesFromApiState,
   loadSchedulerApiState,
   programmeFromApiState
-} from "./a-level-scheduler-state.js";
+} from "./a-level-scheduler-public-state.js";
 
 const curriculumPath = "./data/a-level-maths/year12-curriculum.json";
 const programmePath = "./data/a-level-maths/2026-27.json";

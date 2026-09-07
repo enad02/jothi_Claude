@@ -33,7 +33,7 @@ import {
 import {
   eventOverridesFromApiState,
   programmeFromApiState
-} from "../a-level-scheduler-state.js";
+} from "../a-level-scheduler-public-state.js";
 
 const baseline = JSON.parse(await readFile(new URL("../data/a-level-maths/2026-27.json", import.meta.url), "utf8"));
 const curriculum = JSON.parse(await readFile(new URL("../data/a-level-maths/year12-curriculum.json", import.meta.url), "utf8"));
