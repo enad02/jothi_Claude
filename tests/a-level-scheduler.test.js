@@ -343,14 +343,18 @@ test("Step 2A A/B/F: public rendering emits both batches with title-only lesson 
   assert.match(html, /id="panel-BATCH-2"/);
   assert.match(html, />Batch 1<\/button>/);
   assert.match(html, />Batch 2<\/button>/);
-  assert.match(html, /class="lesson-pill" data-lesson-id="Y12-01">Algebra and functions<\/span>/);
+  assert.match(html, /class="lesson-label" data-lesson-id="Y12-01">Algebra and functions<\/span>/);
   assert.doesNotMatch(html, />Y12-01 · Algebra and functions</);
 });
 
 test("Step 2A C: public event cells are plain text and initialise no editing affordance", () => {
   const html = renderPublicSchedule(generateSchedule(curriculum, programme), programme, "BATCH-1");
+  const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision date\/time<\/th>\s*<th scope="col">Topic Test date\/time<\/th>\s*<th scope="col">Status<\/th>/;
 
   assert.equal((html.match(/class="event-time-static"/g) || []).length, 168);
+  assert.match(html, headerOrder);
+  assert.doesNotMatch(html, /LESSON PILL|lesson-pill/i);
+  assert.doesNotMatch(html, /<span class="lesson-label"[^>]*>[^<]*<\/span>[^<]*<button/i);
   assert.doesNotMatch(html, /data-event-edit/);
   assert.doesNotMatch(html, /event-time-trigger/);
   assert.doesNotMatch(html, /aria-label="Edit /);
@@ -369,12 +373,16 @@ test("Step 2A D/E: public template contains no staff, configuration, editor, or 
 test("Step 2A G: staff rendering retains editable event controls and staff template controls", () => {
   const html = renderScheduleView(generateSchedule(curriculum, programme), programme, "BATCH-1", {
     editableEvents: true,
-    lessonColumnLabel: "Lesson pill",
+    lessonColumnLabel: "Lesson",
     showAcceleration: true,
     showValidation: true
   });
+  const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision date\/time<\/th>\s*<th scope="col">Topic Test date\/time<\/th>\s*<th scope="col">Status<\/th>/;
 
   assert.equal((html.match(/data-event-edit/g) || []).length, 168);
+  assert.match(html, headerOrder);
+  assert.doesNotMatch(html, /LESSON PILL|lesson-pill/i);
+  assert.doesNotMatch(html, /<span class="lesson-label"[^>]*>[^<]*<\/span>[^<]*<button/i);
   assert.match(html, /aria-label="Edit teaching date and time for Algebra and functions"/);
   assert.match(staffTemplate, /class="staff-controls"/);
   assert.match(staffTemplate, /Generate \/ Regenerate Schedule/);
@@ -394,7 +402,7 @@ test("Step 2A A/H/I: public and staff views share lesson sequence, engine output
   const beforeRender = clone(result);
   const publicHtml = renderPublicSchedule(result, programme, "BATCH-1");
   const staffHtml = renderScheduleView(result, programme, "BATCH-1", { editableEvents: true });
-  const lessonIdPattern = /class="lesson-pill" data-lesson-id="([^"]+)"/g;
+  const lessonIdPattern = /class="lesson-label" data-lesson-id="([^"]+)"/g;
   const publicIds = [...publicHtml.matchAll(lessonIdPattern)].map((match) => match[1]);
   const staffIds = [...staffHtml.matchAll(lessonIdPattern)].map((match) => match[1]);
 
