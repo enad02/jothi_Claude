@@ -236,7 +236,7 @@ function renderCurrentSchedule(note) {
   elements.batchTabs.innerHTML = renderScheduleView(displayedSchedule, currentProgramme, activeBatchId, {
     editableEvents: canEditEvents,
     hasEventOverride,
-    lessonColumnLabel: "Lesson pill",
+    lessonColumnLabel: "Lesson",
     showAcceleration: true,
     showValidation: true
   });

@@ -142,8 +142,8 @@ function renderTable(cycles, batchName, batchId, options) {
         <caption class="visually-hidden">${escapeHtml(batchName)} Year 12 A-Level Maths schedule</caption>
         <colgroup>
           <col class="cycle-column" />
-          <col class="event-column" />
           <col class="lesson-column" />
+          <col class="event-column" />
           <col class="event-column" />
           <col class="event-column" />
           <col class="status-column" />
@@ -151,8 +151,8 @@ function renderTable(cycles, batchName, batchId, options) {
         <thead>
           <tr>
             <th scope="col">Cycle</th>
-            <th scope="col">Teaching date/time</th>
             <th scope="col">${options.lessonColumnLabel}</th>
+            <th scope="col">Teaching date/time</th>
             <th scope="col">Revision date/time</th>
             <th scope="col">Topic Test date/time</th>
             <th scope="col">Status</th>
@@ -162,8 +162,8 @@ function renderTable(cycles, batchName, batchId, options) {
           ${cycles.map((cycle) => `
             <tr>
               <td>${cycle.cycle}</td>
+              <td><span class="lesson-label" data-lesson-id="${escapeHtml(cycle.lesson_id)}">${escapeHtml(lessonPillLabel(cycle))}</span></td>
               ${renderEventCell(cycle, batchId, "teaching", options)}
-              <td><span class="lesson-pill" data-lesson-id="${escapeHtml(cycle.lesson_id)}">${escapeHtml(lessonPillLabel(cycle))}</span></td>
               ${renderEventCell(cycle, batchId, "revision", options)}
               ${renderEventCell(cycle, batchId, "topic_test", options)}
               <td><span class="status-pill${cycle.status === "Acceleration" ? " is-acceleration" : ""}">${escapeHtml(cycle.status)}</span></td>
