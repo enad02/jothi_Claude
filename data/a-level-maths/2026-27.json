@@ -1,0 +1,49 @@
+{
+  "programme_id": "ALEVEL-MATHS-Y12",
+  "programme_name": "Year 12 A-Level Maths",
+  "academic_year": "2026-27",
+  "taster_date": "2026-09-08",
+  "programme_start": "2026-09-14",
+  "target_completion": "2027-04-30",
+  "cycle_hours": {
+    "teaching": 2,
+    "revision": 1,
+    "topic_test": 1
+  },
+  "closures": [
+    {
+      "break_id": "christmas",
+      "label": "Christmas",
+      "start_date": "2026-12-21",
+      "end_date": "2027-01-03",
+      "protected": true,
+      "optional_acceleration": "not_agreed"
+    },
+    {
+      "break_id": "easter",
+      "label": "Easter",
+      "start_date": "2027-03-22",
+      "end_date": "2027-04-11",
+      "protected": true,
+      "optional_acceleration": "not_agreed"
+    }
+  ],
+  "batches": [
+    {
+      "batch_id": "BATCH-1",
+      "name": "Batch 1",
+      "teaching": { "weekday": "Monday", "start_time": "18:00", "duration_hours": 2 },
+      "revision": { "weekday": "Thursday", "start_time": "18:00", "duration_hours": 1 },
+      "topic_test": { "weekday": "Friday", "start_time": "19:00", "duration_hours": 1 },
+      "acceleration_overrides": []
+    },
+    {
+      "batch_id": "BATCH-2",
+      "name": "Batch 2",
+      "teaching": { "weekday": "Tuesday", "start_time": "18:00", "duration_hours": 2 },
+      "revision": { "weekday": "Thursday", "start_time": "19:00", "duration_hours": 1 },
+      "topic_test": { "weekday": "Friday", "start_time": "19:00", "duration_hours": 1 },
+      "acceleration_overrides": []
+    }
+  ]
+}

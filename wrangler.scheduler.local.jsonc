@@ -1,0 +1,17 @@
+{
+  // LOCAL DEVELOPMENT ONLY — NOT PRODUCTION CONFIGURATION.
+  // Placeholder UUIDs below do not identify remote Cloudflare resources.
+  "name": "jothi-a-level-scheduler-local",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2026-09-06",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "jothi-a-level-scheduler-local",
+      "database_id": "00000000-0000-4000-8000-000000000000",
+      "preview_database_id": "00000000-0000-4000-8000-000000000001",
+      "migrations_dir": "migrations/a-level-scheduler"
+    }
+  ]
+}

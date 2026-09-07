@@ -1,0 +1,2 @@
+# Local founder QA only. Never configure this bypass in preview or production.
+SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES=local-founder-qa

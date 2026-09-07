@@ -13,9 +13,11 @@ desktop.ini
 # Local environment / secrets
 .env
 .env.local
+.dev.vars
 
 # Node (if ever used locally)
 node_modules/
+.wrangler/
 
 # Local QA / archive artefacts
 .npm-cache/
