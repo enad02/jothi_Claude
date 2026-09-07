@@ -600,7 +600,7 @@ test("local config contains placeholders only and never enables writes", async (
   assert.match(config, /LOCAL DEVELOPMENT ONLY/);
   assert.match(config, /00000000-0000-4000-8000-00000000000[01]/);
   assert.doesNotMatch(config, /SCHEDULER_ALLOW_UNAUTHENTICATED_WRITES/);
-  assert.match(example, /^#.*\nSCHEDULER_ALLOW_UNAUTHENTICATED_WRITES=local-founder-qa\s*$/);
+  assert.match(example, /^#.*\r?\nSCHEDULER_ALLOW_UNAUTHENTICATED_WRITES=local-founder-qa\s*$/);
   assert.match(gitignore, /^\.dev\.vars$/m);
   assert.match(gitignore, /^\.wrangler\/$/m);
 });
