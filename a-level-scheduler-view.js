@@ -87,6 +87,15 @@ function formatHours(hours) {
   return whole > 0 ? `${whole}h ${minutes}m` : `${minutes}m`;
 }
 
+function assessmentDisplayLabel(event) {
+  const paperLabels = {
+    paper_1_pure: "Pure Mathematics",
+    paper_2_statistics_mechanics: "Statistics & Mechanics"
+  };
+  const paperLabel = paperLabels[event.paper];
+  return paperLabel ? `${event.label} — ${paperLabel}` : event.label;
+}
+
 function findAcceleration(batch, breakId) {
   return (batch?.acceleration_overrides || []).find((override) => override.break_id === breakId) || null;
 }
@@ -206,9 +215,11 @@ function renderAssessmentSchedule(assessmentEvents, batchName, batchId, options)
             </tr>
           </thead>
           <tbody>
-            ${assessmentEvents.map((event) => `
+            ${assessmentEvents.map((event) => {
+              const displayLabel = assessmentDisplayLabel(event);
+              return `
               <tr>
-                <td>${escapeHtml(event.label)}</td>
+                <td>${escapeHtml(displayLabel)}</td>
                 <td>${options.editableAssessments ? `
                   <button
                     class="event-time-trigger"
@@ -216,7 +227,7 @@ function renderAssessmentSchedule(assessmentEvents, batchName, batchId, options)
                     data-assessment-edit
                     data-batch-id="${escapeHtml(batchId)}"
                     data-assessment-key="${escapeHtml(event.assessment_key)}"
-                    aria-label="Edit assessment date and time for ${escapeHtml(event.label)}"
+                    aria-label="Edit assessment date and time for ${escapeHtml(displayLabel)}"
                   >
                     <span class="event-date">${formatDate(event.date, true)}</span>
                   </button>
@@ -228,14 +239,15 @@ function renderAssessmentSchedule(assessmentEvents, batchName, batchId, options)
                     data-assessment-edit
                     data-batch-id="${escapeHtml(batchId)}"
                     data-assessment-key="${escapeHtml(event.assessment_key)}"
-                    aria-label="Edit assessment date and time for ${escapeHtml(event.label)}"
+                    aria-label="Edit assessment date and time for ${escapeHtml(displayLabel)}"
                   >
                     <span class="event-time">${escapeHtml(event.start_time)}–${escapeHtml(event.end_time)}</span>
                   </button>
                 ` : `${escapeHtml(event.start_time)}–${escapeHtml(event.end_time)}`}</td>
                 <td>${formatHours(event.duration_hours)}</td>
               </tr>
-            `).join("")}
+            `;
+            }).join("")}
           </tbody>
         </table>
       </div>

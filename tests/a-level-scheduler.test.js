@@ -506,6 +506,25 @@ test("public output contains explicit assessments only and no fake weekly Topic 
   assert.doesNotMatch(html, /Topic Test date\/time/);
 });
 
+test("mock assessment paper labels include their subject in public and staff views", () => {
+  const assessedProgramme = programmeWithAssessments();
+  const result = generateSchedule(curriculum, assessedProgramme);
+  const publicHtml = renderPublicSchedule(result, assessedProgramme, "BATCH-1");
+  const staffHtml = renderScheduleView(result, assessedProgramme, "BATCH-1", {
+    editableEvents: true,
+    editableAssessments: true
+  });
+
+  for (const html of [publicHtml, staffHtml]) {
+    assert.match(html, /Midway Mock Paper 1 — Pure Mathematics/);
+    assert.match(html, /Midway Mock Paper 2 — Statistics &amp; Mechanics/);
+    assert.match(html, /Final Mock Paper 1 — Pure Mathematics/);
+    assert.match(html, /Final Mock Paper 2 — Statistics &amp; Mechanics/);
+    assert.match(html, /October monthly Topic Test/);
+    assert.doesNotMatch(html, /October monthly Topic Test —/);
+  }
+});
+
 test("Step 2A J: the public application ships no protected resource data", () => {
   const html = renderPublicSchedule(generateSchedule(curriculum, programme), programme, "BATCH-1");
   const publicSurface = `${publicTemplate}\n${publicController}\n${html}`;
