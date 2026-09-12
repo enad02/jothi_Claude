@@ -104,9 +104,17 @@ Do not invent further pricing breakdowns unless Prakash provides them.
 - Full Core Exam Programme: £2,760 programme fee
 
 #### Year 12 A-Level Maths
+- £30 per supervised programme hour
+- 112 supervised programme hours
+- Full programme fee: £3,360
+- 56 hours curriculum teaching
+- 28 hours supervised revision
+- 28 hours supervised Topic Tests
 - Programme cycle: September-May
-- Programme fee: £2,200
 - Curriculum teaching is completed by the end of April; May is reserved for teacher-supervised revision, formative assessment, full-paper practice, error correction and consolidation.
+- Paper marking is not included in the 112 supervised-hour calculation.
+- Payment plans are available after consultation.
+- Trial pricing and any pay-in-full concession are not public pricing.
 - Year 12 should not generally be described as an AS qualification. `First-year A-Level / AS-equivalent content` may be used where academically useful.
 
 #### Year 13 A-Level Maths
@@ -135,13 +143,13 @@ The Diagnostic Bridge is a short one-to-one entry pathway for students joining p
 ### Public-facing pricing rule
 
 Homepage pricing should stay light. Do not show a full pricing table on the homepage.
-Homepage pricing should use concise programme-fee `from` figures and state that payment plans are available after consultation.
+Homepage pricing should use concise programme pricing labels and state that payment plans are available after consultation.
 
-Homepage pricing should use these `from` prices (4 cards only):
+Homepage pricing should use these pricing labels (4 cards only):
 - KS3 from £880 programme fee
 - GCSE Prep from £1,100 programme fee
 - Year 11 from £1,000 programme fee
-- A-Level Maths from £2,200 programme fee
+- A-Level Maths: programme pricing by year
 
 KS2 is approved commercially and appears on the Programmes page, but is not shown in the homepage pricing cards. KS2 may be promoted separately through the Programmes page, a dedicated landing page, or campaign.
 
