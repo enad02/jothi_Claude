@@ -125,6 +125,18 @@ export function validateEventOverrideDeletePayload(body) {
   }
 }
 
+export function validateAssessmentEventPatch(body) {
+  assertOnlyFields(body, ["batch_key", "assessment_key", "assessment_date", "start_time", "end_time"], "Assessment event update");
+  if (typeof body.batch_key !== "string" || !body.batch_key) {
+    fail("Batch key is required.");
+  }
+  if (typeof body.assessment_key !== "string" || !body.assessment_key) {
+    fail("Assessment key is required.");
+  }
+  assertIsoDate(body.assessment_date, "Assessment date");
+  assertTimeRange(body.start_time, body.end_time, "Assessment");
+}
+
 function validateAccelerationEvent(value, label) {
   if (!value || Array.isArray(value) || typeof value !== "object") {
     fail(`${label} event is required.`);

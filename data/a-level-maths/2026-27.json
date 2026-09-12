@@ -4,7 +4,7 @@
   "academic_year": "2026-27",
   "taster_date": "2026-09-08",
   "programme_start": "2026-09-14",
-  "target_completion": "2027-04-30",
+  "target_completion": "2027-05-31",
   "cycle_hours": {
     "teaching": 2,
     "revision": 1
@@ -33,6 +33,18 @@
       "name": "Batch 1",
       "teaching": { "weekday": "Monday", "start_time": "18:00", "duration_hours": 2 },
       "revision": { "weekday": "Thursday", "start_time": "18:00", "duration_hours": 1 },
+      "assessment_events": [
+        { "assessment_key": "october-monthly-test", "assessment_type": "monthly_test", "label": "October monthly Topic Test", "date": "2026-10-30", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "november-monthly-test", "assessment_type": "monthly_test", "label": "November monthly Topic Test", "date": "2026-11-27", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "december-monthly-test", "assessment_type": "monthly_test", "label": "December monthly Topic Test", "date": "2026-12-18", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "midway-mock-paper-1", "assessment_type": "mock_paper", "label": "Midway Mock Paper 1", "date": "2027-01-15", "start_time": "19:00", "end_time": "21:00", "mock_cycle": "midway", "paper": "paper_1_pure", "coverage_note": "Pure Mathematics" },
+        { "assessment_key": "midway-mock-paper-2", "assessment_type": "mock_paper", "label": "Midway Mock Paper 2", "date": "2027-01-22", "start_time": "19:00", "end_time": "20:15", "mock_cycle": "midway", "paper": "paper_2_statistics_mechanics", "coverage_note": "Statistics and Mechanics" },
+        { "assessment_key": "february-monthly-test", "assessment_type": "monthly_test", "label": "February monthly Topic Test", "date": "2027-02-26", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "march-monthly-test", "assessment_type": "monthly_test", "label": "March monthly Topic Test", "date": "2027-03-19", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "april-monthly-test", "assessment_type": "monthly_test", "label": "April monthly Topic Test", "date": "2027-04-30", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "final-mock-paper-1", "assessment_type": "mock_paper", "label": "Final Mock Paper 1", "date": "2027-05-14", "start_time": "19:00", "end_time": "21:00", "mock_cycle": "final", "paper": "paper_1_pure", "coverage_note": "Pure Mathematics" },
+        { "assessment_key": "final-mock-paper-2", "assessment_type": "mock_paper", "label": "Final Mock Paper 2", "date": "2027-05-21", "start_time": "19:00", "end_time": "20:15", "mock_cycle": "final", "paper": "paper_2_statistics_mechanics", "coverage_note": "Statistics and Mechanics" }
+      ],
       "acceleration_overrides": []
     },
     {
@@ -40,6 +52,18 @@
       "name": "Batch 2",
       "teaching": { "weekday": "Tuesday", "start_time": "18:00", "duration_hours": 2 },
       "revision": { "weekday": "Thursday", "start_time": "19:00", "duration_hours": 1 },
+      "assessment_events": [
+        { "assessment_key": "october-monthly-test", "assessment_type": "monthly_test", "label": "October monthly Topic Test", "date": "2026-10-30", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "november-monthly-test", "assessment_type": "monthly_test", "label": "November monthly Topic Test", "date": "2026-11-27", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "december-monthly-test", "assessment_type": "monthly_test", "label": "December monthly Topic Test", "date": "2026-12-18", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "midway-mock-paper-1", "assessment_type": "mock_paper", "label": "Midway Mock Paper 1", "date": "2027-01-15", "start_time": "19:00", "end_time": "21:00", "mock_cycle": "midway", "paper": "paper_1_pure", "coverage_note": "Pure Mathematics" },
+        { "assessment_key": "midway-mock-paper-2", "assessment_type": "mock_paper", "label": "Midway Mock Paper 2", "date": "2027-01-22", "start_time": "19:00", "end_time": "20:15", "mock_cycle": "midway", "paper": "paper_2_statistics_mechanics", "coverage_note": "Statistics and Mechanics" },
+        { "assessment_key": "february-monthly-test", "assessment_type": "monthly_test", "label": "February monthly Topic Test", "date": "2027-02-26", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "march-monthly-test", "assessment_type": "monthly_test", "label": "March monthly Topic Test", "date": "2027-03-19", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "april-monthly-test", "assessment_type": "monthly_test", "label": "April monthly Topic Test", "date": "2027-04-30", "start_time": "19:00", "end_time": "20:00" },
+        { "assessment_key": "final-mock-paper-1", "assessment_type": "mock_paper", "label": "Final Mock Paper 1", "date": "2027-05-14", "start_time": "19:00", "end_time": "21:00", "mock_cycle": "final", "paper": "paper_1_pure", "coverage_note": "Pure Mathematics" },
+        { "assessment_key": "final-mock-paper-2", "assessment_type": "mock_paper", "label": "Final Mock Paper 2", "date": "2027-05-21", "start_time": "19:00", "end_time": "20:15", "mock_cycle": "final", "paper": "paper_2_statistics_mechanics", "coverage_note": "Statistics and Mechanics" }
+      ],
       "acceleration_overrides": []
     }
   ]

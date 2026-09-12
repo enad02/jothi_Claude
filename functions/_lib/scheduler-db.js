@@ -228,6 +228,12 @@ export async function loadAccelerationCycle(db, batchId, lessonId) {
   `).bind(batchId, lessonId).first();
 }
 
+export async function loadAssessmentEvent(db, batchId, assessmentKey) {
+  return db.prepare(`
+    SELECT * FROM assessment_events WHERE batch_id = ? AND assessment_key = ?
+  `).bind(batchId, assessmentKey).first();
+}
+
 function auditStatement(db, { actorIdentifier, action, entityType, entityId, before, after, timestamp }) {
   return db.prepare(`
     INSERT INTO schedule_audit_log (
@@ -392,6 +398,32 @@ export async function deleteEventOverride(db, before, actorIdentifier, timestamp
       entityId: before.id,
       before,
       after: null,
+      timestamp
+    })
+  ]);
+}
+
+export async function updateAssessmentEventDateTime(db, before, input, actorIdentifier, timestamp) {
+  const after = {
+    ...before,
+    assessment_date: input.assessment_date,
+    start_time: input.start_time,
+    end_time: input.end_time,
+    updated_at: timestamp
+  };
+  await db.batch([
+    db.prepare(`
+      UPDATE assessment_events
+      SET assessment_date = ?, start_time = ?, end_time = ?, updated_at = ?
+      WHERE id = ?
+    `).bind(input.assessment_date, input.start_time, input.end_time, timestamp, before.id),
+    auditStatement(db, {
+      actorIdentifier,
+      action: "assessment_event.updated",
+      entityType: "assessment_event",
+      entityId: before.id,
+      before,
+      after,
       timestamp
     })
   ]);

@@ -58,18 +58,7 @@ function persistedState() {
 }
 
 function approvedAssessmentFixture() {
-  return [
-    { assessment_key: "october-monthly-test", assessment_type: "monthly_test", label: "October monthly Topic Test", date: "2026-10-16", start_time: "19:00", end_time: "20:00" },
-    { assessment_key: "november-monthly-test", assessment_type: "monthly_test", label: "November monthly Topic Test", date: "2026-11-13", start_time: "19:00", end_time: "20:00" },
-    { assessment_key: "december-monthly-test", assessment_type: "monthly_test", label: "December monthly Topic Test", date: "2026-12-11", start_time: "19:00", end_time: "20:00" },
-    { assessment_key: "february-monthly-test", assessment_type: "monthly_test", label: "February monthly Topic Test", date: "2027-02-12", start_time: "19:00", end_time: "20:00" },
-    { assessment_key: "march-monthly-test", assessment_type: "monthly_test", label: "March monthly Topic Test", date: "2027-03-12", start_time: "19:00", end_time: "20:00" },
-    { assessment_key: "april-monthly-test", assessment_type: "monthly_test", label: "April monthly Topic Test", date: "2027-04-16", start_time: "19:00", end_time: "20:00" },
-    { assessment_key: "midway-mock-paper-1", assessment_type: "mock_paper", label: "Midway Mock — Paper 1 Pure Mathematics", date: "2027-01-15", start_time: "18:00", end_time: "20:00", mock_cycle: "midway", paper: "paper_1_pure" },
-    { assessment_key: "midway-mock-paper-2", assessment_type: "mock_paper", label: "Midway Mock — Paper 2 Statistics and Mechanics", date: "2027-01-16", start_time: "10:00", end_time: "11:15", mock_cycle: "midway", paper: "paper_2_statistics_mechanics" },
-    { assessment_key: "final-mock-paper-1", assessment_type: "mock_paper", label: "Final Mock — Paper 1 Pure Mathematics", date: "2027-05-07", start_time: "18:00", end_time: "20:00", mock_cycle: "final", paper: "paper_1_pure" },
-    { assessment_key: "final-mock-paper-2", assessment_type: "mock_paper", label: "Final Mock — Paper 2 Statistics and Mechanics", date: "2027-05-08", start_time: "10:00", end_time: "11:15", mock_cycle: "final", paper: "paper_2_statistics_mechanics" }
-  ];
+  return clone(programme.batches[0].assessment_events);
 }
 
 function programmeWithAssessments() {
@@ -155,8 +144,8 @@ test("H: recurring teaching and revision/consolidation hours are generated witho
   for (const generatedBatch of result.batches) {
     assert.equal(generatedBatch.progress.core_teaching_hours, 56);
     assert.equal(generatedBatch.progress.revision_hours, 28);
-    assert.equal(generatedBatch.progress.formal_assessment_hours, 0);
-    assert.equal(generatedBatch.progress.total_supervised_hours, 84);
+    assert.equal(generatedBatch.progress.formal_assessment_hours, 12.5);
+    assert.equal(generatedBatch.progress.total_supervised_hours, 96.5);
     assert.equal(generatedBatch.cycles.some((cycle) => "topic_test" in cycle), false);
   }
 });
@@ -179,6 +168,49 @@ test("approved assessment fixture totals 12.5 assessment hours and 96.5 supervis
   }
 });
 
+test("approved default assessment calendar is loaded for both independent batches", () => {
+  const result = generateSchedule(curriculum, programme);
+  const expectedDates = {
+    "october-monthly-test": ["2026-10-30", "19:00", "20:00"],
+    "november-monthly-test": ["2026-11-27", "19:00", "20:00"],
+    "december-monthly-test": ["2026-12-18", "19:00", "20:00"],
+    "midway-mock-paper-1": ["2027-01-15", "19:00", "21:00"],
+    "midway-mock-paper-2": ["2027-01-22", "19:00", "20:15"],
+    "february-monthly-test": ["2027-02-26", "19:00", "20:00"],
+    "march-monthly-test": ["2027-03-19", "19:00", "20:00"],
+    "april-monthly-test": ["2027-04-30", "19:00", "20:00"],
+    "final-mock-paper-1": ["2027-05-14", "19:00", "21:00"],
+    "final-mock-paper-2": ["2027-05-21", "19:00", "20:15"]
+  };
+
+  for (const generatedBatch of result.batches) {
+    assert.equal(generatedBatch.assessment_events.length, 10);
+    for (const event of generatedBatch.assessment_events) {
+      assert.deepEqual([event.date, event.start_time, event.end_time], expectedDates[event.assessment_key]);
+    }
+  }
+  assert.notEqual(programme.batches[0].assessment_events, programme.batches[1].assessment_events);
+});
+
+test("programme target completion is 31 May and May assessment forecasts remain on track", () => {
+  const result = generateSchedule(curriculum, programme);
+
+  assert.equal(programme.target_completion, "2027-05-31");
+  assert.ok(result.batches.every((item) => item.progress.forecast_completion_date === "2027-05-21"));
+  assert.ok(result.batches.every((item) => item.progress.deadline_status === "On track"));
+});
+
+test("legacy topic_test fields remain ignored for supervised-hour totals", () => {
+  const changedProgramme = clone(programme);
+  for (const batchConfig of changedProgramme.batches) {
+    batchConfig.topic_test = { weekday: "Friday", start_time: "09:00", duration_hours: 8 };
+  }
+
+  const result = generateSchedule(curriculum, changedProgramme);
+  assert.ok(result.batches.every((item) => item.progress.total_supervised_hours === 96.5));
+  assert.ok(result.batches.every((item) => item.cycles.every((cycle) => !("topic_test" in cycle))));
+});
+
 test("I: changing programme start changes dates without changing lesson identity or order", () => {
   const changedProgramme = clone(programme);
   changedProgramme.programme_start = "2026-09-21";
@@ -195,11 +227,11 @@ test("regeneration honours changed closure dates", () => {
   const defaultBatch = batch(generateSchedule(curriculum, programme), "BATCH-1");
   const changedBatch = batch(generateSchedule(curriculum, changedProgramme), "BATCH-1");
 
-  assert.notEqual(changedBatch.progress.forecast_completion_date, defaultBatch.progress.forecast_completion_date);
+  assert.notEqual(changedBatch.cycles.at(-1).revision.date, defaultBatch.cycles.at(-1).revision.date);
   assert.deepEqual(changedBatch.cycles.map((cycle) => cycle.lesson_id), expectedIds);
 });
 
-test("J/K: Batch 1 acceleration advances only Batch 1 forecast", () => {
+test("J/K: Batch 1 acceleration advances only Batch 1 curriculum cycles", () => {
   const acceleratedProgramme = clone(programme);
   acceleratedProgramme.batches[0].acceleration_overrides.push({
     batch_id: "BATCH-1",
@@ -217,7 +249,8 @@ test("J/K: Batch 1 acceleration advances only Batch 1 forecast", () => {
   const acceleratedBatch2 = batch(acceleratedResult, "BATCH-2");
 
   assert.equal(acceleratedBatch1.progress.acceleration_cycles_used, 1);
-  assert.ok(acceleratedBatch1.progress.forecast_completion_date < defaultBatch1.progress.forecast_completion_date);
+  assert.ok(acceleratedBatch1.cycles.at(-1).revision.date < defaultBatch1.cycles.at(-1).revision.date);
+  assert.equal(acceleratedBatch1.progress.forecast_completion_date, defaultBatch1.progress.forecast_completion_date);
   assert.equal(acceleratedBatch2.progress.forecast_completion_date, defaultBatch2.progress.forecast_completion_date);
   assert.deepEqual(acceleratedBatch2.cycles, defaultBatch2.cycles);
   assert.deepEqual(acceleratedBatch1.cycles.map((cycle) => cycle.lesson_id), expectedIds);
@@ -236,7 +269,7 @@ test("L: an incomplete enabled acceleration override is rejected and not schedul
   const generatedBatch = batch(generateSchedule(curriculum, invalidProgramme), "BATCH-1");
   assert.ok(generatedBatch.errors.some((error) => error.includes("revision date/time is required")));
   assert.equal(generatedBatch.progress.acceleration_cycles_used, 0);
-  assert.equal(generatedBatch.progress.forecast_completion_date, "2027-04-29");
+  assert.equal(generatedBatch.progress.forecast_completion_date, "2027-05-21");
 });
 
 test("M: scheduling does not require resource references or URLs", () => {
@@ -300,10 +333,10 @@ test("Step 1A G/H: overrides preserve lesson order and event-derived supervised 
   );
 
   assert.deepEqual(displayedBatch.cycles.map((cycle) => cycle.lesson_id), expectedIds);
-  assert.equal(displayedBatch.progress.total_supervised_hours, 84);
+  assert.equal(displayedBatch.progress.total_supervised_hours, 96.5);
   assert.equal(displayedBatch.progress.core_teaching_hours, 56);
   assert.equal(displayedBatch.progress.revision_hours, 28);
-  assert.equal(displayedBatch.progress.formal_assessment_hours, 0);
+  assert.equal(displayedBatch.progress.formal_assessment_hours, 12.5);
 });
 
 test("Step 1A I: an end time that is not after the start time is rejected", () => {
@@ -360,14 +393,14 @@ test("Step 1A: forecast uses overridden dates from the final cycle", () => {
     lesson_id: "Y12-28",
     cycle: 28,
     event_type: "revision",
-    new_date: "2027-05-07",
+    new_date: "2027-06-04",
     new_start_time: "18:00",
     new_end_time: "19:00"
   }]);
 
-  assert.equal(batch(displayed, "BATCH-1").progress.forecast_completion_date, "2027-05-07");
+  assert.equal(batch(displayed, "BATCH-1").progress.forecast_completion_date, "2027-06-04");
   assert.equal(batch(displayed, "BATCH-1").progress.deadline_status, "At risk");
-  assert.equal(batch(displayed, "BATCH-1").progress.total_supervised_hours, 84);
+  assert.equal(batch(displayed, "BATCH-1").progress.total_supervised_hours, 96.5);
 });
 
 test("Step 1A L: regeneration clears all temporary event overrides", () => {
@@ -417,11 +450,13 @@ test("Step 2A G: staff rendering retains editable event controls and staff templ
     editableEvents: true,
     lessonColumnLabel: "Lesson",
     showAcceleration: true,
-    showValidation: true
+    showValidation: true,
+    editableAssessments: true
   });
   const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision \/ consolidation date\/time<\/th>\s*<th scope="col">Status<\/th>/;
 
   assert.equal((html.match(/data-event-edit/g) || []).length, 112);
+  assert.equal((html.match(/data-assessment-edit/g) || []).length, 40);
   assert.match(html, headerOrder);
   assert.doesNotMatch(html, /Topic Test date\/time/);
   assert.doesNotMatch(html, /LESSON PILL|lesson-pill/i);
@@ -436,6 +471,7 @@ test("Step 2A G: staff rendering retains editable event controls and staff templ
   assert.match(staffController, /elements\.eventEditForm\.addEventListener\("submit"/);
   assert.match(staffController, /requestSchedulerWrite\("event-override", "PUT"/);
   assert.match(staffController, /requestSchedulerWrite\("event-override", "DELETE"/);
+  assert.match(staffController, /requestSchedulerWrite\("assessment-event", "PATCH"/);
   assert.match(staffController, /loadSchedulerApiState\(STAFF_SCHEDULER_STATE_URL\)/);
   assert.match(staffController, /renderAccelerationEditors/);
 });
@@ -444,7 +480,7 @@ test("Step 2A A/H/I: public and staff views share lesson sequence, engine output
   const result = generateSchedule(curriculum, programme);
   const beforeRender = clone(result);
   const publicHtml = renderPublicSchedule(result, programme, "BATCH-1");
-  const staffHtml = renderScheduleView(result, programme, "BATCH-1", { editableEvents: true });
+  const staffHtml = renderScheduleView(result, programme, "BATCH-1", { editableEvents: true, editableAssessments: true });
   const lessonIdPattern = /class="lesson-label" data-lesson-id="([^"]+)"/g;
   const publicIds = [...publicHtml.matchAll(lessonIdPattern)].map((match) => match[1]);
   const staffIds = [...staffHtml.matchAll(lessonIdPattern)].map((match) => match[1]);
@@ -452,9 +488,9 @@ test("Step 2A A/H/I: public and staff views share lesson sequence, engine output
   assert.deepEqual(result, beforeRender);
   assert.deepEqual(publicIds, [...expectedIds, ...expectedIds]);
   assert.deepEqual(staffIds, publicIds);
-  assert.equal((publicHtml.match(/>84h<\/dd>/g) || []).length, 1);
-  assert.equal((staffHtml.match(/>84h<\/dd>/g) || []).length, 1);
-  assert.ok(result.batches.every((item) => item.progress.total_supervised_hours === 84));
+  assert.equal((publicHtml.match(/>96.5h<\/dd>/g) || []).length, 1);
+  assert.equal((staffHtml.match(/>96.5h<\/dd>/g) || []).length, 1);
+  assert.ok(result.batches.every((item) => item.progress.total_supervised_hours === 96.5));
 });
 
 test("public output contains explicit assessments only and no fake weekly Topic Tests", () => {
@@ -463,8 +499,8 @@ test("public output contains explicit assessments only and no fake weekly Topic 
 
   assert.match(html, /Assessment schedule/);
   assert.match(html, /October monthly Topic Test/);
-  assert.match(html, /Midway Mock — Paper 1 Pure Mathematics/);
-  assert.match(html, /Final Mock — Paper 2 Statistics and Mechanics/);
+  assert.match(html, /Midway Mock Paper 1/);
+  assert.match(html, /Final Mock Paper 2/);
   assert.equal((html.match(/monthly Topic Test/g) || []).length, 12);
   assert.equal((html.match(/1h 15m/g) || []).length, 4);
   assert.doesNotMatch(html, /Topic Test date\/time/);

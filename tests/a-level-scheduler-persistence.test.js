@@ -9,7 +9,7 @@ import {
   requireSchedulerWriteAccess,
   schedulerWritesAllowed
 } from "../functions/_lib/scheduler-write-guard.js";
-import { toScheduleApiState, upsertBatchConfiguration } from "../functions/_lib/scheduler-db.js";
+import { toScheduleApiState, updateAssessmentEventDateTime, upsertBatchConfiguration } from "../functions/_lib/scheduler-db.js";
 import { onRequest as protectScheduleApi } from "../functions/api/a-level-scheduler/_middleware.js";
 import { onRequest as protectStaffApi } from "../functions/api/staff/a-level-scheduler/_middleware.js";
 import { onRequestGet as getPublicScheduleState } from "../functions/api/a-level-scheduler/[academicYear]/state.js";
@@ -20,6 +20,7 @@ import {
   onRequestDelete as deleteEventOverride,
   onRequestPut as putEventOverride
 } from "../functions/api/staff/a-level-scheduler/[academicYear]/event-override.js";
+import { onRequestPatch as patchAssessmentEvent } from "../functions/api/staff/a-level-scheduler/[academicYear]/assessment-event.js";
 import {
   onRequestDelete as deleteAcceleration,
   onRequestPut as putAcceleration
@@ -27,6 +28,7 @@ import {
 import {
   assertAccelerationInsideBreak,
   assertAcademicYear,
+  validateAssessmentEventPatch,
   validateAccelerationPayload,
   validateEventOverridePayload
 } from "../functions/_lib/scheduler-validation.js";
@@ -120,25 +122,41 @@ function databaseState() {
       academic_year: "2026-27",
       taster_date: "2026-09-08",
       programme_start_date: "2026-09-14",
-      target_completion_date: "2027-04-30",
+      target_completion_date: "2027-05-31",
       status: "On track",
       created_at: "2026-09-06T00:00:00Z",
       updated_at: "2026-09-06T00:00:00Z"
     },
-    batches: [{
-      id: "BATCH-DB-1",
-      batch_key: "BATCH-1",
-      display_name: "Batch 1",
-      teaching_weekday: 1,
-      teaching_start: "18:00",
-      teaching_end: "20:00",
-      revision_weekday: 4,
-      revision_start: "18:00",
-      revision_end: "19:00",
-      topic_test_weekday: 5,
-      topic_test_start: "19:00",
-      topic_test_end: "20:00"
-    }],
+    batches: [
+      {
+        id: "BATCH-DB-1",
+        batch_key: "BATCH-1",
+        display_name: "Batch 1",
+        teaching_weekday: 1,
+        teaching_start: "18:00",
+        teaching_end: "20:00",
+        revision_weekday: 4,
+        revision_start: "18:00",
+        revision_end: "19:00",
+        topic_test_weekday: 5,
+        topic_test_start: "19:00",
+        topic_test_end: "20:00"
+      },
+      {
+        id: "BATCH-DB-2",
+        batch_key: "BATCH-2",
+        display_name: "Batch 2",
+        teaching_weekday: 2,
+        teaching_start: "18:00",
+        teaching_end: "20:00",
+        revision_weekday: 4,
+        revision_start: "19:00",
+        revision_end: "20:00",
+        topic_test_weekday: 5,
+        topic_test_start: "19:00",
+        topic_test_end: "20:00"
+      }
+    ],
     breaks: [{
       id: "BREAK-DB-1",
       break_key: "christmas",
@@ -158,7 +176,40 @@ function databaseState() {
       reason: "private staff note"
     }],
     accelerationCycles: [],
-    assessmentEvents: []
+    assessmentEvents: [
+      {
+        id: "ASSESSMENT-DB-1",
+        batch_id: "BATCH-DB-1",
+        batch_key: "BATCH-1",
+        assessment_key: "october-monthly-test",
+        assessment_type: "monthly_test",
+        label: "October monthly Topic Test",
+        assessment_date: "2026-10-30",
+        start_time: "19:00",
+        end_time: "20:00",
+        mock_cycle: null,
+        paper: null,
+        coverage_note: null,
+        created_at: "2026-09-06T00:00:00Z",
+        updated_at: "2026-09-06T00:00:00Z"
+      },
+      {
+        id: "ASSESSMENT-DB-2",
+        batch_id: "BATCH-DB-2",
+        batch_key: "BATCH-2",
+        assessment_key: "october-monthly-test",
+        assessment_type: "monthly_test",
+        label: "October monthly Topic Test",
+        assessment_date: "2026-10-30",
+        start_time: "19:00",
+        end_time: "20:00",
+        mock_cycle: null,
+        paper: null,
+        coverage_note: null,
+        created_at: "2026-09-06T00:00:00Z",
+        updated_at: "2026-09-06T00:00:00Z"
+      }
+    ]
   };
 }
 
@@ -183,6 +234,68 @@ function scheduleDatabase(state = databaseState()) {
         { results: state.eventOverrides },
         { results: state.accelerationCycles }
       ];
+    }
+  };
+}
+
+function assessmentUpdateDatabase(state = databaseState()) {
+  state.mutationBatches = [];
+  return {
+    prepare(sql) {
+      return {
+        sql,
+        bind(...args) {
+          return {
+            sql,
+            args,
+            first: async () => {
+              if (sql.includes("FROM programme_instances")) {
+                return state.programme;
+              }
+              if (sql.includes("FROM batches WHERE")) {
+                return state.batches.find((batch) => (
+                  batch.programme_instance_id === args[0] || args[0] === state.programme.id
+                ) && batch.batch_key === args[1]) || null;
+              }
+              if (sql.includes("FROM assessment_events WHERE")) {
+                return state.assessmentEvents.find((event) => (
+                  event.batch_id === args[0] && event.assessment_key === args[1]
+                )) || null;
+              }
+              return null;
+            },
+            all: async () => {
+              if (sql.includes("FROM assessment_events")) {
+                return { results: state.assessmentEvents };
+              }
+              return { results: [] };
+            }
+          };
+        }
+      };
+    },
+    async batch(items) {
+      if (items.length === 4 && items.every((item) => item.sql.includes("SELECT"))) {
+        return [
+          { results: state.batches },
+          { results: state.breaks },
+          { results: state.eventOverrides },
+          { results: state.accelerationCycles }
+        ];
+      }
+      state.mutationBatches.push(items);
+      const update = items.find((item) => item.sql.includes("UPDATE assessment_events"));
+      if (update) {
+        const [assessmentDate, startTime, endTime, updatedAt, id] = update.args;
+        const event = state.assessmentEvents.find((item) => item.id === id);
+        Object.assign(event, {
+          assessment_date: assessmentDate,
+          start_time: startTime,
+          end_time: endTime,
+          updated_at: updatedAt
+        });
+      }
+      return items.map(() => ({ success: true }));
     }
   };
 }
@@ -306,10 +419,13 @@ test("every scheduler write endpoint declares its server-side permission", async
   const programme = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/programme.js", import.meta.url), "utf8");
   const batch = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/batch.js", import.meta.url), "utf8");
   const override = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/event-override.js", import.meta.url), "utf8");
+  const assessment = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/assessment-event.js", import.meta.url), "utf8");
   const acceleration = await readFile(new URL("../functions/api/staff/a-level-scheduler/[academicYear]/acceleration.js", import.meta.url), "utf8");
   assert.match(programme, /requireSchedulerWriteAccess\(context, "programme_configuration"\)/);
   assert.match(batch, /requireSchedulerWriteAccess\(context, "batch_configuration"\)/);
   assert.equal((override.match(/requireSchedulerWriteAccess\(context, "event_override"\)/g) || []).length, 2);
+  assert.equal((assessment.match(/requireSchedulerWriteAccess\(context, "event_override"\)/g) || []).length, 1);
+  assert.doesNotMatch(assessment, /onRequest(?:Put|Post|Delete)|INSERT INTO assessment_events|DELETE FROM assessment_events/);
   assert.equal((acceleration.match(/requireSchedulerWriteAccess\(context, "acceleration"\)/g) || []).length, 2);
 
   const viewerData = { aLevelPrincipal: { code: "VIEWER-TEST", role: "viewer" } };
@@ -318,6 +434,7 @@ test("every scheduler write endpoint declares its server-side permission", async
     ["PATCH", patchBatch],
     ["PUT", putEventOverride],
     ["DELETE", deleteEventOverride],
+    ["PATCH", patchAssessmentEvent],
     ["PUT", putAcceleration],
     ["DELETE", deleteAcceleration]
   ]) {
@@ -427,6 +544,119 @@ test("public state exposes assessment schedule fields without database IDs or au
   assert.doesNotMatch(JSON.stringify(publicState), /ASSESSMENT-DB-1|created_at|updated_at|audit|actor/i);
 });
 
+test("assessment update validation allows only date and time fields", () => {
+  validateAssessmentEventPatch({
+    batch_key: "BATCH-1",
+    assessment_key: "october-monthly-test",
+    assessment_date: "2026-10-31",
+    start_time: "18:30",
+    end_time: "19:30"
+  });
+  assert.throws(() => validateAssessmentEventPatch({
+    batch_key: "BATCH-1",
+    assessment_key: "october-monthly-test",
+    assessment_date: "2026-10-31",
+    start_time: "19:30",
+    end_time: "18:30"
+  }), (error) => error.status === 400);
+  assert.throws(() => validateAssessmentEventPatch({
+    batch_key: "BATCH-1",
+    assessment_key: "october-monthly-test",
+    assessment_type: "mock_paper",
+    assessment_date: "2026-10-31",
+    start_time: "18:30",
+    end_time: "19:30"
+  }), (error) => error.status === 400);
+});
+
+test("assessment event updates change only the selected batch row and record audit", async () => {
+  const state = databaseState();
+  const db = assessmentUpdateDatabase(state);
+  const context = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/assessment-event",
+    "PATCH",
+    { DB: db },
+    async () => patchAssessmentEvent(context),
+    {
+      batch_key: "BATCH-1",
+      assessment_key: "october-monthly-test",
+      assessment_date: "2026-10-31",
+      start_time: "18:30",
+      end_time: "19:30"
+    }
+  );
+  context.params = { academicYear: "2026-27" };
+  context.data = { aLevelPrincipal: { code: "EDITOR-TEST", role: "editor" } };
+
+  const response = await patchAssessmentEvent(context);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body.batches[0].assessment_events[0], {
+    assessment_key: "october-monthly-test",
+    assessment_type: "monthly_test",
+    label: "October monthly Topic Test",
+    date: "2026-10-31",
+    start_time: "18:30",
+    end_time: "19:30"
+  });
+  assert.deepEqual(body.batches[1].assessment_events[0], {
+    assessment_key: "october-monthly-test",
+    assessment_type: "monthly_test",
+    label: "October monthly Topic Test",
+    date: "2026-10-30",
+    start_time: "19:00",
+    end_time: "20:00"
+  });
+
+  const audit = state.mutationBatches[0][1];
+  assert.equal(audit.args[0], "EDITOR-TEST");
+  assert.equal(audit.args[1], "assessment_event.updated");
+  assert.equal(audit.args[2], "assessment_event");
+  assert.equal(JSON.parse(audit.args[4]).assessment_date, "2026-10-30");
+  assert.equal(JSON.parse(audit.args[5]).assessment_date, "2026-10-31");
+});
+
+test("assessment event endpoint rejects missing rows, anonymous writes, identity changes, and delete attempts", async () => {
+  const baseBody = {
+    batch_key: "BATCH-1",
+    assessment_key: "missing-assessment",
+    assessment_date: "2026-10-31",
+    start_time: "18:30",
+    end_time: "19:30"
+  };
+  let context = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/assessment-event",
+    "PATCH",
+    { DB: assessmentUpdateDatabase(databaseState()) },
+    async () => patchAssessmentEvent(context),
+    baseBody
+  );
+  context.params = { academicYear: "2026-27" };
+  context.data = { aLevelPrincipal: { code: "EDITOR-TEST", role: "editor" } };
+  assert.equal((await patchAssessmentEvent(context)).status, 404);
+
+  context = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/assessment-event",
+    "PATCH",
+    { DB: assessmentUpdateDatabase(databaseState()) },
+    async () => patchAssessmentEvent(context),
+    { ...baseBody, assessment_key: "october-monthly-test" }
+  );
+  context.params = { academicYear: "2026-27" };
+  assert.equal((await patchAssessmentEvent(context)).status, 403);
+
+  context = staffContext(
+    "https://jothi.uk/api/staff/a-level-scheduler/2026-27/assessment-event",
+    "PATCH",
+    { DB: assessmentUpdateDatabase(databaseState()) },
+    async () => patchAssessmentEvent(context),
+    { ...baseBody, assessment_key: "october-monthly-test", label: "Changed identity" }
+  );
+  context.params = { academicYear: "2026-27" };
+  context.data = { aLevelPrincipal: { code: "EDITOR-TEST", role: "editor" } };
+  assert.equal((await patchAssessmentEvent(context)).status, 400);
+});
+
 test("mapped viewers, editors, and admins can read authenticated schedule data", async () => {
   for (const email of [
     "viewer.user@example.test",
@@ -463,6 +693,7 @@ test("Sruthi authenticates as a viewer, can read the schedule, and cannot perfor
     ["PATCH", patchBatch, "batch"],
     ["PUT", putEventOverride, "event-override"],
     ["DELETE", deleteEventOverride, "event-override"],
+    ["PATCH", patchAssessmentEvent, "assessment-event"],
     ["PUT", putAcceleration, "acceleration"],
     ["DELETE", deleteAcceleration, "acceleration"]
   ]) {
@@ -536,6 +767,29 @@ test("schema, seed, and public state contain no Classkick, Zoom, or resource URL
   const seed = await readFile(new URL("../scripts/a-level-scheduler/seed-2026-27.sql", import.meta.url), "utf8");
   const serialized = `${schema}\n${assessmentSchema}\n${seed}\n${JSON.stringify(toScheduleApiState(databaseState()))}`;
   assert.doesNotMatch(serialized, /classkick|zoom|resource[_ -]?url|https?:\/\//i);
+});
+
+test("seed upserts the approved assessment calendar for both batches", async () => {
+  const seed = await readFile(new URL("../scripts/a-level-scheduler/seed-2026-27.sql", import.meta.url), "utf8");
+
+  assert.match(seed, /target_completion_date = excluded\.target_completion_date/);
+  assert.match(seed, /ON CONFLICT\(batch_id, assessment_key\) DO UPDATE SET/);
+  assert.equal((seed.match(/'october-monthly-test', 'monthly_test'/g) || []).length, 2);
+  assert.equal((seed.match(/'final-mock-paper-2', 'mock_paper'/g) || []).length, 2);
+  for (const date of [
+    "2026-10-30",
+    "2026-11-27",
+    "2026-12-18",
+    "2027-01-15",
+    "2027-01-22",
+    "2027-02-26",
+    "2027-03-19",
+    "2027-04-30",
+    "2027-05-14",
+    "2027-05-21"
+  ]) {
+    assert.equal((seed.match(new RegExp(date, "g")) || []).length, 2);
+  }
 });
 
 test("staff UI loads mapped identity and displays its label without rendering an email", async () => {

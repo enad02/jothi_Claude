@@ -1,6 +1,6 @@
 # A-Level Scheduler Persistence Design
 
-Status: **REAL D1 RESOURCE PROVISIONED AND PRODUCTION API READS ACTIVE**.
+Status: **REAL D1 RESOURCE PROVISIONED AND PRODUCTION API READS ACTIVE; APPROVED ASSESSMENT CALENDAR PREPARED IN CODE**.
 
 The real `jothi-a-level-scheduler` D1 database has been created in Cloudflare Western Europe. Migration `0001_initial_schema.sql` and the idempotent 2026–27 baseline seed have been applied. The database is not bound to Preview or Production, and no scheduler code has been deployed.
 
@@ -44,7 +44,7 @@ The read-only and staff controllers combine the API state with the same Git curr
 
 ### Academic-year baseline: Git
 
-`data/a-level-maths/2026-27.json` remains the approved seed/default source. The local seed creates the corresponding operational programme, batch, and break records without copying curriculum records.
+`data/a-level-maths/2026-27.json` remains the approved seed/default source. It includes the programme target completion date of `2027-05-31` and the approved fixed set of ten formal assessment identities per batch. The local seed creates the corresponding operational programme, batch, break, and assessment records without copying curriculum records.
 
 ### Operational state: D1
 
@@ -67,7 +67,7 @@ The additive migration `migrations/a-level-scheduler/0002_assessment_events.sql`
 
 Foreign keys and useful lookup indexes are included. Student, parent, resource, payment, and attendance tables are excluded.
 
-The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and no event overrides, acceleration cycles, or assessment events. Approved production assessment dates must be loaded only after separate founder approval.
+The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and the approved ten assessment events per batch. It does not seed event overrides or acceleration cycles. Re-running the seed updates the programme target and the fixed assessment rows by `batch_id` plus `assessment_key`, rather than creating duplicates.
 
 ## Actual route contract
 
@@ -82,9 +82,10 @@ Staff write routes:
 - `PATCH /api/staff/a-level-scheduler/2026-27/programme`;
 - `PATCH /api/staff/a-level-scheduler/2026-27/batch`;
 - `PUT` or `DELETE /api/staff/a-level-scheduler/2026-27/event-override`;
+- `PATCH /api/staff/a-level-scheduler/2026-27/assessment-event`;
 - `PUT` or `DELETE /api/staff/a-level-scheduler/2026-27/acceleration`.
 
-Every write validates the academic year, writable fields, batch, stable lesson ID, event type, dates, time ranges, and operation-specific data on the server. Successful writes and their audit insert are submitted in the same D1 batch. Browser-safe responses do not expose SQL error details.
+Every write validates the academic year, writable fields, batch, stable lesson ID or assessment key, event type where relevant, dates, time ranges, and operation-specific data on the server. Successful writes and their audit insert are submitted in the same D1 batch. Browser-safe responses do not expose SQL error details.
 
 ## Read-only data boundary
 
@@ -113,7 +114,7 @@ Missing or invalid configuration returns `503` and fails closed. Preview and Pro
 Cloudflare Access authentication is Gate 1. Gate 2 resolves the normalised verified email (`trim()` then lowercase) against the dedicated `A_LEVEL_USERS` map. This map is separate from Mathematics workspace users and contains only the approved A-Level users. Each entry defines a durable `code`, display `label`, and supported role (`viewer`, `editor`, or `admin`). Authenticated but unmapped users receive `403`.
 
 - `viewer`: may read the authenticated A-Level identity and schedule views;
-- `editor`: has viewer access and may create, update, delete, and reset individual teaching and revision/consolidation event overrides;
+- `editor`: has viewer access and may create, update, delete, and reset individual teaching and revision/consolidation event overrides, and may update the date/start/end time for existing assessment events;
 - `admin`: has editor access and may also change programme configuration, recurring batch rules, and acceleration cycles.
 
 `GET /api/a-level/me` returns only the mapped `code`, `label`, and `role`. It does not return email or expose the allow-list. The staff page shows the mapped label, enables event editing for editors and admins, and shows programme/batch/acceleration controls only to admins. Server-side endpoint permission checks remain authoritative.
@@ -167,7 +168,7 @@ Step 2C1-B will initially add this binding only to the **Preview** environment. 
 
 The scheduler generates only weekly teaching and weekly revision/consolidation cycle events. Assessment scheduling is separate from curriculum-cycle generation.
 
-The planned formal-assessment rhythm is represented by real rows in `assessment_events` only:
+The approved formal-assessment rhythm is represented by real rows in `assessment_events` only:
 
 - six monthly Topic Tests, each one hour;
 - midway mock Paper 1 Pure Mathematics, two hours;
@@ -175,7 +176,22 @@ The planned formal-assessment rhythm is represented by real rows in `assessment_
 - final mock Paper 1 Pure Mathematics, two hours; and
 - final mock Paper 2 Statistics and Mechanics, one hour fifteen minutes.
 
-If no assessment dates have been approved or loaded, the public and staff schedule views show no invented assessments. They do not manufacture cancelled or blank weekly Topic Tests.
+If no assessment dates have been loaded, the public and staff schedule views show no invented assessments. They do not manufacture cancelled or blank weekly Topic Tests.
+
+The fixed assessment identities for each batch are:
+
+- `october-monthly-test` on `2026-10-30`, `19:00`-`20:00`;
+- `november-monthly-test` on `2026-11-27`, `19:00`-`20:00`;
+- `december-monthly-test` on `2026-12-18`, `19:00`-`20:00`;
+- `midway-mock-paper-1` on `2027-01-15`, `19:00`-`21:00`;
+- `midway-mock-paper-2` on `2027-01-22`, `19:00`-`20:15`;
+- `february-monthly-test` on `2027-02-26`, `19:00`-`20:00`;
+- `march-monthly-test` on `2027-03-19`, `19:00`-`20:00`;
+- `april-monthly-test` on `2027-04-30`, `19:00`-`20:00`;
+- `final-mock-paper-1` on `2027-05-14`, `19:00`-`21:00`;
+- `final-mock-paper-2` on `2027-05-21`, `19:00`-`20:15`.
+
+Staff may move the stored date, start time, and end time for an existing assessment event. They cannot create or delete assessment events through the scheduler interface, and cannot change the assessment key, type, cycle, paper, label, coverage note, or batch assignment through that route. Each batch has its own assessment rows, so changing `BATCH-1` does not change `BATCH-2`.
 
 Supervised programme hours are calculated from actual rendered events:
 

@@ -181,7 +181,7 @@ function renderTable(cycles, batchName, batchId, options) {
   `;
 }
 
-function renderAssessmentSchedule(assessmentEvents, batchName) {
+function renderAssessmentSchedule(assessmentEvents, batchName, batchId, options) {
   if (!assessmentEvents.length) {
     return `
       <section class="programme-breaks" aria-label="Assessment schedule">
@@ -209,8 +209,30 @@ function renderAssessmentSchedule(assessmentEvents, batchName) {
             ${assessmentEvents.map((event) => `
               <tr>
                 <td>${escapeHtml(event.label)}</td>
-                <td>${formatDate(event.date, true)}</td>
-                <td>${escapeHtml(event.start_time)}–${escapeHtml(event.end_time)}</td>
+                <td>${options.editableAssessments ? `
+                  <button
+                    class="event-time-trigger"
+                    type="button"
+                    data-assessment-edit
+                    data-batch-id="${escapeHtml(batchId)}"
+                    data-assessment-key="${escapeHtml(event.assessment_key)}"
+                    aria-label="Edit assessment date and time for ${escapeHtml(event.label)}"
+                  >
+                    <span class="event-date">${formatDate(event.date, true)}</span>
+                  </button>
+                ` : formatDate(event.date, true)}</td>
+                <td>${options.editableAssessments ? `
+                  <button
+                    class="event-time-trigger"
+                    type="button"
+                    data-assessment-edit
+                    data-batch-id="${escapeHtml(batchId)}"
+                    data-assessment-key="${escapeHtml(event.assessment_key)}"
+                    aria-label="Edit assessment date and time for ${escapeHtml(event.label)}"
+                  >
+                    <span class="event-time">${escapeHtml(event.start_time)}–${escapeHtml(event.end_time)}</span>
+                  </button>
+                ` : `${escapeHtml(event.start_time)}–${escapeHtml(event.end_time)}`}</td>
                 <td>${formatHours(event.duration_hours)}</td>
               </tr>
             `).join("")}
@@ -231,6 +253,7 @@ function renderValidation(errors) {
 export function renderScheduleView(result, programme, requestedBatchId, settings = {}) {
   const options = {
     editableEvents: false,
+    editableAssessments: false,
     hasEventOverride: () => false,
     lessonColumnLabel: "Lesson",
     showAcceleration: false,
@@ -256,7 +279,7 @@ export function renderScheduleView(result, programme, requestedBatchId, settings
       return `
         <section id="panel-${escapeHtml(batch.batch_id)}" role="tabpanel" aria-labelledby="tab-${escapeHtml(batch.batch_id)}"${active ? "" : " hidden"}>
           ${renderTable(batch.cycles, batch.name, batch.batch_id, options)}
-          ${renderAssessmentSchedule(batch.assessment_events || [], batch.name)}
+          ${renderAssessmentSchedule(batch.assessment_events || [], batch.name, batch.batch_id, options)}
           ${renderBreaks(programme, batchById.get(batch.batch_id), options)}
           ${options.showValidation ? renderValidation(batch.errors) : ""}
         </section>

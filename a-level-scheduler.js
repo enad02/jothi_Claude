@@ -44,7 +44,8 @@ const elements = {
   eventEnd: document.querySelector("#event-override-end"),
   eventErrors: document.querySelector("#event-editor-errors"),
   eventWarnings: document.querySelector("#event-editor-warnings"),
-  warningConfirm: document.querySelector("#event-warning-confirm")
+  warningConfirm: document.querySelector("#event-warning-confirm"),
+  eventReset: document.querySelector('[data-editor-action="reset"]')
 };
 
 let curriculum;
@@ -230,6 +231,7 @@ function renderCurrentSchedule(note) {
   activeBatchId = resolveActiveBatchId(displayedSchedule, activeBatchId);
   elements.batchTabs.innerHTML = renderScheduleView(displayedSchedule, currentProgramme, activeBatchId, {
     editableEvents: canEditEvents,
+    editableAssessments: canEditEvents,
     hasEventOverride,
     lessonColumnLabel: "Lesson",
     showAcceleration: true,
@@ -345,6 +347,12 @@ function findCycle(schedule, batchId, lessonId) {
     ?.cycles.find((cycle) => cycle.lesson_id === lessonId);
 }
 
+function findAssessment(schedule, batchId, assessmentKey) {
+  return schedule.batches
+    .find((batch) => batch.batch_id === batchId)
+    ?.assessment_events.find((event) => event.assessment_key === assessmentKey);
+}
+
 function hideEditorFeedback() {
   elements.eventErrors.hidden = true;
   elements.eventErrors.textContent = "";
@@ -363,6 +371,7 @@ function openEventEditor(trigger) {
   }
 
   editingEvent = {
+    kind: "lesson",
     batch_id: batchId,
     lesson_id: lessonId,
     cycle: Number(trigger.dataset.cycle),
@@ -370,9 +379,33 @@ function openEventEditor(trigger) {
   };
   elements.eventEditorType.textContent = EVENT_LABELS[eventType];
   elements.eventEditorLesson.textContent = cycle.title;
+  elements.eventReset.hidden = false;
   elements.eventDate.value = cycle[eventType].date;
   elements.eventStart.value = cycle[eventType].start_time;
   elements.eventEnd.value = cycle[eventType].end_time;
+  hideEditorFeedback();
+  elements.eventEditor.showModal();
+}
+
+function openAssessmentEditor(trigger) {
+  const batchId = trigger.dataset.batchId;
+  const assessmentKey = trigger.dataset.assessmentKey;
+  const assessment = findAssessment(displayedSchedule, batchId, assessmentKey);
+  if (!assessment) {
+    return;
+  }
+
+  editingEvent = {
+    kind: "assessment",
+    batch_id: batchId,
+    assessment_key: assessmentKey
+  };
+  elements.eventEditorType.textContent = "Assessment";
+  elements.eventEditorLesson.textContent = assessment.label;
+  elements.eventReset.hidden = true;
+  elements.eventDate.value = assessment.date;
+  elements.eventStart.value = assessment.start_time;
+  elements.eventEnd.value = assessment.end_time;
   hideEditorFeedback();
   elements.eventEditor.showModal();
 }
@@ -414,6 +447,12 @@ elements.batchTabs.addEventListener("click", (event) => {
     return;
   }
 
+  const assessmentTrigger = event.target.closest("[data-assessment-edit]");
+  if (assessmentTrigger) {
+    openAssessmentEditor(assessmentTrigger);
+    return;
+  }
+
   const tab = event.target.closest('[role="tab"]');
   if (tab) {
     activateTab(tab.dataset.tabBatch);
@@ -450,6 +489,25 @@ elements.eventEditForm.addEventListener("submit", (event) => {
   event.preventDefault();
   void (async () => {
     if (!editingEvent) {
+      return;
+    }
+
+    if (editingEvent.kind === "assessment") {
+      try {
+        const state = await requestSchedulerWrite("assessment-event", "PATCH", {
+          batch_key: editingEvent.batch_id,
+          assessment_key: editingEvent.assessment_key,
+          assessment_date: elements.eventDate.value,
+          start_time: elements.eventStart.value,
+          end_time: elements.eventEnd.value
+        });
+        const assessment = findAssessment(displayedSchedule, editingEvent.batch_id, editingEvent.assessment_key);
+        elements.eventEditor.close();
+        applyPersistedState(state, `${assessment?.label || "Assessment"} rescheduled`);
+      } catch (error) {
+        elements.eventErrors.hidden = false;
+        elements.eventErrors.textContent = error.message || "The assessment could not be rescheduled.";
+      }
       return;
     }
 
@@ -493,7 +551,7 @@ elements.eventEditor.addEventListener("click", (event) => {
   if (action === "cancel") {
     elements.eventEditor.close();
   }
-  if (action === "reset" && editingEvent) {
+  if (action === "reset" && editingEvent?.kind === "lesson") {
     void (async () => {
       try {
         const state = await requestSchedulerWrite("event-override", "DELETE", {
