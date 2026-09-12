@@ -7,8 +7,7 @@
   "target_completion": "2027-04-30",
   "cycle_hours": {
     "teaching": 2,
-    "revision": 1,
-    "topic_test": 1
+    "revision": 1
   },
   "closures": [
     {
@@ -34,7 +33,6 @@
       "name": "Batch 1",
       "teaching": { "weekday": "Monday", "start_time": "18:00", "duration_hours": 2 },
       "revision": { "weekday": "Thursday", "start_time": "18:00", "duration_hours": 1 },
-      "topic_test": { "weekday": "Friday", "start_time": "19:00", "duration_hours": 1 },
       "acceleration_overrides": []
     },
     {
@@ -42,7 +40,6 @@
       "name": "Batch 2",
       "teaching": { "weekday": "Tuesday", "start_time": "18:00", "duration_hours": 2 },
       "revision": { "weekday": "Thursday", "start_time": "19:00", "duration_hours": 1 },
-      "topic_test": { "weekday": "Friday", "start_time": "19:00", "duration_hours": 1 },
       "acceleration_overrides": []
     }
   ]

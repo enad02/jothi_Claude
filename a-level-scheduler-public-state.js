@@ -44,15 +44,15 @@ export function programmeFromApiState(state, baselineProgramme) {
     name: batch.display_name,
     teaching: recurringRuleFromState(batch.teaching),
     revision: recurringRuleFromState(batch.revision),
-    topic_test: recurringRuleFromState(batch.topic_test),
+    ...(batch.topic_test ? { topic_test: recurringRuleFromState(batch.topic_test) } : {}),
+    assessment_events: (batch.assessment_events || []).map((event) => ({ ...event })),
     acceleration_overrides: batch.acceleration_cycles.map((cycle) => ({
       batch_id: batch.batch_key,
       lesson_id: cycle.lesson_id,
       break_id: cycle.break_key,
       enabled: cycle.enabled,
       teaching: { ...cycle.teaching },
-      revision: { ...cycle.revision },
-      topic_test: { ...cycle.topic_test }
+      revision: { ...cycle.revision }
     }))
   }));
   return programme;

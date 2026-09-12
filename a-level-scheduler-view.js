@@ -48,8 +48,8 @@ export function renderProgrammeCommitment(progress, programme, { showAcceleratio
   const values = [
     ["Curriculum lessons", progress.lessons_scheduled],
     ["Curriculum teaching", `${progress.core_teaching_hours}h`],
-    ["Supervised revision", `${progress.revision_hours}h`],
-    ["Topic Tests", `${progress.topic_test_hours}h`],
+    ["Revision / consolidation", `${progress.revision_hours}h`],
+    ["Formal assessments", `${progress.formal_assessment_hours}h`],
     ["Supervised student hours", `${progress.total_supervised_hours}h`]
   ];
 
@@ -76,6 +76,15 @@ export function renderProgrammeCommitment(progress, programme, { showAcceleratio
       </dl>
     </section>
   `;
+}
+
+function formatHours(hours) {
+  if (Number.isInteger(hours)) {
+    return `${hours}h`;
+  }
+  const whole = Math.floor(hours);
+  const minutes = Math.round((hours - whole) * 60);
+  return whole > 0 ? `${whole}h ${minutes}m` : `${minutes}m`;
 }
 
 function findAcceleration(batch, breakId) {
@@ -145,7 +154,6 @@ function renderTable(cycles, batchName, batchId, options) {
           <col class="lesson-column" />
           <col class="event-column" />
           <col class="event-column" />
-          <col class="event-column" />
           <col class="status-column" />
         </colgroup>
         <thead>
@@ -153,8 +161,7 @@ function renderTable(cycles, batchName, batchId, options) {
             <th scope="col">Cycle</th>
             <th scope="col">${options.lessonColumnLabel}</th>
             <th scope="col">Teaching date/time</th>
-            <th scope="col">Revision date/time</th>
-            <th scope="col">Topic Test date/time</th>
+            <th scope="col">Revision / consolidation date/time</th>
             <th scope="col">Status</th>
           </tr>
         </thead>
@@ -165,13 +172,52 @@ function renderTable(cycles, batchName, batchId, options) {
               <td><span class="lesson-label" data-lesson-id="${escapeHtml(cycle.lesson_id)}">${escapeHtml(lessonPillLabel(cycle))}</span></td>
               ${renderEventCell(cycle, batchId, "teaching", options)}
               ${renderEventCell(cycle, batchId, "revision", options)}
-              ${renderEventCell(cycle, batchId, "topic_test", options)}
               <td><span class="status-pill${cycle.status === "Acceleration" ? " is-acceleration" : ""}">${escapeHtml(cycle.status)}</span></td>
             </tr>
           `).join("")}
         </tbody>
       </table>
     </div>
+  `;
+}
+
+function renderAssessmentSchedule(assessmentEvents, batchName) {
+  if (!assessmentEvents.length) {
+    return `
+      <section class="programme-breaks" aria-label="Assessment schedule">
+        <h3>Assessment schedule</h3>
+        <p>No formal assessment dates have been approved yet.</p>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="programme-breaks" aria-label="Assessment schedule">
+      <h3>Assessment schedule</h3>
+      <div class="schedule-table-wrap">
+        <table class="schedule-table">
+          <caption class="visually-hidden">${escapeHtml(batchName)} formal assessment schedule</caption>
+          <thead>
+            <tr>
+              <th scope="col">Assessment</th>
+              <th scope="col">Date</th>
+              <th scope="col">Time</th>
+              <th scope="col">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${assessmentEvents.map((event) => `
+              <tr>
+                <td>${escapeHtml(event.label)}</td>
+                <td>${formatDate(event.date, true)}</td>
+                <td>${escapeHtml(event.start_time)}–${escapeHtml(event.end_time)}</td>
+                <td>${formatHours(event.duration_hours)}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </div>
+    </section>
   `;
 }
 
@@ -210,6 +256,7 @@ export function renderScheduleView(result, programme, requestedBatchId, settings
       return `
         <section id="panel-${escapeHtml(batch.batch_id)}" role="tabpanel" aria-labelledby="tab-${escapeHtml(batch.batch_id)}"${active ? "" : " hidden"}>
           ${renderTable(batch.cycles, batch.name, batch.batch_id, options)}
+          ${renderAssessmentSchedule(batch.assessment_events || [], batch.name)}
           ${renderBreaks(programme, batchById.get(batch.batch_id), options)}
           ${options.showValidation ? renderValidation(batch.errors) : ""}
         </section>

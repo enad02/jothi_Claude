@@ -1,6 +1,6 @@
 # A-Level Scheduler Persistence Design
 
-Status: **REAL D1 RESOURCE PROVISIONED — NOT YET BOUND OR DEPLOYED**.
+Status: **REAL D1 RESOURCE PROVISIONED AND PRODUCTION API READS ACTIVE**.
 
 The real `jothi-a-level-scheduler` D1 database has been created in Cloudflare Western Europe. Migration `0001_initial_schema.sql` and the idempotent 2026–27 baseline seed have been applied. The database is not bound to Preview or Production, and no scheduler code has been deployed.
 
@@ -48,22 +48,26 @@ The read-only and staff controllers combine the API state with the same Git curr
 
 ### Operational state: D1
 
-Local D1 now owns programme and batch operating configuration, public break dates, individual event overrides, batch-specific acceleration cycles, and the write audit trail.
+Local D1 now owns programme and batch operating configuration, public break dates, individual event overrides, batch-specific acceleration cycles, explicit assessment events, and the write audit trail.
+
+The former weekly compulsory Topic Test model is retired operationally for the Year 12 A-Level Maths 2026–27 scheduler. Formal assessments are now explicit dated assessment events. The legacy `topic_test_*` columns remain temporarily for backward compatibility and are not used to generate, render, or count weekly Topic Tests.
 
 ## Actual local D1 schema
 
 The initial migration is `migrations/a-level-scheduler/0001_initial_schema.sql`. It creates:
 
 - `programme_instances`: programme/year identity, taster, start, target completion, status, timestamps, unique by programme and academic year;
-- `batches`: recurring teaching/revision/Topic Test rules and timestamps, unique by programme instance and batch key;
+- `batches`: recurring teaching/revision rules plus retained legacy Topic Test columns and timestamps, unique by programme instance and batch key;
 - `programme_breaks`: public break range and acceleration flag, unique by programme instance and break key;
 - `event_overrides`: one override per batch, stable lesson ID, and event type, with event-type validation;
 - `acceleration_cycles`: one enabled/disabled cycle per batch and stable lesson ID; and
 - `schedule_audit_log`: actor, action, entity, before/after JSON, and timestamp.
 
+The additive migration `migrations/a-level-scheduler/0002_assessment_events.sql` creates `assessment_events`, a scheduler-only table for explicit monthly tests and mock-paper events. It stores stable assessment keys, batch reference, bounded assessment type, label, date, start/end time, optional mock cycle, optional paper identifier, optional coverage note, and timestamps. It does not store marks, scores, student results, question banks, assessment content, grading, automatic marking, learning analytics, or generic workflow state.
+
 Foreign keys and useful lookup indexes are included. Student, parent, resource, payment, and attendance tables are excluded.
 
-The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and no event overrides or acceleration cycles.
+The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and no event overrides, acceleration cycles, or assessment events. Approved production assessment dates must be loaded only after separate founder approval.
 
 ## Actual route contract
 
@@ -87,10 +91,11 @@ Every write validates the academic year, writable fields, batch, stable lesson I
 The public read-only response contains only:
 
 - programme ID, academic year, taster date, start date, target completion date, and status;
-- batch key/display name and recurring teaching, revision, and Topic Test rules;
+- batch key/display name and recurring teaching and revision/consolidation rules;
 - public break key/name/date range;
 - event override fields required to render the current schedule; and
-- enabled acceleration-cycle fields required to render the current schedule.
+- enabled acceleration-cycle fields required to render the current teaching/revision schedule; and
+- explicit assessment-event fields required to render the assessment schedule.
 
 It does not return database IDs, override reasons, audit records, actor identifiers, internal notes, tutor costs, authentication data, Classkick or Zoom data, resource URLs, or resource tokens.
 
@@ -108,7 +113,7 @@ Missing or invalid configuration returns `503` and fails closed. Preview and Pro
 Cloudflare Access authentication is Gate 1. Gate 2 resolves the normalised verified email (`trim()` then lowercase) against the dedicated `A_LEVEL_USERS` map. This map is separate from Mathematics workspace users and contains only the approved A-Level users. Each entry defines a durable `code`, display `label`, and supported role (`viewer`, `editor`, or `admin`). Authenticated but unmapped users receive `403`.
 
 - `viewer`: may read the authenticated A-Level identity and schedule views;
-- `editor`: has viewer access and may create, update, delete, and reset individual teaching, revision, and Topic Test event overrides;
+- `editor`: has viewer access and may create, update, delete, and reset individual teaching and revision/consolidation event overrides;
 - `admin`: has editor access and may also change programme configuration, recurring batch rules, and acceleration cycles.
 
 `GET /api/a-level/me` returns only the mapped `code`, `label`, and `role`. It does not return email or expose the allow-list. The staff page shows the mapped label, enables event editing for editors and admins, and shows programme/batch/acceleration controls only to admins. Server-side endpoint permission checks remain authoritative.
@@ -157,6 +162,41 @@ Step 2C1-B will initially add this binding only to the **Preview** environment. 
 - local bypass: restricted to localhost and exact QA value
 - audit actor: resolved A-Level principal code for deployed admin writes
 - remote baseline: one programme, two batches, two breaks, zero overrides, zero acceleration cycles
+
+## Assessment-event operating model
+
+The scheduler generates only weekly teaching and weekly revision/consolidation cycle events. Assessment scheduling is separate from curriculum-cycle generation.
+
+The planned formal-assessment rhythm is represented by real rows in `assessment_events` only:
+
+- six monthly Topic Tests, each one hour;
+- midway mock Paper 1 Pure Mathematics, two hours;
+- midway mock Paper 2 Statistics and Mechanics, one hour fifteen minutes;
+- final mock Paper 1 Pure Mathematics, two hours; and
+- final mock Paper 2 Statistics and Mechanics, one hour fifteen minutes.
+
+If no assessment dates have been approved or loaded, the public and staff schedule views show no invented assessments. They do not manufacture cancelled or blank weekly Topic Tests.
+
+Supervised programme hours are calculated from actual rendered events:
+
+```text
+teaching duration
+  + revision/consolidation duration
+  + explicit assessment-event duration
+```
+
+The calculation is event-derived, not hard-coded to 96.5 hours. With the complete approved assessment set loaded, the expected total is:
+
+```text
+56 teaching hours
++ 28 revision/consolidation hours
++ 6 monthly-test hours
++ 3.25 midway-mock hours
++ 3.25 final-mock hours
+= 96.5 planned supervised hours
+```
+
+This release does not create a generic assessment-management platform. It adds the fixed scheduler representation needed for dated assessment events. Destructive cleanup of retained legacy `topic_test_*` database columns is explicitly deferred.
 
 No Pages binding, Access application, Access policy, Preview deployment, or Production change was made in Step 2C1-A.
 

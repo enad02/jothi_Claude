@@ -49,11 +49,35 @@ function persistedState() {
       display_name: item.name,
       teaching: { weekday: 1 + programme.batches.indexOf(item), start_time: item.teaching.start_time, end_time: "20:00" },
       revision: { weekday: 4, start_time: item.revision.start_time, end_time: item.batch_id === "BATCH-1" ? "19:00" : "20:00" },
-      topic_test: { weekday: 5, start_time: item.topic_test.start_time, end_time: "20:00" },
+      topic_test: { weekday: 5, start_time: "19:00", end_time: "20:00" },
       event_overrides: [],
+      assessment_events: [],
       acceleration_cycles: []
     }))
   };
+}
+
+function approvedAssessmentFixture() {
+  return [
+    { assessment_key: "october-monthly-test", assessment_type: "monthly_test", label: "October monthly Topic Test", date: "2026-10-16", start_time: "19:00", end_time: "20:00" },
+    { assessment_key: "november-monthly-test", assessment_type: "monthly_test", label: "November monthly Topic Test", date: "2026-11-13", start_time: "19:00", end_time: "20:00" },
+    { assessment_key: "december-monthly-test", assessment_type: "monthly_test", label: "December monthly Topic Test", date: "2026-12-11", start_time: "19:00", end_time: "20:00" },
+    { assessment_key: "february-monthly-test", assessment_type: "monthly_test", label: "February monthly Topic Test", date: "2027-02-12", start_time: "19:00", end_time: "20:00" },
+    { assessment_key: "march-monthly-test", assessment_type: "monthly_test", label: "March monthly Topic Test", date: "2027-03-12", start_time: "19:00", end_time: "20:00" },
+    { assessment_key: "april-monthly-test", assessment_type: "monthly_test", label: "April monthly Topic Test", date: "2027-04-16", start_time: "19:00", end_time: "20:00" },
+    { assessment_key: "midway-mock-paper-1", assessment_type: "mock_paper", label: "Midway Mock — Paper 1 Pure Mathematics", date: "2027-01-15", start_time: "18:00", end_time: "20:00", mock_cycle: "midway", paper: "paper_1_pure" },
+    { assessment_key: "midway-mock-paper-2", assessment_type: "mock_paper", label: "Midway Mock — Paper 2 Statistics and Mechanics", date: "2027-01-16", start_time: "10:00", end_time: "11:15", mock_cycle: "midway", paper: "paper_2_statistics_mechanics" },
+    { assessment_key: "final-mock-paper-1", assessment_type: "mock_paper", label: "Final Mock — Paper 1 Pure Mathematics", date: "2027-05-07", start_time: "18:00", end_time: "20:00", mock_cycle: "final", paper: "paper_1_pure" },
+    { assessment_key: "final-mock-paper-2", assessment_type: "mock_paper", label: "Final Mock — Paper 2 Statistics and Mechanics", date: "2027-05-08", start_time: "10:00", end_time: "11:15", mock_cycle: "final", paper: "paper_2_statistics_mechanics" }
+  ];
+}
+
+function programmeWithAssessments() {
+  const withAssessments = clone(programme);
+  for (const batch of withAssessments.batches) {
+    batch.assessment_events = approvedAssessmentFixture();
+  }
+  return withAssessments;
 }
 
 function batch(result, batchId) {
@@ -61,7 +85,7 @@ function batch(result, batchId) {
 }
 
 function eventDates(cycle) {
-  return [cycle.teaching.date, cycle.revision.date, cycle.topic_test.date];
+  return [cycle.teaching.date, cycle.revision.date];
 }
 
 function inRange(date, start, end) {
@@ -92,8 +116,8 @@ test("C: generates the exact first-cycle dates", () => {
   const batch1First = batch(result, "BATCH-1").cycles[0];
   const batch2First = batch(result, "BATCH-2").cycles[0];
 
-  assert.deepEqual(eventDates(batch1First), ["2026-09-14", "2026-09-17", "2026-09-18"]);
-  assert.deepEqual(eventDates(batch2First), ["2026-09-15", "2026-09-17", "2026-09-18"]);
+  assert.deepEqual(eventDates(batch1First), ["2026-09-14", "2026-09-17"]);
+  assert.deepEqual(eventDates(batch2First), ["2026-09-15", "2026-09-17"]);
 });
 
 test("D: generates the exact final-cycle dates", () => {
@@ -101,8 +125,8 @@ test("D: generates the exact final-cycle dates", () => {
   const batch1Final = batch(result, "BATCH-1").cycles.at(-1);
   const batch2Final = batch(result, "BATCH-2").cycles.at(-1);
 
-  assert.deepEqual(eventDates(batch1Final), ["2027-04-26", "2027-04-29", "2027-04-30"]);
-  assert.deepEqual(eventDates(batch2Final), ["2027-04-27", "2027-04-29", "2027-04-30"]);
+  assert.deepEqual(eventDates(batch1Final), ["2027-04-26", "2027-04-29"]);
+  assert.deepEqual(eventDates(batch2Final), ["2027-04-27", "2027-04-29"]);
 });
 
 test("E/F: no normal event falls inside Christmas or Easter closures", () => {
@@ -126,13 +150,32 @@ test("G: lesson IDs remain unique and in exact curriculum order per batch", () =
   }
 });
 
-test("H: total supervised hours equal 112 per batch", () => {
+test("H: recurring teaching and revision/consolidation hours are generated without weekly Topic Tests", () => {
   const result = generateSchedule(curriculum, programme);
   for (const generatedBatch of result.batches) {
     assert.equal(generatedBatch.progress.core_teaching_hours, 56);
     assert.equal(generatedBatch.progress.revision_hours, 28);
-    assert.equal(generatedBatch.progress.topic_test_hours, 28);
-    assert.equal(generatedBatch.progress.total_supervised_hours, 112);
+    assert.equal(generatedBatch.progress.formal_assessment_hours, 0);
+    assert.equal(generatedBatch.progress.total_supervised_hours, 84);
+    assert.equal(generatedBatch.cycles.some((cycle) => "topic_test" in cycle), false);
+  }
+});
+
+test("approved assessment fixture totals 12.5 assessment hours and 96.5 supervised hours", () => {
+  const result = generateSchedule(curriculum, programmeWithAssessments());
+  for (const generatedBatch of result.batches) {
+    const assessments = generatedBatch.assessment_events;
+    assert.equal(assessments.filter((event) => event.assessment_type === "monthly_test").length, 6);
+    assert.equal(assessments.filter((event) => event.assessment_type === "monthly_test").every((event) => event.duration_hours === 1), true);
+    assert.equal(assessments.find((event) => event.assessment_key === "midway-mock-paper-1").duration_hours, 2);
+    assert.equal(assessments.find((event) => event.assessment_key === "midway-mock-paper-2").duration_hours, 1.25);
+    assert.equal(assessments.find((event) => event.assessment_key === "final-mock-paper-1").duration_hours, 2);
+    assert.equal(assessments.find((event) => event.assessment_key === "final-mock-paper-2").duration_hours, 1.25);
+    assert.equal(generatedBatch.progress.formal_assessment_hours, 12.5);
+    assert.equal(generatedBatch.progress.monthly_test_hours, 6);
+    assert.equal(generatedBatch.progress.midway_mock_hours, 3.25);
+    assert.equal(generatedBatch.progress.final_mock_hours, 3.25);
+    assert.equal(generatedBatch.progress.total_supervised_hours, 96.5);
   }
 });
 
@@ -163,8 +206,7 @@ test("J/K: Batch 1 acceleration advances only Batch 1 forecast", () => {
     break_id: "christmas",
     enabled: true,
     teaching: { date: "2026-12-22", start_time: "10:00" },
-    revision: { date: "2026-12-23", start_time: "10:00" },
-    topic_test: { date: "2026-12-24", start_time: "10:00" }
+    revision: { date: "2026-12-23", start_time: "10:00" }
   });
 
   const defaultResult = generateSchedule(curriculum, programme);
@@ -188,14 +230,13 @@ test("L: an incomplete enabled acceleration override is rejected and not schedul
     break_id: "christmas",
     enabled: true,
     teaching: { date: "2026-12-22", start_time: "10:00" },
-    revision: { date: "", start_time: "" },
-    topic_test: { date: "2026-12-24", start_time: "10:00" }
+    revision: { date: "", start_time: "" }
   });
 
   const generatedBatch = batch(generateSchedule(curriculum, invalidProgramme), "BATCH-1");
   assert.ok(generatedBatch.errors.some((error) => error.includes("revision date/time is required")));
   assert.equal(generatedBatch.progress.acceleration_cycles_used, 0);
-  assert.equal(generatedBatch.progress.forecast_completion_date, "2027-04-30");
+  assert.equal(generatedBatch.progress.forecast_completion_date, "2027-04-29");
 });
 
 test("M: scheduling does not require resource references or URLs", () => {
@@ -231,7 +272,7 @@ test("Step 1A C/D: a teaching override changes only the selected teaching event"
     end_time: "19:00"
   });
   assert.deepEqual(displayedCycle.revision, originalCycle.revision);
-  assert.deepEqual(displayedCycle.topic_test, originalCycle.topic_test);
+  assert.equal("topic_test" in displayedCycle, false);
 });
 
 test("Step 1A E: a Batch 1 event override does not affect Batch 2", () => {
@@ -251,7 +292,7 @@ test("Step 1A F: resetting an override restores the generated event", () => {
   assert.deepEqual(batch(displayed, "BATCH-1").cycles[0].teaching, batch(generated, "BATCH-1").cycles[0].teaching);
 });
 
-test("Step 1A G/H: overrides preserve lesson order and the 112-hour total", () => {
+test("Step 1A G/H: overrides preserve lesson order and event-derived supervised hours", () => {
   const generated = generateSchedule(curriculum, programme);
   const displayedBatch = batch(
     applyEventOverrides(generated, curriculum, programme, [teachingOverride()]),
@@ -259,10 +300,10 @@ test("Step 1A G/H: overrides preserve lesson order and the 112-hour total", () =
   );
 
   assert.deepEqual(displayedBatch.cycles.map((cycle) => cycle.lesson_id), expectedIds);
-  assert.equal(displayedBatch.progress.total_supervised_hours, 112);
+  assert.equal(displayedBatch.progress.total_supervised_hours, 84);
   assert.equal(displayedBatch.progress.core_teaching_hours, 56);
   assert.equal(displayedBatch.progress.revision_hours, 28);
-  assert.equal(displayedBatch.progress.topic_test_hours, 28);
+  assert.equal(displayedBatch.progress.formal_assessment_hours, 0);
 });
 
 test("Step 1A I: an end time that is not after the start time is rejected", () => {
@@ -309,7 +350,7 @@ test("Step 1A: moving revision before teaching returns a confirmation warning", 
   }, generated, programme);
 
   assert.deepEqual(validation.errors, []);
-  assert.ok(validation.warnings.includes("Revision would take place before teaching."));
+  assert.ok(validation.warnings.includes("Revision / Consolidation would take place before teaching."));
 });
 
 test("Step 1A: forecast uses overridden dates from the final cycle", () => {
@@ -318,15 +359,15 @@ test("Step 1A: forecast uses overridden dates from the final cycle", () => {
     batch_id: "BATCH-1",
     lesson_id: "Y12-28",
     cycle: 28,
-    event_type: "topic_test",
+    event_type: "revision",
     new_date: "2027-05-07",
-    new_start_time: "19:00",
-    new_end_time: "20:00"
+    new_start_time: "18:00",
+    new_end_time: "19:00"
   }]);
 
   assert.equal(batch(displayed, "BATCH-1").progress.forecast_completion_date, "2027-05-07");
   assert.equal(batch(displayed, "BATCH-1").progress.deadline_status, "At risk");
-  assert.equal(batch(displayed, "BATCH-1").progress.total_supervised_hours, 112);
+  assert.equal(batch(displayed, "BATCH-1").progress.total_supervised_hours, 84);
 });
 
 test("Step 1A L: regeneration clears all temporary event overrides", () => {
@@ -349,10 +390,11 @@ test("Step 2A A/B/F: public rendering emits both batches with title-only lesson 
 
 test("Step 2A C: public event cells are plain text and initialise no editing affordance", () => {
   const html = renderPublicSchedule(generateSchedule(curriculum, programme), programme, "BATCH-1");
-  const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision date\/time<\/th>\s*<th scope="col">Topic Test date\/time<\/th>\s*<th scope="col">Status<\/th>/;
+  const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision \/ consolidation date\/time<\/th>\s*<th scope="col">Status<\/th>/;
 
-  assert.equal((html.match(/class="event-time-static"/g) || []).length, 168);
+  assert.equal((html.match(/class="event-time-static"/g) || []).length, 112);
   assert.match(html, headerOrder);
+  assert.doesNotMatch(html, /Topic Test date\/time/);
   assert.doesNotMatch(html, /LESSON PILL|lesson-pill/i);
   assert.doesNotMatch(html, /<span class="lesson-label"[^>]*>[^<]*<\/span>[^<]*<button/i);
   assert.doesNotMatch(html, /data-event-edit/);
@@ -377,10 +419,11 @@ test("Step 2A G: staff rendering retains editable event controls and staff templ
     showAcceleration: true,
     showValidation: true
   });
-  const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision date\/time<\/th>\s*<th scope="col">Topic Test date\/time<\/th>\s*<th scope="col">Status<\/th>/;
+  const headerOrder = /<th scope="col">Cycle<\/th>\s*<th scope="col">Lesson<\/th>\s*<th scope="col">Teaching date\/time<\/th>\s*<th scope="col">Revision \/ consolidation date\/time<\/th>\s*<th scope="col">Status<\/th>/;
 
-  assert.equal((html.match(/data-event-edit/g) || []).length, 168);
+  assert.equal((html.match(/data-event-edit/g) || []).length, 112);
   assert.match(html, headerOrder);
+  assert.doesNotMatch(html, /Topic Test date\/time/);
   assert.doesNotMatch(html, /LESSON PILL|lesson-pill/i);
   assert.doesNotMatch(html, /<span class="lesson-label"[^>]*>[^<]*<\/span>[^<]*<button/i);
   assert.match(html, /aria-label="Edit teaching date and time for Algebra and functions"/);
@@ -397,7 +440,7 @@ test("Step 2A G: staff rendering retains editable event controls and staff templ
   assert.match(staffController, /renderAccelerationEditors/);
 });
 
-test("Step 2A A/H/I: public and staff views share lesson sequence, engine output, and 112-hour totals", () => {
+test("Step 2A A/H/I: public and staff views share lesson sequence, engine output, and event-derived totals", () => {
   const result = generateSchedule(curriculum, programme);
   const beforeRender = clone(result);
   const publicHtml = renderPublicSchedule(result, programme, "BATCH-1");
@@ -409,9 +452,22 @@ test("Step 2A A/H/I: public and staff views share lesson sequence, engine output
   assert.deepEqual(result, beforeRender);
   assert.deepEqual(publicIds, [...expectedIds, ...expectedIds]);
   assert.deepEqual(staffIds, publicIds);
-  assert.equal((publicHtml.match(/>112h<\/dd>/g) || []).length, 1);
-  assert.equal((staffHtml.match(/>112h<\/dd>/g) || []).length, 1);
-  assert.ok(result.batches.every((item) => item.progress.total_supervised_hours === 112));
+  assert.equal((publicHtml.match(/>84h<\/dd>/g) || []).length, 1);
+  assert.equal((staffHtml.match(/>84h<\/dd>/g) || []).length, 1);
+  assert.ok(result.batches.every((item) => item.progress.total_supervised_hours === 84));
+});
+
+test("public output contains explicit assessments only and no fake weekly Topic Tests", () => {
+  const result = generateSchedule(curriculum, programmeWithAssessments());
+  const html = renderPublicSchedule(result, programmeWithAssessments(), "BATCH-1");
+
+  assert.match(html, /Assessment schedule/);
+  assert.match(html, /October monthly Topic Test/);
+  assert.match(html, /Midway Mock — Paper 1 Pure Mathematics/);
+  assert.match(html, /Final Mock — Paper 2 Statistics and Mechanics/);
+  assert.equal((html.match(/monthly Topic Test/g) || []).length, 12);
+  assert.equal((html.match(/1h 15m/g) || []).length, 4);
+  assert.doesNotMatch(html, /Topic Test date\/time/);
 });
 
 test("Step 2A J: the public application ships no protected resource data", () => {

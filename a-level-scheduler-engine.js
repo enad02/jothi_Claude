@@ -10,13 +10,14 @@ export const WEEKDAYS = [
   "Saturday"
 ];
 
-export const EVENT_TYPES = ["teaching", "revision", "topic_test"];
+export const EVENT_TYPES = ["teaching", "revision"];
 
 export const EVENT_LABELS = {
   teaching: "Teaching",
-  revision: "Revision",
-  topic_test: "Topic Test"
+  revision: "Revision / Consolidation"
 };
+
+export const ASSESSMENT_TYPES = ["monthly_test", "mock_paper"];
 
 function parseDate(dateString) {
   const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateString || "");
@@ -65,6 +66,35 @@ function makeEvent(date, startTime, durationHours) {
     start_time: startTime,
     end_time: addHours(startTime, durationHours),
     duration_hours: durationHours
+  };
+}
+
+function durationHours(startTime, endTime) {
+  return (parseTime(endTime) - parseTime(startTime)) / 60;
+}
+
+export function normaliseAssessmentEvent(event) {
+  parseDate(event.date);
+  parseTime(event.start_time);
+  parseTime(event.end_time);
+  if (!ASSESSMENT_TYPES.includes(event.assessment_type)) {
+    throw new Error(`Invalid assessment type: ${event.assessment_type || "missing"}`);
+  }
+  const duration = durationHours(event.start_time, event.end_time);
+  if (duration <= 0) {
+    throw new Error(`Assessment end time must be after its start: ${event.assessment_key || event.label || "assessment"}`);
+  }
+  return {
+    assessment_key: event.assessment_key,
+    assessment_type: event.assessment_type,
+    label: event.label,
+    date: event.date,
+    start_time: event.start_time,
+    end_time: event.end_time,
+    duration_hours: duration,
+    ...(event.mock_cycle ? { mock_cycle: event.mock_cycle } : {}),
+    ...(event.paper ? { paper: event.paper } : {}),
+    ...(event.coverage_note ? { coverage_note: event.coverage_note } : {})
   };
 }
 
@@ -160,7 +190,7 @@ export function applyEventOverrides(schedule, curriculum, programme, overrides =
       return {
         ...batch,
         cycles,
-        progress: calculateProgress(cycles, curriculum, programme)
+        progress: calculateProgress(cycles, curriculum, programme, batch.assessment_events || [])
       };
     })
   };
@@ -232,10 +262,7 @@ export function validateEventOverride(override, generatedSchedule, programme, cu
 
   const resolvedTargetCycle = resolveCycleEvents(generatedCycle, generatedBatch.batch_id, effectiveOverrides);
   if (eventStartsBefore(resolvedTargetCycle.revision, resolvedTargetCycle.teaching)) {
-    warnings.push("Revision would take place before teaching.");
-  }
-  if (eventStartsBefore(resolvedTargetCycle.topic_test, resolvedTargetCycle.teaching)) {
-    warnings.push("Topic Test would take place before teaching.");
+    warnings.push("Revision / Consolidation would take place before teaching.");
   }
 
   return { errors: [...new Set(errors)], warnings: [...new Set(warnings)] };
@@ -248,11 +275,9 @@ function eventInsideProtectedClosure(event, closures) {
 function buildNormalSlot(teachingDate, batch) {
   const teaching = makeEvent(teachingDate, batch.teaching.start_time, batch.teaching.duration_hours);
   const revision = nextConfiguredEvent(teaching, batch.revision);
-  const topicTest = nextConfiguredEvent(revision, batch.topic_test);
   return {
     teaching,
     revision,
-    topic_test: topicTest,
     status: "Scheduled"
   };
 }
@@ -265,7 +290,7 @@ function findNormalSlots(batch, programme, count) {
 
   while (slots.length < count) {
     const slot = buildNormalSlot(teachingDate, batch);
-    const intersectsClosure = [slot.teaching, slot.revision, slot.topic_test]
+    const intersectsClosure = [slot.teaching, slot.revision]
       .some((event) => eventInsideProtectedClosure(event, closures));
 
     if (!intersectsClosure) {
@@ -305,7 +330,7 @@ export function validateAccelerationOverride(override, batch, programme) {
     errors.push("break_id does not match a configured closure");
   }
 
-  const required = ["teaching", "revision", "topic_test"];
+  const required = ["teaching", "revision"];
   for (const eventName of required) {
     const value = override[eventName];
     if (!value || !value.date || !value.start_time) {
@@ -328,9 +353,8 @@ export function validateAccelerationOverride(override, batch, programme) {
   if (errors.length === 0) {
     const teaching = accelerationEvent(override, "teaching", programme.cycle_hours.teaching);
     const revision = accelerationEvent(override, "revision", programme.cycle_hours.revision);
-    const topicTest = accelerationEvent(override, "topic_test", programme.cycle_hours.topic_test);
-    if (compareEvents(revision, teaching) <= 0 || compareEvents(topicTest, revision) <= 0) {
-      errors.push("acceleration events must be in Teaching, Revision, Topic Test order");
+    if (compareEvents(revision, teaching) <= 0) {
+      errors.push("acceleration events must be in Teaching, Revision / Consolidation order");
     }
   }
 
@@ -355,7 +379,6 @@ function buildAccelerationSlots(batch, programme) {
     slots.push({
       teaching: accelerationEvent(override, "teaching", programme.cycle_hours.teaching),
       revision: accelerationEvent(override, "revision", programme.cycle_hours.revision),
-      topic_test: accelerationEvent(override, "topic_test", programme.cycle_hours.topic_test),
       status: "Acceleration",
       break_id: override.break_id
     });
@@ -364,15 +387,36 @@ function buildAccelerationSlots(batch, programme) {
   return { slots, errors };
 }
 
-export function calculateProgress(cycles, curriculum, programme) {
+export function assessmentHours(assessmentEvents = []) {
+  return assessmentEvents.reduce((total, event) => {
+    const normalised = normaliseAssessmentEvent(event);
+    return total + normalised.duration_hours;
+  }, 0);
+}
+
+export function calculateProgress(cycles, curriculum, programme, assessmentEvents = []) {
   const scheduledLessons = cycles.length;
   const coreTeachingHours = cycles.reduce((total, cycle) => total + cycle.teaching.duration_hours, 0);
   const revisionHours = cycles.reduce((total, cycle) => total + cycle.revision.duration_hours, 0);
-  const topicTestHours = cycles.reduce((total, cycle) => total + cycle.topic_test.duration_hours, 0);
-  const totalSupervisedHours = coreTeachingHours + revisionHours + topicTestHours;
+  const normalisedAssessments = assessmentEvents.map((event) => normaliseAssessmentEvent(event));
+  const formalAssessmentHours = normalisedAssessments.reduce((total, event) => total + event.duration_hours, 0);
+  const monthlyTestHours = normalisedAssessments
+    .filter((event) => event.assessment_type === "monthly_test")
+    .reduce((total, event) => total + event.duration_hours, 0);
+  const midwayMockHours = normalisedAssessments
+    .filter((event) => event.mock_cycle === "midway")
+    .reduce((total, event) => total + event.duration_hours, 0);
+  const finalMockHours = normalisedAssessments
+    .filter((event) => event.mock_cycle === "final")
+    .reduce((total, event) => total + event.duration_hours, 0);
+  const totalSupervisedHours = coreTeachingHours + revisionHours + formalAssessmentHours;
   const finalCycle = cycles.at(-1);
-  const forecastCompletionDate = finalCycle
-    ? [finalCycle.teaching.date, finalCycle.revision.date, finalCycle.topic_test.date].sort().at(-1)
+  const scheduledDates = [
+    ...(finalCycle ? [finalCycle.teaching.date, finalCycle.revision.date] : []),
+    ...normalisedAssessments.map((event) => event.date)
+  ];
+  const forecastCompletionDate = scheduledDates.length
+    ? scheduledDates.sort().at(-1)
     : null;
 
   return {
@@ -382,12 +426,13 @@ export function calculateProgress(cycles, curriculum, programme) {
     core_teaching_hours_total: curriculum.sessions.reduce((total, lesson) => total + lesson.duration_hours, 0),
     revision_hours: revisionHours,
     revision_hours_total: curriculum.sessions.length * programme.cycle_hours.revision,
-    topic_test_hours: topicTestHours,
-    topic_test_hours_total: curriculum.sessions.length * programme.cycle_hours.topic_test,
+    monthly_test_hours: monthlyTestHours,
+    midway_mock_hours: midwayMockHours,
+    final_mock_hours: finalMockHours,
+    formal_assessment_hours: formalAssessmentHours,
+    formal_assessment_events: normalisedAssessments.length,
     total_supervised_hours: totalSupervisedHours,
-    total_supervised_hours_total: curriculum.sessions.length * (
-      programme.cycle_hours.teaching + programme.cycle_hours.revision + programme.cycle_hours.topic_test
-    ),
+    total_supervised_hours_total: totalSupervisedHours,
     forecast_completion_date: forecastCompletionDate,
     acceleration_cycles_used: cycles.filter((cycle) => cycle.status === "Acceleration").length,
     deadline_status: forecastCompletionDate && forecastCompletionDate <= programme.target_completion ? "On track" : "At risk"
@@ -398,6 +443,7 @@ export function generateBatchSchedule(curriculum, programme, batch) {
   const lessonCount = curriculum.sessions.length;
   const acceleration = buildAccelerationSlots(batch, programme);
   const normalSlots = findNormalSlots(batch, programme, lessonCount);
+  const assessmentEvents = (batch.assessment_events || []).map((event) => normaliseAssessmentEvent(event));
   const slots = [...normalSlots, ...acceleration.slots]
     .sort((a, b) => compareEvents(a.teaching, b.teaching))
     .slice(0, lessonCount);
@@ -408,7 +454,6 @@ export function generateBatchSchedule(curriculum, programme, batch) {
     title: curriculum.sessions[index].title,
     teaching: slot.teaching,
     revision: slot.revision,
-    topic_test: slot.topic_test,
     status: slot.status,
     ...(slot.break_id ? { break_id: slot.break_id } : {})
   }));
@@ -417,7 +462,8 @@ export function generateBatchSchedule(curriculum, programme, batch) {
     batch_id: batch.batch_id,
     name: batch.name,
     cycles,
-    progress: calculateProgress(cycles, curriculum, programme),
+    assessment_events: assessmentEvents.sort(compareEvents),
+    progress: calculateProgress(cycles, curriculum, programme, assessmentEvents),
     errors: acceleration.errors
   };
 }

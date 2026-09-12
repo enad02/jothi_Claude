@@ -1,7 +1,8 @@
 import { SchedulerHttpError } from "./scheduler-http.js";
 
 export const SUPPORTED_ACADEMIC_YEAR = "2026-27";
-export const EVENT_TYPES = ["teaching", "revision", "topic_test"];
+export const EVENT_TYPES = ["teaching", "revision"];
+export const ASSESSMENT_TYPES = ["monthly_test", "mock_paper"];
 
 function fail(message, status = 400) {
   throw new SchedulerHttpError(status, message);
@@ -94,8 +95,10 @@ export function validateBatchPatch(body) {
     fail("Batch key is required.");
   }
   validateRecurringRule(body.teaching, "Teaching");
-  validateRecurringRule(body.revision, "Revision");
-  validateRecurringRule(body.topic_test, "Topic Test");
+  validateRecurringRule(body.revision, "Revision / Consolidation");
+  if (body.topic_test) {
+    validateRecurringRule(body.topic_test, "Legacy Topic Test");
+  }
 }
 
 export function validateEventOverridePayload(body) {
@@ -105,7 +108,7 @@ export function validateEventOverridePayload(body) {
   }
   assertKnownLessonId(body.lesson_id);
   if (!EVENT_TYPES.includes(body.event_type)) {
-    fail("Event type must be teaching, revision, or topic_test.");
+    fail("Event type must be teaching or revision.");
   }
   assertIsoDate(body.override_date, "Override date");
   assertTimeRange(body.override_start, body.override_end, "Override");
@@ -118,7 +121,7 @@ export function validateEventOverrideDeletePayload(body) {
   }
   assertKnownLessonId(body.lesson_id);
   if (!EVENT_TYPES.includes(body.event_type)) {
-    fail("Event type must be teaching, revision, or topic_test.");
+    fail("Event type must be teaching or revision.");
   }
 }
 
@@ -144,13 +147,14 @@ export function validateAccelerationPayload(body) {
     fail("Enabled acceleration cycles must set enabled to true.");
   }
   validateAccelerationEvent(body.teaching, "Teaching");
-  validateAccelerationEvent(body.revision, "Revision");
-  validateAccelerationEvent(body.topic_test, "Topic Test");
+  validateAccelerationEvent(body.revision, "Revision / Consolidation");
+  if (body.topic_test) {
+    validateAccelerationEvent(body.topic_test, "Legacy Topic Test");
+  }
   const teaching = `${body.teaching.date}T${body.teaching.start_time}`;
   const revision = `${body.revision.date}T${body.revision.start_time}`;
-  const topicTest = `${body.topic_test.date}T${body.topic_test.start_time}`;
-  if (!(teaching < revision && revision < topicTest)) {
-    fail("Acceleration events must be in Teaching, Revision, Topic Test order.");
+  if (!(teaching < revision)) {
+    fail("Acceleration events must be in Teaching, Revision / Consolidation order.");
   }
 }
 
@@ -163,7 +167,7 @@ export function validateAccelerationDeletePayload(body) {
 }
 
 export function assertAccelerationInsideBreak(body, programmeBreak) {
-  for (const [label, event] of [["Teaching", body.teaching], ["Revision", body.revision], ["Topic Test", body.topic_test]]) {
+  for (const [label, event] of [["Teaching", body.teaching], ["Revision / Consolidation", body.revision]]) {
     if (event.date < programmeBreak.start_date || event.date > programmeBreak.end_date) {
       fail(`${label} date must fall inside the selected programme break.`);
     }

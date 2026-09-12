@@ -157,7 +157,8 @@ function databaseState() {
       override_end: "20:00",
       reason: "private staff note"
     }],
-    accelerationCycles: []
+    accelerationCycles: [],
+    assessmentEvents: []
   };
 }
 
@@ -169,7 +170,8 @@ function scheduleDatabase(state = databaseState()) {
         bind() {
           return {
             sql,
-            first: async () => state.programme
+            first: async () => state.programme,
+            all: async () => ({ results: state.assessmentEvents })
           };
         }
       };
@@ -395,6 +397,36 @@ test("public state excludes database IDs, override reasons, actors, and audit hi
   assert.doesNotMatch(serialized, /private staff note|actor|audit/i);
 });
 
+test("public state exposes assessment schedule fields without database IDs or audit fields", () => {
+  const state = databaseState();
+  state.assessmentEvents = [{
+    id: "ASSESSMENT-DB-1",
+    batch_key: "BATCH-1",
+    assessment_key: "midway-mock-paper-2",
+    assessment_type: "mock_paper",
+    label: "Midway Mock — Paper 2 Statistics and Mechanics",
+    assessment_date: "2027-01-16",
+    start_time: "10:00",
+    end_time: "11:15",
+    mock_cycle: "midway",
+    paper: "paper_2_statistics_mechanics",
+    coverage_note: null
+  }];
+
+  const publicState = toScheduleApiState(state);
+  assert.deepEqual(publicState.batches[0].assessment_events, [{
+    assessment_key: "midway-mock-paper-2",
+    assessment_type: "mock_paper",
+    label: "Midway Mock — Paper 2 Statistics and Mechanics",
+    date: "2027-01-16",
+    start_time: "10:00",
+    end_time: "11:15",
+    mock_cycle: "midway",
+    paper: "paper_2_statistics_mechanics"
+  }]);
+  assert.doesNotMatch(JSON.stringify(publicState), /ASSESSMENT-DB-1|created_at|updated_at|audit|actor/i);
+});
+
 test("mapped viewers, editors, and admins can read authenticated schedule data", async () => {
   for (const email of [
     "viewer.user@example.test",
@@ -500,8 +532,9 @@ test("anonymous public page renders while anonymous staff GET and writes remain 
 
 test("schema, seed, and public state contain no Classkick, Zoom, or resource URLs", async () => {
   const schema = await readFile(new URL("../migrations/a-level-scheduler/0001_initial_schema.sql", import.meta.url), "utf8");
+  const assessmentSchema = await readFile(new URL("../migrations/a-level-scheduler/0002_assessment_events.sql", import.meta.url), "utf8");
   const seed = await readFile(new URL("../scripts/a-level-scheduler/seed-2026-27.sql", import.meta.url), "utf8");
-  const serialized = `${schema}\n${seed}\n${JSON.stringify(toScheduleApiState(databaseState()))}`;
+  const serialized = `${schema}\n${assessmentSchema}\n${seed}\n${JSON.stringify(toScheduleApiState(databaseState()))}`;
   assert.doesNotMatch(serialized, /classkick|zoom|resource[_ -]?url|https?:\/\//i);
 });
 
@@ -581,7 +614,6 @@ test("acceleration validation requires ordered events inside the selected break"
     break_key: "christmas",
     teaching: { date: "2026-12-22", start_time: "10:00", end_time: "12:00" },
     revision: { date: "2026-12-23", start_time: "10:00", end_time: "11:00" },
-    topic_test: { date: "2026-12-24", start_time: "10:00", end_time: "11:00" },
     enabled: true
   };
   validateAccelerationPayload(cycle);

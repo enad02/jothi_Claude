@@ -94,11 +94,10 @@ function renderSetup(programme) {
     <h3 class="setup-subheading">Weekly batch pattern</h3>
     ${programme.batches.map((batch) => `
       <div class="batch-config" data-batch-config="${escapeHtml(batch.batch_id)}">
-        <h4>${escapeHtml(batch.name)}</h4>
+          <h4>${escapeHtml(batch.name)}</h4>
         <div class="setup-grid">
           ${weeklyEventControl("Teaching", "teaching", batch.teaching)}
-          ${weeklyEventControl("Revision", "revision", batch.revision)}
-          ${weeklyEventControl("Topic Test", "topic_test", batch.topic_test)}
+          ${weeklyEventControl("Revision / Consolidation", "revision", batch.revision)}
         </div>
       </div>
     `).join("")}
@@ -162,8 +161,7 @@ function readProgrammeFromForm() {
         break_id: editor.dataset.accelerationBreak,
         enabled: true,
         teaching: readDateTime(editor.querySelector('[data-field="teaching"]').value),
-        revision: readDateTime(editor.querySelector('[data-field="revision"]').value),
-        topic_test: readDateTime(editor.querySelector('[data-field="topic_test"]').value)
+        revision: readDateTime(editor.querySelector('[data-field="revision"]').value)
       });
     }
   }
@@ -198,9 +196,6 @@ function renderAccelerationEditors(programme, batch) {
               </label>
               <label>Revision date/time
                 <input type="datetime-local" data-field="revision" value="${escapeHtml(toDateTimeValue(override?.revision))}" />
-              </label>
-              <label>Topic Test date/time
-                <input type="datetime-local" data-field="topic_test" value="${escapeHtml(toDateTimeValue(override?.topic_test))}" />
               </label>
             </section>
           `;
@@ -291,11 +286,6 @@ function accelerationPayloads(programme) {
         start_time: cycle.revision.start_time,
         end_time: cycle.revision.end_time
       },
-      topic_test: {
-        date: cycle.topic_test.date,
-        start_time: cycle.topic_test.start_time,
-        end_time: cycle.topic_test.end_time
-      },
       enabled: true
     })));
 }
@@ -317,8 +307,7 @@ async function persistConfiguration(programme) {
     await requestSchedulerWrite("batch", "PATCH", {
       batch_key: batch.batch_id,
       teaching: recurringRuleToApi(batch.teaching),
-      revision: recurringRuleToApi(batch.revision),
-      topic_test: recurringRuleToApi(batch.topic_test)
+      revision: recurringRuleToApi(batch.revision)
     });
   }
 

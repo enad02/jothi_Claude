@@ -66,6 +66,26 @@ export async function loadAccelerationCycles(db, programmeInstanceId) {
   return rows(result);
 }
 
+export async function loadAssessmentEvents(db, programmeInstanceId) {
+  try {
+    const result = await db.prepare(`
+      SELECT b.batch_key, a.id, a.batch_id, a.assessment_key, a.assessment_type,
+             a.label, a.assessment_date, a.start_time, a.end_time,
+             a.mock_cycle, a.paper, a.coverage_note, a.created_at, a.updated_at
+      FROM assessment_events a
+      INNER JOIN batches b ON b.id = a.batch_id
+      WHERE b.programme_instance_id = ?
+      ORDER BY b.batch_key, a.assessment_date, a.start_time, a.assessment_key
+    `).bind(programmeInstanceId).all();
+    return rows(result);
+  } catch (error) {
+    if (String(error?.message || "").includes("assessment_events")) {
+      return [];
+    }
+    throw error;
+  }
+}
+
 export async function loadScheduleState(db, academicYear) {
   const programme = await loadProgrammeInstance(db, academicYear);
   if (!programme) {
@@ -103,13 +123,15 @@ export async function loadScheduleState(db, academicYear) {
       WHERE b.programme_instance_id = ? ORDER BY b.batch_key, a.lesson_id
     `).bind(programme.id)
   ]);
+  const assessmentEvents = await loadAssessmentEvents(db, programme.id);
 
   return {
     programme,
     batches: rows(batchResult),
     breaks: rows(breakResult),
     eventOverrides: rows(overrideResult),
-    accelerationCycles: rows(accelerationResult)
+    accelerationCycles: rows(accelerationResult),
+    assessmentEvents
   };
 }
 
@@ -150,6 +172,19 @@ export function toScheduleApiState(state) {
           override_start: item.override_start,
           override_end: item.override_end
         })),
+      assessment_events: (state.assessmentEvents || [])
+        .filter((item) => item.batch_key === batch.batch_key)
+        .map((item) => ({
+          assessment_key: item.assessment_key,
+          assessment_type: item.assessment_type,
+          label: item.label,
+          date: item.assessment_date,
+          start_time: item.start_time,
+          end_time: item.end_time,
+          ...(item.mock_cycle ? { mock_cycle: item.mock_cycle } : {}),
+          ...(item.paper ? { paper: item.paper } : {}),
+          ...(item.coverage_note ? { coverage_note: item.coverage_note } : {})
+        })),
       acceleration_cycles: state.accelerationCycles
         .filter((item) => item.batch_key === batch.batch_key && item.enabled === 1)
         .map((item) => ({
@@ -157,7 +192,6 @@ export function toScheduleApiState(state) {
           break_key: item.break_key,
           teaching: { date: item.teaching_date, start_time: item.teaching_start, end_time: item.teaching_end },
           revision: { date: item.revision_date, start_time: item.revision_start, end_time: item.revision_end },
-          topic_test: { date: item.topic_test_date, start_time: item.topic_test_start, end_time: item.topic_test_end },
           enabled: true
         }))
     })),
@@ -260,11 +294,16 @@ export async function upsertProgrammeConfiguration(db, current, currentBreaks, i
 }
 
 export async function upsertBatchConfiguration(db, current, input, actorIdentifier, timestamp) {
+  const legacyTopicTest = input.topic_test || {
+    weekday: current.topic_test_weekday,
+    start_time: current.topic_test_start,
+    end_time: current.topic_test_end
+  };
   const after = {
     batch_key: current.batch_key,
     teaching: input.teaching,
     revision: input.revision,
-    topic_test: input.topic_test
+    legacy_topic_test: legacyTopicTest
   };
   const before = {
     batch_key: current.batch_key,
@@ -296,7 +335,7 @@ export async function upsertBatchConfiguration(db, current, input, actorIdentifi
       current.id, current.programme_instance_id, current.batch_key, current.display_name,
       input.teaching.weekday, input.teaching.start_time, input.teaching.end_time,
       input.revision.weekday, input.revision.start_time, input.revision.end_time,
-      input.topic_test.weekday, input.topic_test.start_time, input.topic_test.end_time,
+      legacyTopicTest.weekday, legacyTopicTest.start_time, legacyTopicTest.end_time,
       current.created_at, timestamp
     ),
     auditStatement(db, {
@@ -361,6 +400,15 @@ export async function deleteEventOverride(db, before, actorIdentifier, timestamp
 export async function upsertAccelerationCycle(db, batch, input, before, actorIdentifier, timestamp) {
   const id = `${batch.id}:${input.lesson_id}`;
   const after = { ...input };
+  const legacyTopicTest = input.topic_test || (before ? {
+    date: before.topic_test_date,
+    start_time: before.topic_test_start,
+    end_time: before.topic_test_end
+  } : {
+    date: input.revision.date,
+    start_time: input.revision.end_time,
+    end_time: input.revision.end_time
+  });
   await db.batch([
     db.prepare(`
       INSERT INTO acceleration_cycles (
@@ -387,7 +435,7 @@ export async function upsertAccelerationCycle(db, batch, input, before, actorIde
       id, batch.id, input.lesson_id, input.break_key,
       input.teaching.date, input.teaching.start_time, input.teaching.end_time,
       input.revision.date, input.revision.start_time, input.revision.end_time,
-      input.topic_test.date, input.topic_test.start_time, input.topic_test.end_time,
+      legacyTopicTest.date, legacyTopicTest.start_time, legacyTopicTest.end_time,
       before?.created_at || timestamp, timestamp
     ),
     auditStatement(db, {
