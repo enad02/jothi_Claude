@@ -769,11 +769,12 @@ test("schema, seed, and public state contain no Classkick, Zoom, or resource URL
   assert.doesNotMatch(serialized, /classkick|zoom|resource[_ -]?url|https?:\/\//i);
 });
 
-test("seed upserts the approved assessment calendar for both batches", async () => {
+test("seed inserts the approved assessment calendar for both batches without resetting conflicts", async () => {
   const seed = await readFile(new URL("../scripts/a-level-scheduler/seed-2026-27.sql", import.meta.url), "utf8");
 
   assert.match(seed, /target_completion_date = excluded\.target_completion_date/);
-  assert.match(seed, /ON CONFLICT\(batch_id, assessment_key\) DO UPDATE SET/);
+  assert.match(seed, /ON CONFLICT\(batch_id, assessment_key\) DO NOTHING/);
+  assert.doesNotMatch(seed, /ON CONFLICT\(batch_id, assessment_key\) DO UPDATE SET/);
   assert.equal((seed.match(/'october-monthly-test', 'monthly_test'/g) || []).length, 2);
   assert.equal((seed.match(/'final-mock-paper-2', 'mock_paper'/g) || []).length, 2);
   for (const date of [
@@ -789,6 +790,60 @@ test("seed upserts the approved assessment calendar for both batches", async () 
     "2027-05-21"
   ]) {
     assert.equal((seed.match(new RegExp(date, "g")) || []).length, 2);
+  }
+});
+
+test("seed rerun preserves staff-adjusted assessment date and time without duplicates", async () => {
+  const { DatabaseSync } = await import("node:sqlite");
+  const schema = await readFile(new URL("../migrations/a-level-scheduler/0001_initial_schema.sql", import.meta.url), "utf8");
+  const assessmentSchema = await readFile(new URL("../migrations/a-level-scheduler/0002_assessment_events.sql", import.meta.url), "utf8");
+  const seed = await readFile(new URL("../scripts/a-level-scheduler/seed-2026-27.sql", import.meta.url), "utf8");
+  const db = new DatabaseSync(":memory:");
+  try {
+    db.exec(schema);
+    db.exec(assessmentSchema);
+    db.exec(seed);
+
+    const defaultRow = db.prepare(`
+      SELECT assessment_date, start_time, end_time
+      FROM assessment_events
+      WHERE batch_id = ? AND assessment_key = ?
+    `).get("ALEVEL-MATHS-Y12:2026-27:BATCH-1", "october-monthly-test");
+    assert.equal(defaultRow.assessment_date, "2026-10-30");
+    assert.equal(defaultRow.start_time, "19:00");
+    assert.equal(defaultRow.end_time, "20:00");
+
+    db.prepare(`
+      UPDATE assessment_events
+      SET assessment_date = ?, start_time = ?, end_time = ?
+      WHERE batch_id = ? AND assessment_key = ?
+    `).run(
+      "2026-10-31",
+      "18:30",
+      "19:30",
+      "ALEVEL-MATHS-Y12:2026-27:BATCH-1",
+      "october-monthly-test"
+    );
+
+    db.exec(seed);
+
+    const rerunRow = db.prepare(`
+      SELECT assessment_date, start_time, end_time
+      FROM assessment_events
+      WHERE batch_id = ? AND assessment_key = ?
+    `).get("ALEVEL-MATHS-Y12:2026-27:BATCH-1", "october-monthly-test");
+    const rowCount = db.prepare(`
+      SELECT COUNT(*) AS count
+      FROM assessment_events
+      WHERE batch_id = ? AND assessment_key = ?
+    `).get("ALEVEL-MATHS-Y12:2026-27:BATCH-1", "october-monthly-test");
+
+    assert.equal(rerunRow.assessment_date, "2026-10-31");
+    assert.equal(rerunRow.start_time, "18:30");
+    assert.equal(rerunRow.end_time, "19:30");
+    assert.equal(rowCount.count, 1);
+  } finally {
+    db.close();
   }
 });
 

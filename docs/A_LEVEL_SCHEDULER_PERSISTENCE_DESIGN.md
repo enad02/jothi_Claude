@@ -67,7 +67,7 @@ The additive migration `migrations/a-level-scheduler/0002_assessment_events.sql`
 
 Foreign keys and useful lookup indexes are included. Student, parent, resource, payment, and attendance tables are excluded.
 
-The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and the approved ten assessment events per batch. It does not seed event overrides or acceleration cycles. Re-running the seed updates the programme target and the fixed assessment rows by `batch_id` plus `assessment_key`, rather than creating duplicates.
+The idempotent local seed is `scripts/a-level-scheduler/seed-2026-27.sql`. It seeds one programme, two batches, Christmas and Easter, and inserts any missing approved assessment events per batch. It does not seed event overrides or acceleration cycles. Re-running the seed updates the programme target, but assessment defaults are insert-missing-only by `batch_id` plus `assessment_key`: existing assessment events are never reset by seed reruns, so staff-rescheduled dates and times remain authoritative after initial creation.
 
 ## Actual route contract
 
@@ -191,7 +191,7 @@ The fixed assessment identities for each batch are:
 - `final-mock-paper-1` on `2027-05-14`, `19:00`-`21:00`;
 - `final-mock-paper-2` on `2027-05-21`, `19:00`-`20:15`.
 
-Staff may move the stored date, start time, and end time for an existing assessment event. They cannot create or delete assessment events through the scheduler interface, and cannot change the assessment key, type, cycle, paper, label, coverage note, or batch assignment through that route. Each batch has its own assessment rows, so changing `BATCH-1` does not change `BATCH-2`.
+Staff may move the stored date, start time, and end time for an existing assessment event. They cannot create or delete assessment events through the scheduler interface, and cannot change the assessment key, type, cycle, paper, label, coverage note, or batch assignment through that route. Each batch has its own assessment rows, so changing `BATCH-1` does not change `BATCH-2`. The seed is safe to rerun for missing approved assessment rows only; it must not be used as a reset mechanism for staff-adjusted assessment timings.
 
 Supervised programme hours are calculated from actual rendered events:
 

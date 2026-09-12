@@ -175,16 +175,7 @@ INSERT INTO assessment_events (
     '2027-05-21', '19:00', '20:15', 'final', 'paper_2_statistics_mechanics', 'Statistics and Mechanics',
     '2026-09-06T00:00:00.000Z', '2026-09-06T00:00:00.000Z'
   )
-ON CONFLICT(batch_id, assessment_key) DO UPDATE SET
-  assessment_type = excluded.assessment_type,
-  label = excluded.label,
-  assessment_date = excluded.assessment_date,
-  start_time = excluded.start_time,
-  end_time = excluded.end_time,
-  mock_cycle = excluded.mock_cycle,
-  paper = excluded.paper,
-  coverage_note = excluded.coverage_note,
-  updated_at = excluded.updated_at;
+ON CONFLICT(batch_id, assessment_key) DO NOTHING;
 
 INSERT INTO programme_breaks (
   id, programme_instance_id, break_key, display_name, start_date, end_date,
