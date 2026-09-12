@@ -194,10 +194,20 @@ test("approved default assessment calendar is loaded for both independent batche
 
 test("programme target completion is 31 May and May assessment forecasts remain on track", () => {
   const result = generateSchedule(curriculum, programme);
+  const publicHtml = renderPublicSchedule(result, programme, "BATCH-1");
+  const staffHtml = renderScheduleView(result, programme, "BATCH-1", {
+    editableEvents: true,
+    editableAssessments: true
+  });
 
   assert.equal(programme.target_completion, "2027-05-31");
   assert.ok(result.batches.every((item) => item.progress.forecast_completion_date === "2027-05-21"));
   assert.ok(result.batches.every((item) => item.progress.deadline_status === "On track"));
+  for (const html of [publicHtml, staffHtml]) {
+    assert.match(html, /<dt>Programme target completion<\/dt><dd>31 May 2027<\/dd>/);
+    assert.doesNotMatch(html, /<dt>Programme target completion<\/dt><dd>21 May 2027<\/dd>/);
+    assert.doesNotMatch(html, /<dt>Forecast completion<\/dt>/);
+  }
 });
 
 test("legacy topic_test fields remain ignored for supervised-hour totals", () => {

@@ -56,7 +56,7 @@ export function renderProgrammeCommitment(progress, programme, { showAcceleratio
   const dateValues = [
     ["Taster", formatLongDate(programme.taster_date)],
     ["Programme start", formatLongDate(programme.programme_start)],
-    ["Forecast completion", formatLongDate(progress.forecast_completion_date)]
+    ["Programme target completion", formatLongDate(programme.target_completion)]
   ];
   if (showAcceleration) {
     dateValues.push(["Acceleration cycles used", progress.acceleration_cycles_used]);
