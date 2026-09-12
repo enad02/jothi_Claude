@@ -1,6 +1,6 @@
 # Jothi Learning - Handover Brief
 
-Last updated: 6 September 2026
+Last updated: 12 September 2026
 
 This document supersedes the earlier April handover notes.
 For locked facts, pricing, CTA hierarchy, proof numbers, and public-copy rules, use `SOURCE_OF_TRUTH.md`.
@@ -8,7 +8,7 @@ For the current working snapshot, use `CURRENT_STATE.md`.
 
 ## Current business summary
 
-Jothi Learning is a mid-market-to-premium online tutoring business for students in Years 7-13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
+Jothi Learning is a mid-market-to-premium online tutoring business for students in Years 5-13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths.
 
 Core public positioning:
 - Warm, nurturing, premium, and serious
@@ -31,10 +31,11 @@ Do not describe pricing as hourly tuition.
 Do not lead with the previous crash-course-first A-Level positioning.
 
 Approved public model:
-- KS3 Years 7-8: from £880 programme fee
-- Years 9-10 GCSE preparation: from £1,100 programme fee
-- Year 11 GCSE exam year: from £1,000 programme fee
-- Year 12 A-Level Maths: £3,360 full programme
+- KS2 Years 5-6: £825 per subject; standard instalments 11 × £75
+- KS3 Years 7-8: £880 per subject; standard instalments 11 × £80
+- Years 9-10 GCSE preparation: £1,045 per subject; standard instalments 11 × £95
+- Year 11 GCSE exam year: £770 per subject; standard instalments 7 × £110
+- Year 12 A-Level Maths: £2,700 full programme; standard instalments 9 × £300; 96.5 planned supervised programme hours
 - Year 13 A-Level Maths: admissions currently closed; previous pricing retired.
 
 Full pathway pricing and programme-cycle details live in `SOURCE_OF_TRUTH.md`.
@@ -44,7 +45,7 @@ Full pathway pricing and programme-cycle details live in `SOURCE_OF_TRUTH.md`.
 The Programmes page now works as a parent decision flow:
 stage -> pathway -> programme fee -> joining route.
 
-The homepage pricing summary is intentionally light and uses only `from` programme fees. Full pricing and payment-plan rules remain in `SOURCE_OF_TRUTH.md`.
+The homepage pricing summary is intentionally light and uses the approved per-subject or programme prices with standard instalments. Full pricing and payment-plan rules remain in `SOURCE_OF_TRUTH.md`.
 
 ## Operating reminder
 

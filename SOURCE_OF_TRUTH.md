@@ -1,6 +1,6 @@
 # Source of Truth - Jothi Learning Website
 
-Last updated: 13 May 2026
+Last updated: 12 September 2026
 
 This file holds locked facts and decisions for the website build.
 It should contain only stable decisions, not working-state notes.
@@ -74,45 +74,45 @@ Do not invent further pricing breakdowns unless Prakash provides them.
 
 ### Programme fees
 
-- Two-subject pathways use the approved combined programme fee. Full Core three-subject pathways include a small combined-programme reduction. Public copy should describe this as combined-programme pricing, not as a discount.
-- KS2–Year 11 amounts were converted from the existing approved commercial economics; this standardisation did not conduct a new pricing review.
-- A future commercial review may consider whether converted totals should be rounded, but no repricing or rounding is approved here.
+- KS2–Year 11 pricing is public per subject.
+- Public copy must not publish two-subject package prices, Full Core bundle prices, or the discretionary three-subject concession.
+- Full Core and pathway descriptions may remain as academic pathway descriptions.
+- Where a student takes more than one subject, the combined programme arrangement is confirmed during consultation.
+- Standard instalments spread the fixed programme fee; they do not represent a monthly allocation of tuition hours.
 
 #### KS2 Years 5-6 (Maths-first)
 - Programme cycle: September-July
-- 1 subject (Maths Foundations): £825 programme fee
-- 2-subject pathway (Maths + SATs English support, Year 6 only where appropriate): £1,650 programme fee
+- Programme fee: £825 per subject
+- Standard instalments: 11 × £75
 - KS2 is positioned as Maths-first. English is focused SATs English support for Year 6 where appropriate, not a full English pillar.
 - No Full Core option at KS2.
 
 #### KS3 Years 7-8
 - Programme cycle: September-July
-- 1 subject / standard pathway: £880 programme fee
-- 2-session pathway: £1,760 programme fee
-- Full Core Foundations: £2,420 programme fee
+- Programme fee: £880 per subject
+- Standard instalments: 11 × £80
 
 #### Years 9-10 GCSE preparation
 - Programme cycle: September-July
-- 1 subject: £1,100 programme fee
-- 2-subject pathway: £2,200 programme fee
-- GCSE Full Core: £3,025 programme fee
+- Programme fee: £1,045 per subject
+- Standard instalments: 11 × £95
 
 #### Year 11 GCSE exam year
-- Programme cycle: September-April
-- 1 subject: £1,000 programme fee
-- 2-subject pathway: £2,000 programme fee
-- Full Core Exam Programme: £2,760 programme fee
+- Programme cycle: September to end of March
+- Programme fee: £770 per subject
+- Standard instalments: 7 × £110
 
 #### Year 12 A-Level Maths
-- £30 per supervised programme hour
-- 112 supervised programme hours
-- Full programme fee: £3,360
+- Fixed full programme fee: £2,700
+- Standard instalments: 9 × £300
+- 96.5 planned supervised programme hours
 - 56 hours curriculum teaching
-- 28 hours supervised revision
-- 28 hours supervised Topic Tests
+- 28 hours Revision / Consolidation
+- 12.5 hours planned formal assessments
 - Programme cycle: September-May
-- Curriculum teaching is completed by the end of April; May is reserved for teacher-supervised revision, formative assessment, full-paper practice, error correction and consolidation.
-- Paper marking is not included in the 112 supervised-hour calculation.
+- Curriculum completion expectation: end April
+- Programme target completion: 31 May 2027
+- May is reserved for teacher-supervised revision, formative assessment, full-paper practice, error correction and consolidation.
 - Payment plans are available after consultation.
 - Trial pricing and any pay-in-full concession are not public pricing.
 - Year 12 should not generally be described as an AS qualification. `First-year A-Level / AS-equivalent content` may be used where academically useful.
@@ -144,10 +144,10 @@ Homepage pricing should stay light. Do not show a full pricing table on the home
 Homepage pricing should use concise programme pricing labels and state that payment plans are available after consultation.
 
 Homepage pricing should use these pricing labels (4 cards only):
-- KS3 from £880 programme fee
-- GCSE Prep from £1,100 programme fee
-- Year 11 from £1,000 programme fee
-- A-Level Maths Year 12: £3,360 full programme
+- KS3 Years 7-8: £880 per subject; standard instalments 11 × £80
+- GCSE Prep Years 9-10: £1,045 per subject; standard instalments 11 × £95
+- Year 11 GCSE exam year: £770 per subject; standard instalments 7 × £110
+- A-Level Maths Year 12: £2,700 programme; standard instalments 9 × £300
 
 KS2 is approved commercially and appears on the Programmes page, but is not shown in the homepage pricing cards. KS2 may be promoted separately through the Programmes page, a dedicated landing page, or campaign.
 
