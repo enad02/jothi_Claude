@@ -118,12 +118,10 @@ Do not invent further pricing breakdowns unless Prakash provides them.
 - Year 12 should not generally be described as an AS qualification. `First-year A-Level / AS-equivalent content` may be used where academically useful.
 
 #### Year 13 A-Level Maths
-- Programme cycle: September-April
-- Programme fee: £2,500
-- Curriculum teaching is completed by the end of March; April is reserved for targeted revision, error correction and a three-paper final mock series.
-- The standard programme finishes at the end of April, protecting May for independent preparation before the main A-Level examinations.
+- Year 13 A-Level Maths admissions are currently closed.
+- The former £2,500 programme price is retired and must not be used for new admissions unless a new Year 13 programme and pricing decision is approved.
 
-Teacher-supervised curriculum teaching, revision, formative assessment, mocks, mock review and error correction are programme activities included in the programme fee. They are not unpaid extras.
+Teacher-supervised curriculum teaching, revision, formative assessment, mocks, mock review and error correction are programme activities included in approved programme fees. They are not unpaid extras.
 
 ### Specialist A-Level routes
 
@@ -149,7 +147,7 @@ Homepage pricing should use these pricing labels (4 cards only):
 - KS3 from £880 programme fee
 - GCSE Prep from £1,100 programme fee
 - Year 11 from £1,000 programme fee
-- A-Level Maths: programme pricing by year
+- A-Level Maths Year 12: £3,360 full programme
 
 KS2 is approved commercially and appears on the Programmes page, but is not shown in the homepage pricing cards. KS2 may be promoted separately through the Programmes page, a dedicated landing page, or campaign.
 

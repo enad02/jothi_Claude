@@ -35,7 +35,7 @@ Approved public model:
 - Years 9-10 GCSE preparation: from £1,100 programme fee
 - Year 11 GCSE exam year: from £1,000 programme fee
 - Year 12 A-Level Maths: £3,360 full programme
-- Year 13 A-Level Maths: £2,500 programme fee
+- Year 13 A-Level Maths: admissions currently closed; previous pricing retired.
 
 Full pathway pricing and programme-cycle details live in `SOURCE_OF_TRUTH.md`.
 
