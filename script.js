@@ -1,9 +1,5 @@
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
-const contactForm = document.querySelector(".contact-form-card");
-const accessKeyField = contactForm?.querySelector('input[name="access_key"]');
-const contactSubmitButton = contactForm?.querySelector('button[type="submit"]');
-const formStatus = contactForm?.querySelector("[data-form-status]");
 
 if (navToggle && siteNav) {
   const closeNav = () => {
@@ -369,58 +365,331 @@ if (navToggle && siteNav) {
   window.addEventListener("hashchange", activateTestimonialFromHash);
 })();
 
-if (contactForm && accessKeyField && formStatus) {
-  const defaultSubmitLabel = contactSubmitButton?.textContent ?? "Send enquiry";
+(function () {
+  "use strict";
 
-  const setFormStatus = (message, state) => {
-    formStatus.textContent = message;
-    formStatus.hidden = false;
-    formStatus.dataset.state = state;
-  };
+  const META_PIXEL_ID = "1497091182452721";
+  const CONSENT_VERSION = 1;
+  const CONSENT_STORAGE_KEY = "jothi_cookie_consent_v1";
+  const PENDING_ENQUIRY_KEY = "jothi_pending_enquiry_v1";
+  const CONSUMED_ENQUIRY_KEY = "jothi_consumed_enquiry_v1";
+  const PENDING_EXPIRY_MS = 10 * 60 * 1000;
+  const SUCCESS_PATH = "/consultation-request-received";
 
-  contactForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  let currentConsent = readConsentPreference();
+  let metaScriptPromise = null;
+  let pixelInitialised = false;
+  let pageViewSent = false;
+  let leadAttemptInProgress = false;
+  let consumedMarkerIdThisPage = null;
 
-    if (!contactForm.reportValidity()) {
-      return;
+  function readJson(storage, key) {
+    try {
+      const value = storage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch (_error) {
+      return null;
     }
+  }
 
-    const formData = new FormData(contactForm);
-
-    setFormStatus("Sending your enquiry...", "sending");
-
-    if (contactSubmitButton) {
-      contactSubmitButton.disabled = true;
-      contactSubmitButton.textContent = "Sending...";
+  function readConsentPreference() {
+    const preference = readJson(window.localStorage, CONSENT_STORAGE_KEY);
+    if (
+      !preference ||
+      preference.version !== CONSENT_VERSION ||
+      typeof preference.marketing !== "boolean" ||
+      typeof preference.timestamp !== "string"
+    ) {
+      return null;
     }
+    return preference;
+  }
+
+  function hasMarketingConsent() {
+    return currentConsent?.marketing === true;
+  }
+
+  function saveConsentPreference(marketing) {
+    currentConsent = {
+      version: CONSENT_VERSION,
+      marketing,
+      timestamp: new Date().toISOString(),
+    };
 
     try {
-      const response = await fetch(contactForm.action, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Something went wrong while sending your enquiry.");
-      }
-
-      contactForm.reset();
-      setFormStatus("Your enquiry has been sent. We will be in touch shortly.", "success");
-    } catch (error) {
-      setFormStatus(
-        error instanceof Error ? error.message : "We could not send your enquiry. Please try again.",
-        "error",
-      );
-    } finally {
-      if (contactSubmitButton) {
-        contactSubmitButton.disabled = false;
-        contactSubmitButton.textContent = defaultSubmitLabel;
-      }
+      window.localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(currentConsent));
+    } catch (_error) {
+      // The in-memory choice still applies for this page if storage is unavailable.
     }
-  });
-}
+
+    if (marketing) {
+      loadMetaPixel().then(trySendVerifiedLead).catch(function () {
+        // A blocked or failed Meta request must not affect access to the site.
+      });
+    }
+  }
+
+  function createMetaQueue() {
+    if (typeof window.fbq === "function") return;
+
+    const fbq = function () {
+      if (fbq.callMethod) {
+        fbq.callMethod.apply(fbq, arguments);
+      } else {
+        fbq.queue.push(arguments);
+      }
+    };
+
+    fbq.push = fbq;
+    fbq.loaded = true;
+    fbq.version = "2.0";
+    fbq.queue = [];
+    window.fbq = fbq;
+    window._fbq = fbq;
+  }
+
+  function loadMetaPixel() {
+    if (!hasMarketingConsent()) {
+      return Promise.resolve(false);
+    }
+
+    if (!metaScriptPromise) {
+      createMetaQueue();
+      metaScriptPromise = new Promise(function (resolve, reject) {
+        const script = document.createElement("script");
+        script.async = true;
+        script.src = "https://connect.facebook.net/en_US/fbevents.js";
+        script.dataset.jothiMetaPixel = "true";
+        script.addEventListener("load", resolve, { once: true });
+        script.addEventListener("error", reject, { once: true });
+        document.head.appendChild(script);
+      });
+    }
+
+    return metaScriptPromise.then(function () {
+      if (!hasMarketingConsent() || typeof window.fbq !== "function") return false;
+
+      if (!pixelInitialised) {
+        window.fbq("init", META_PIXEL_ID);
+        pixelInitialised = true;
+      }
+
+      if (!pageViewSent) {
+        window.fbq("track", "PageView");
+        pageViewSent = true;
+      }
+
+      return true;
+    });
+  }
+
+  function isSuccessPage() {
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    return path === SUCCESS_PATH;
+  }
+
+  function removeUnexpectedSuccessPageParameters() {
+    if (
+      isSuccessPage() &&
+      (window.location.search || window.location.hash) &&
+      typeof window.history?.replaceState === "function"
+    ) {
+      window.history.replaceState(null, "", SUCCESS_PATH);
+    }
+  }
+
+  function getFreshPendingEnquiry() {
+    const marker = readJson(window.sessionStorage, PENDING_ENQUIRY_KEY);
+    if (
+      !marker ||
+      marker.version !== 1 ||
+      typeof marker.id !== "string" ||
+      typeof marker.createdAt !== "number"
+    ) {
+      return null;
+    }
+
+    const age = Date.now() - marker.createdAt;
+    if (age < 0 || age > PENDING_EXPIRY_MS) {
+      try {
+        window.sessionStorage.removeItem(PENDING_ENQUIRY_KEY);
+      } catch (_error) {
+        // An expired marker is ignored even if browser storage cannot be updated.
+      }
+      return null;
+    }
+
+    const consumed = readJson(window.sessionStorage, CONSUMED_ENQUIRY_KEY);
+    if (consumedMarkerIdThisPage === marker.id || consumed?.id === marker.id) return null;
+    return marker;
+  }
+
+  function consumePendingEnquiry(marker) {
+    consumedMarkerIdThisPage = marker.id;
+    try {
+      window.sessionStorage.removeItem(PENDING_ENQUIRY_KEY);
+      window.sessionStorage.setItem(
+        CONSUMED_ENQUIRY_KEY,
+        JSON.stringify({ id: marker.id, consumedAt: Date.now() }),
+      );
+    } catch (_error) {
+      // The in-memory guard below still prevents another event on this page view.
+    }
+  }
+
+  function trySendVerifiedLead() {
+    if (leadAttemptInProgress || !isSuccessPage() || !hasMarketingConsent()) return;
+
+    const marker = getFreshPendingEnquiry();
+    if (!marker) return;
+    leadAttemptInProgress = true;
+
+    loadMetaPixel()
+      .then(function (ready) {
+        if (!ready || !hasMarketingConsent() || typeof window.fbq !== "function") return;
+        window.fbq("track", "Lead");
+        consumePendingEnquiry(marker);
+      })
+      .catch(function () {
+        // Keep the fresh marker so a later consented retry can still be attempted.
+      })
+      .finally(function () {
+        leadAttemptInProgress = false;
+      });
+  }
+
+  function createSubmissionMarker() {
+    const marker = {
+      version: 1,
+      id:
+        typeof window.crypto?.randomUUID === "function"
+          ? window.crypto.randomUUID()
+          : String(Date.now()) + "-" + Math.random().toString(36).slice(2),
+      createdAt: Date.now(),
+    };
+
+    try {
+      window.sessionStorage.setItem(PENDING_ENQUIRY_KEY, JSON.stringify(marker));
+    } catch (_error) {
+      // Measurement storage failure must never prevent a genuine enquiry.
+    }
+  }
+
+  window.prepareBiginEnquirySubmission = function () {
+    if (typeof window.checkMandatory985999000000548437 !== "function") {
+      return false;
+    }
+
+    const isValid = window.checkMandatory985999000000548437();
+    if (!isValid) return false;
+
+    createSubmissionMarker();
+    return true;
+  };
+
+  removeUnexpectedSuccessPageParameters();
+
+  function buildConsentInterface() {
+    const container = document.createElement("div");
+    container.className = "cookie-consent";
+    container.innerHTML = `
+      <button class="cookie-settings-trigger" type="button" data-cookie-settings-open${currentConsent ? "" : " hidden"}>Cookie settings</button>
+      <section class="cookie-banner" data-cookie-banner aria-label="Cookie choices"${currentConsent ? " hidden" : ""}>
+        <div>
+          <h2>Optional cookies</h2>
+          <p>We use essential storage for your choices. With your permission, Meta marketing technology helps us measure advertising and enquiries. The website and enquiry form still work if you reject it. Read our <a href="/cookies.html">Cookies Notice</a>.</p>
+        </div>
+        <div class="cookie-banner-actions">
+          <button type="button" data-cookie-accept>Accept optional cookies</button>
+          <button type="button" data-cookie-reject>Reject optional cookies</button>
+          <button type="button" data-cookie-settings-open>Cookie settings</button>
+        </div>
+      </section>
+      <div class="cookie-dialog-backdrop" data-cookie-dialog-backdrop hidden>
+        <section class="cookie-dialog" role="dialog" aria-modal="true" aria-labelledby="cookie-dialog-title" tabindex="-1">
+          <div class="cookie-dialog-heading">
+            <h2 id="cookie-dialog-title">Cookie settings</h2>
+            <button type="button" class="cookie-dialog-close" data-cookie-dialog-close aria-label="Close cookie settings">×</button>
+          </div>
+          <div class="cookie-choice">
+            <div>
+              <h3>Essential</h3>
+              <p>Required for site operation and to remember your cookie choice.</p>
+            </div>
+            <span>Always active</span>
+          </div>
+          <label class="cookie-choice" for="cookie-marketing-choice">
+            <div>
+              <h3>Marketing</h3>
+              <p>Allows Meta Pixel to measure page visits and successful enquiries.</p>
+            </div>
+            <input id="cookie-marketing-choice" type="checkbox" data-cookie-marketing>
+          </label>
+          <div class="cookie-dialog-actions">
+            <button type="button" data-cookie-save>Save choices</button>
+          </div>
+        </section>
+      </div>`;
+    document.body.appendChild(container);
+
+    const banner = container.querySelector("[data-cookie-banner]");
+    const persistentSettingsButton = container.querySelector(".cookie-settings-trigger");
+    const backdrop = container.querySelector("[data-cookie-dialog-backdrop]");
+    const dialog = container.querySelector(".cookie-dialog");
+    const marketingChoice = container.querySelector("[data-cookie-marketing]");
+    let lastFocusedElement = null;
+
+    function closeDialog() {
+      backdrop.hidden = true;
+      document.body.classList.remove("cookie-dialog-open");
+      lastFocusedElement?.focus();
+    }
+
+    function openDialog(event) {
+      lastFocusedElement = event?.currentTarget || document.activeElement;
+      marketingChoice.checked = hasMarketingConsent();
+      backdrop.hidden = false;
+      document.body.classList.add("cookie-dialog-open");
+      dialog.focus();
+    }
+
+    function applyChoice(marketing) {
+      saveConsentPreference(marketing);
+      banner.hidden = true;
+      persistentSettingsButton.hidden = false;
+      closeDialog();
+    }
+
+    container.querySelectorAll("[data-cookie-settings-open]").forEach(function (button) {
+      button.addEventListener("click", openDialog);
+    });
+    container.querySelector("[data-cookie-accept]").addEventListener("click", function () {
+      applyChoice(true);
+    });
+    container.querySelector("[data-cookie-reject]").addEventListener("click", function () {
+      applyChoice(false);
+    });
+    container.querySelector("[data-cookie-save]").addEventListener("click", function () {
+      applyChoice(marketingChoice.checked);
+    });
+    container.querySelector("[data-cookie-dialog-close]").addEventListener("click", closeDialog);
+    backdrop.addEventListener("click", function (event) {
+      if (event.target === backdrop) closeDialog();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !backdrop.hidden) closeDialog();
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", buildConsentInterface, { once: true });
+  } else {
+    buildConsentInterface();
+  }
+
+  if (hasMarketingConsent()) {
+    loadMetaPixel().then(trySendVerifiedLead).catch(function () {
+      // A blocked or failed Meta request must not affect access to the site.
+    });
+  }
+})();
