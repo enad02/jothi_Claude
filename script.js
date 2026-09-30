@@ -374,7 +374,10 @@ if (navToggle && siteNav) {
   const PENDING_ENQUIRY_KEY = "jothi_pending_enquiry_v1";
   const CONSUMED_ENQUIRY_KEY = "jothi_consumed_enquiry_v1";
   const PENDING_EXPIRY_MS = 10 * 60 * 1000;
-  const SUCCESS_PATH = "/consultation-request-received";
+  const SUCCESS_PATHS = new Set([
+    "/consultation-request-received",
+    "/year-9-maths-request-received",
+  ]);
 
   let currentConsent = readConsentPreference();
   let metaScriptPromise = null;
@@ -409,6 +412,8 @@ if (navToggle && siteNav) {
     return currentConsent?.marketing === true;
   }
 
+  window.jothiMarketingConsent = { hasConsent: hasMarketingConsent };
+
   function saveConsentPreference(marketing) {
     currentConsent = {
       version: CONSENT_VERSION,
@@ -427,6 +432,8 @@ if (navToggle && siteNav) {
         // A blocked or failed Meta request must not affect access to the site.
       });
     }
+
+    window.dispatchEvent(new CustomEvent("jothi:marketing-consent-changed"));
   }
 
   function createMetaQueue() {
@@ -485,16 +492,30 @@ if (navToggle && siteNav) {
 
   function isSuccessPage() {
     const path = window.location.pathname.replace(/\/+$/, "") || "/";
-    return path === SUCCESS_PATH;
+    return SUCCESS_PATHS.has(path);
   }
 
   function removeUnexpectedSuccessPageParameters() {
-    if (
-      isSuccessPage() &&
-      (window.location.search || window.location.hash) &&
-      typeof window.history?.replaceState === "function"
-    ) {
-      window.history.replaceState(null, "", SUCCESS_PATH);
+    const path = window.location.pathname.replace(/\/+$/, "") || "/";
+    if (!SUCCESS_PATHS.has(path) || typeof window.history?.replaceState !== "function") return;
+
+    let search = "";
+    if (path === "/year-9-maths-request-received") {
+      const marker = readJson(window.sessionStorage, "jothi_year9_maths_pending_enquiry_v1");
+      const consumed = readJson(window.sessionStorage, "jothi_year9_maths_openai_lead_v1");
+      const age = Date.now() - marker?.createdAt;
+      if (
+        marker?.version === 1 && typeof marker.id === "string" &&
+        typeof marker.createdAt === "number" && age >= 0 && age <= PENDING_EXPIRY_MS &&
+        consumed?.id !== marker.id &&
+        typeof marker.oppref === "string" && /^[A-Za-z0-9._~+/=-]{1,200}$/.test(marker.oppref)
+      ) {
+        search = "?oppref=" + encodeURIComponent(marker.oppref);
+      }
+    }
+
+    if (window.location.search !== search || window.location.hash) {
+      window.history.replaceState(null, "", path + search);
     }
   }
 
@@ -597,7 +618,7 @@ if (navToggle && siteNav) {
       <section class="cookie-banner" data-cookie-banner aria-label="Cookie choices"${currentConsent ? " hidden" : ""}>
         <div>
           <h2>Optional cookies</h2>
-          <p>We use essential storage for your choices. With your permission, Meta marketing technology helps us measure advertising and enquiries. The website and enquiry form still work if you reject it. Read our <a href="/cookies.html">Cookies Notice</a>.</p>
+          <p>We use essential storage for your choices. With your permission, Meta and OpenAI advertising measurement help us understand visits and enquiries. The website and enquiry form still work if you reject it. Read our <a href="/cookies.html">Cookies Notice</a>.</p>
         </div>
         <div class="cookie-banner-actions">
           <button type="button" data-cookie-accept>Accept optional cookies</button>
@@ -621,7 +642,7 @@ if (navToggle && siteNav) {
           <label class="cookie-choice" for="cookie-marketing-choice">
             <div>
               <h3>Marketing</h3>
-              <p>Allows Meta Pixel to measure page visits and successful enquiries.</p>
+              <p>Allows Meta and OpenAI advertising measurement on relevant pages and successful enquiries.</p>
             </div>
             <input id="cookie-marketing-choice" type="checkbox" data-cookie-marketing>
           </label>
