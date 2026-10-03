@@ -59,7 +59,7 @@ Use `CURRENT_STATE.md` for the current working snapshot.
 ## Current homepage state
 
 - `index.html` is the live homepage and uses the promoted Variant D design.
-- `index-hero-proof-variant-d.html` remains as a reference backup only.
+- `docs/reference/index-hero-proof-variant-d.html` remains as a historical reference backup only.
 - Global typography uses self-hosted Playfair Display for headings and Lato for body copy.
 - Keep homepage edits small and scoped.
 - Ask before touching global CSS, script behaviour, sitemap/robots, assets, or unrelated pages.

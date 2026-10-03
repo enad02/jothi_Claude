@@ -62,7 +62,7 @@ If documents conflict, follow the order above. If pricing, proof numbers, names,
 ## Current Homepage State
 
 - `index.html` is the live homepage and uses the promoted Variant D design.
-- `index-hero-proof-variant-d.html` remains as a reference backup only.
+- `docs/reference/index-hero-proof-variant-d.html` remains as a historical reference backup only.
 - Global typography uses self-hosted Playfair Display for headings and Lato for body copy.
 - Do not edit `styles.css`, `script.js`, sitemap/robots, assets, or unrelated pages unless explicitly approved.
 - Do not run a full repo audit for targeted visual fixes.

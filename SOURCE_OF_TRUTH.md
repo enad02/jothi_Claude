@@ -7,7 +7,7 @@ It should contain only stable decisions, not working-state notes.
 
 ## Locked business description
 
-Jothi Learning is a UK-based online tutoring company helping students from Year 5 to Year 13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths. KS2 is a Maths-first offer approved commercially and appears on the Programmes page. The homepage remains focused on Years 7–13 for now. Year 6 may include focused SATs English support where appropriate, but KS2 is not shown in homepage pricing or pathway cards. KS2 may be promoted separately through a dedicated landing page or campaign.
+Jothi Learning is a UK-based online tutoring company helping students from Year 5 to Year 13, with a strong emphasis on Maths, GCSE Science, and A-Level Maths. KS2 is a Maths-first offer approved commercially and appears on the Programmes page. Years 5-6 is intentionally not a homepage pricing card. Year 6 may include focused SATs English support where appropriate. The homepage’s broader pathway content remains focused on Years 7–13.
 
 The site should present the business as warm, nurturing, premium, and serious.
 
@@ -58,12 +58,42 @@ Primary destination:
 
 ## Locked pricing
 
-The public pricing model shows the total programme fee for the defined academic cycle.
-
-Payment plans are agreed after consultation. A payment plan spreads the programme fee across an agreed period; it does not represent a fixed monthly allocation of lesson hours.
-Do not describe pricing as hourly tuition.
+The current public website pricing model uses clear hourly rates for open school-age group routes. The teaching remains structured through pathways, assessment, feedback and parent communication; hourly group pricing does not mean ad-hoc tutoring.
 Do not lead with the previous crash-course-first model as the future-facing public A-Level offer.
 Do not invent further pricing breakdowns unless Prakash provides them.
+
+### Current public group pricing
+
+- Years 5-6: &pound;20/hr.
+- Years 7-8: &pound;20/hr.
+- Years 9-10: &pound;25/hr.
+- Year 11: &pound;30/hr.
+- One-to-one tuition is a separate service at &pound;50/hr, subject to suitability and availability.
+- A-Level Maths admissions are currently closed. Do not advertise an A-Level hourly offer or the former programme price as an active acquisition price.
+
+### Current public availability
+
+- Years 5-6: admissions closed.
+- Years 7-8: places available in selected groups.
+- Years 9-10: places available in selected groups.
+- Year 11: limited availability — subject to group fit.
+- A-Level Maths: admissions currently closed.
+
+Programme/monthly reference prices remain internal standard references. They may be disclosed with exact terms when an ongoing arrangement is actually offered, but they are not the primary public price proposition for the open group routes.
+
+### Year 9 Maths new-parent entry exception — approved 3 October 2026
+
+For the scoped Year 9 Maths new-parent entry pilot only, the public route starts with a free initial diagnostic and then four paid teaching lessons. The diagnostic is separate from the four lessons, consumes no teaching credit, requires no teaching payment first, and remains free if the family does not continue.
+
+- Public entry rate: &pound;25/hr for online small-group teaching with 4 students.
+- Starting payment: &pound;100 paid before the first teaching lesson for four complete 60-minute teaching lessons.
+- We confirm suitability, an actual available place and lesson dates before requesting payment.
+- After four attended teaching lessons, the included suitability review is distinct from the initial diagnostic. Continuing hourly tuition or an appropriate monthly arrangement is agreed explicitly; there is no automatic renewal, debit, programme purchase or monthly conversion.
+- A family can stop immediately. Unused prepaid teaching is refunded without a notice-period attendance requirement, cancellation penalty, diagnostic deduction, forced voucher, unapproved expiry or newly implied no-show charge. Statutory rights take precedence.
+- Refund illustrations for the &pound;100 block are: zero attended teaching hours = &pound;100 unused; one = &pound;75; two = &pound;50; four = &pound;0. A completed free diagnostic changes none of these amounts.
+- Later assessments or exams are separately chargeable under the actual disclosed arrangement and must not replace a promised teaching lesson. The later assessment tariff is unresolved and is not approved here.
+
+This exception supersedes the earlier programme-first presentation only for this Year 9 new-parent pilot. It does not change existing family agreements, other subjects, Year 10 standard references, Year 11 group pricing, one-to-one pricing, or closed A-Level admissions.
 
 ### Programme format
 
@@ -72,9 +102,11 @@ Do not invent further pricing breakdowns unless Prakash provides them.
 - Groups are matched by level, confidence, ambition, and regular test performance.
 - One-to-one support is primarily used for the Diagnostic Bridge where closer assessment is needed before placement.
 
-### Programme fees
+### Internal programme/monthly references
 
-- KS2–Year 11 pricing is public per subject.
+The figures in this section are internal or historical programme references, not the current public price proposition. Preserve them for operational context and provenance; do not present them as compulsory public entry prices.
+
+- These historical/internal references include KS2–Year 11 per-subject programme calculations; they are not the current public hourly rate proposition for Years 7–11.
 - Public copy must not publish two-subject package prices, Full Core bundle prices, or the discretionary three-subject concession.
 - Full Core and pathway descriptions may remain as academic pathway descriptions.
 - Where a student takes more than one subject, the combined programme arrangement is confirmed during consultation.
@@ -125,8 +157,7 @@ Teacher-supervised curriculum teaching, revision, formative assessment, mocks, m
 
 ### Specialist A-Level routes
 
-University admissions preparation and accelerated A-Level Maths are discussed after consultation.
-Do not present the previous crash-course-first model as the main future-facing A-Level offer.
+University admissions preparation and accelerated A-Level Maths are not current new-admission offers. Any future route requires a new approved decision.
 
 ### Diagnostic Bridge
 
@@ -140,20 +171,24 @@ The Diagnostic Bridge is a short one-to-one entry pathway for students joining p
 
 ### Public-facing pricing rule
 
-Homepage pricing should stay light. Do not show a full pricing table on the homepage.
-Homepage pricing should use concise programme pricing labels and state that payment plans are available after consultation.
+Homepage pricing should stay light and show exactly four peer cards, not the internal programme/monthly references:
+- KS3 / Years 7-8: &pound;20/hr.
+- GCSE Preparation / Years 9-10: &pound;25/hr.
+- Year 11: &pound;30/hr.
+- A-Level Maths: admissions currently closed.
 
-Homepage pricing should use these pricing labels (4 cards only):
-- KS3 Years 7-8: £880 per subject; standard instalments 11 × £80
-- GCSE Prep Years 9-10: £1,045 per subject; standard instalments 11 × £95
-- Year 11 GCSE exam year: £770 per subject; standard instalments 7 × £110
-- A-Level Maths Year 12: £2,700 programme; standard instalments 9 × £300
+KS2 / Years 5-6 remains &pound;20/hr where publicly listed, especially on the Programmes page, but is intentionally not a homepage pricing card.
 
-KS2 is approved commercially and appears on the Programmes page, but is not shown in the homepage pricing cards. KS2 may be promoted separately through the Programmes page, a dedicated landing page, or campaign.
+The Programmes page should list:
+- Years 5-6: &pound;20/hr.
+- Years 7-8: &pound;20/hr.
+- Years 9-10: &pound;25/hr.
+- Year 11: &pound;30/hr.
+- A-Level Maths: admissions currently closed.
 
-The Programmes page should show stage-based programme fees by pathway, the programme cycle, and payment-plan availability after consultation.
-Programme detail pages may explain pathway details, but pricing must not contradict the programme-fee model.
-Explain that a payment plan spreads the programme fee across an agreed period and does not redefine the programme as monthly hourly tuition.
+The Year 9 public route starts with a free initial diagnostic, followed by a &pound;100 starting payment for four complete 60-minute teaching lessons at &pound;25/hr after suitability, a suitable place and lesson dates are confirmed. The group size is 4 students.
+
+The Programmes page should preserve stage-based educational pathways and explain that group tuition is structured, not ad-hoc. It should not present internal annual or monthly references as the main public price proposition. One-to-one tuition remains a separate &pound;50/hr service subject to suitability and availability.
 
 ## Locked public positioning points
 
@@ -217,7 +252,7 @@ Our public copy should reflect that our core academic offer is built around the 
 
 ## Do not change without explicit approval
 
-- Public programme-fee pricing and consultation-based payment plans
+- Current public hourly group pricing and the consultation/diagnostic routes
 - Programme format and Diagnostic Bridge rules
 - Specialist A-Level route positioning
 - CTA hierarchy
