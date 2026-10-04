@@ -248,6 +248,6 @@ test("the OpenAI conversion surface contains no enquiry form or explicit custome
   assert.doesNotMatch(successHtml, /<form\b/i);
   assert.doesNotMatch(successScript, /user\s*:/);
   assert.doesNotMatch(successScript, /debug\s*:\s*true/);
-  assert.match(formScript, /const ATTRIBUTION_KEYS = \["utm_source", "utm_medium", "utm_campaign", "oppref"\]/);
+  assert.match(formScript, /const ATTRIBUTION_KEYS = \["utm_source", "utm_medium", "utm_campaign", "utm_content", "oppref"\]/);
   assert.match(formScript, /const value = cleanValue\(params\.get\(key\), 200\)/);
 });

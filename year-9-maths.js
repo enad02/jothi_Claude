@@ -4,7 +4,7 @@
   const FORM_NAME = "BiginWebToRecordForm985999000000548437";
   const CAMPAIGN_MARKER_KEY = "jothi_year9_maths_pending_enquiry_v1";
   const SUCCESS_URL = "https://jothi.uk/year-9-maths-request-received";
-  const ATTRIBUTION_KEYS = ["utm_source", "utm_medium", "utm_campaign", "oppref"];
+  const ATTRIBUTION_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "oppref"];
   const form = document.forms[FORM_NAME];
   if (!form) return;
 

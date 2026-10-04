@@ -67,7 +67,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   const window = {
     crypto: { randomUUID: () => "local-payload-test" },
     location: {
-      search: "?utm_source=openai&utm_medium=paid&utm_campaign=year9_maths_chatgpt_2026&oppref=controlled_retest_20260930&ignored=not_included",
+      search: "?utm_source=openai&utm_medium=paid&utm_campaign=year9_maths_chatgpt_2026&utm_content=openai_control&oppref=controlled_retest_20260930&ignored=not_included",
     },
     sessionStorage: {
       getItem: (key) => storage.get(key) ?? null,
@@ -101,6 +101,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
     "utm_source=openai",
     "utm_medium=paid",
     "utm_campaign=year9_maths_chatgpt_2026",
+    "utm_content=openai_control",
     "oppref=controlled_retest_20260930",
   ].join("\n");
 
@@ -128,18 +129,48 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "meta");
   assert.equal(returnUrl.value, "https://jothi.uk/year-9-maths-request-received?oppref=meta_click");
 
-  window.location.search = "?utm_source=newsletter&utm_medium=email&utm_campaign=year9_update";
+  for (const identifier of ["foundations_static", "maths_confidence", "parent_proof"]) {
+    window.location.search = "?utm_source=meta&utm_medium=paid_social&utm_campaign=meta2_y9_maths_oct26&utm_content=" + identifier + "&parent_email=synthetic%40example.invalid";
+    assert.equal(window.checkMandatory985999000000548437(), true);
+    assert.match(description.value, new RegExp("utm_campaign=meta2_y9_maths_oct26\\nutm_content=" + identifier + "$"));
+    assert.doesNotMatch(description.value, /synthetic@example\.invalid|parent_email=/);
+    assert.doesNotMatch(description.value, /utm_content=.*YearNineRetest/);
+    assert.equal(hearAbout.value, "");
+    assert.match(description.value, /marketing_platform=Meta/);
+    assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "meta");
+  }
+
+  window.location.search = "?utm_source=meta&utm_content=%20%20";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.doesNotMatch(description.value, /utm_content=/);
+
+  window.location.search = "?utm_source=meta&utm_content=%20foundations%0Ainjected%3Dsource%20";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.match(description.value, /utm_content=foundations injected=source$/);
+  assert.doesNotMatch(description.value, /\ninjected=source/);
+  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "meta");
+
+  window.location.search = "?utm_source=meta&utm_content=" + "x".repeat(240);
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.equal(description.value.match(/utm_content=(.*)$/)?.[1].length, 200);
+
+  window.location.search = "?utm_source=newsletter&utm_medium=email&utm_campaign=year9_update&utm_content=maths_confidence";
   assert.equal(window.checkMandatory985999000000548437(), true);
   assert.equal(hearAbout.value, "");
-  assert.match(description.value, /utm_source=newsletter\nutm_medium=email\nutm_campaign=year9_update/);
+  assert.match(description.value, /utm_source=newsletter\nutm_medium=email\nutm_campaign=year9_update\nutm_content=maths_confidence/);
   assert.doesNotMatch(description.value, /marketing_platform=|OpenAI Ads|campaign_name=|ad_group=|ad_name=/);
+  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "unknown");
+
+  window.location.search = "?utm_content=parent_proof";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.equal(hearAbout.value, "");
+  assert.match(description.value, /utm_content=parent_proof/);
+  assert.doesNotMatch(description.value, /marketing_platform=|utm_source=/);
   assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "unknown");
 
   window.location.search = "";
   assert.equal(window.checkMandatory985999000000548437(), true);
-  assert.equal(hearAbout.value, "");
-  assert.doesNotMatch(description.value, /marketing_platform=|utm_source=/);
-  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "unknown");
+  assert.doesNotMatch(description.value, /utm_content=|marketing_platform=|utm_source=/);
 
   window.location.search = "?oppref=click%2B123%2F%3D";
   assert.equal(window.checkMandatory985999000000548437(), true);
