@@ -22,7 +22,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.ok(descriptionMarkup, "Pipeline Description control is present");
   assert.match(descriptionMarkup, /name="Description"/);
   assert.doesNotMatch(descriptionMarkup, /\bdisabled\b/);
-  assert.match(html, /name="POTENTIALCF12" value="OpenAI Ads"/);
+  assert.match(html, /name="POTENTIALCF12" id="year9-crm-source" value=""/);
   assert.doesNotMatch(html, /name="Contacts\.Description"/);
   assert.match(returnUrlMarkup, /name="returnURL"/);
   assert.doesNotMatch(html, /id="year9-exam-board"/);
@@ -34,7 +34,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
 
   const potentialName = { name: "Potential Name", value: "YearNineRetest", disabled: false };
   const yearGroup = { name: "POTENTIALCF4", value: "Year 9", disabled: false };
-  const hearAbout = { name: "POTENTIALCF12", value: "OpenAI Ads", disabled: false };
+  const hearAbout = { name: "POTENTIALCF12", value: "", disabled: false };
   const description = { name: "Description", value: "", disabled: false };
   const returnUrl = { name: "returnURL", value: "https://jothi.uk/year-9-maths-request-received", disabled: false };
   const listeners = {};
@@ -48,6 +48,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
     setAttribute: (name, value) => { parentMessageField[name] = value; },
   };
   const elements = {
+    "year9-crm-source": hearAbout,
     "year9-crm-notes": description,
     "year9-return-url": returnUrl,
     "year9-main-concern": mainConcern,
@@ -81,6 +82,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
 
   vm.runInNewContext(script, { document, URLSearchParams, window });
   assert.equal(parentMessageField.hidden, true);
+  assert.equal(hearAbout.value, "");
   assert.equal(parentMessage.required, false);
   assert.equal(typeof listeners.change, "function");
   assert.equal(window.checkMandatory985999000000548437(), true);
@@ -95,9 +97,6 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
     "",
     "Campaign attribution",
     "marketing_platform=OpenAI Ads",
-    "campaign_name=Year 9 Maths Admissions - 2026 Test 1",
-    "ad_group=Year 9 Maths - AQA Edexcel OCR",
-    "ad_name=Year 9 Maths Tuition - Parent Consultation",
     "landing_page=/year-9-maths",
     "utm_source=openai",
     "utm_medium=paid",
@@ -113,12 +112,40 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.equal(outgoingPayload.get("returnURL"), "https://jothi.uk/year-9-maths-request-received?oppref=controlled_retest_20260930");
   assert.equal(outgoingPayload.has("Contacts.Description"), false);
   assert.equal(outgoingPayload.get("Description").includes("ignored"), false);
-  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).oppref, "controlled_retest_20260930");
+  const openAIMarker = JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1"));
+  assert.equal(openAIMarker.version, 1);
+  assert.equal(openAIMarker.id, "local-payload-test");
+  assert.equal(typeof openAIMarker.createdAt, "number");
+  assert.equal(openAIMarker.oppref, "controlled_retest_20260930");
+  assert.equal(openAIMarker.source, "openai");
+
+  window.location.search = "?utm_source=%20MeTa%20&utm_medium=paid_social&utm_campaign=year9_meta_2_0&oppref=meta_click";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.equal(hearAbout.value, "");
+  assert.match(description.value, /marketing_platform=Meta/);
+  assert.match(description.value, /utm_source=MeTa\nutm_medium=paid_social\nutm_campaign=year9_meta_2_0\noppref=meta_click/);
+  assert.doesNotMatch(description.value, /OpenAI Ads|campaign_name=|ad_group=|ad_name=/);
+  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "meta");
+  assert.equal(returnUrl.value, "https://jothi.uk/year-9-maths-request-received?oppref=meta_click");
+
+  window.location.search = "?utm_source=newsletter&utm_medium=email&utm_campaign=year9_update";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.equal(hearAbout.value, "");
+  assert.match(description.value, /utm_source=newsletter\nutm_medium=email\nutm_campaign=year9_update/);
+  assert.doesNotMatch(description.value, /marketing_platform=|OpenAI Ads|campaign_name=|ad_group=|ad_name=/);
+  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "unknown");
+
+  window.location.search = "";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.equal(hearAbout.value, "");
+  assert.doesNotMatch(description.value, /marketing_platform=|utm_source=/);
+  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "unknown");
 
   window.location.search = "?oppref=click%2B123%2F%3D";
   assert.equal(window.checkMandatory985999000000548437(), true);
   assert.equal(returnUrl.value, "https://jothi.uk/year-9-maths-request-received?oppref=click%2B123%2F%3D");
   assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).oppref, "click+123/=");
+  assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).source, "unknown");
 
   mainConcern.value = "Other";
   listeners.change();

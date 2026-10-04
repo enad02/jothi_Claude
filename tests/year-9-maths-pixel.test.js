@@ -119,6 +119,7 @@ test("the Year 9 form page never loads OpenAI, including after consent; Meta sti
 test("the existing Meta success flow still sends its Lead event", async () => {
   const session = createStorage({
     jothi_pending_enquiry_v1: JSON.stringify({ version: 1, id: "meta-test", createdAt: Date.now() }),
+    [CAMPAIGN_MARKER_KEY]: JSON.stringify({ version: 1, id: "meta-year9", createdAt: Date.now(), oppref: null, source: "meta" }),
   });
   const page = createPage("/year-9-maths-request-received", { marketing: true, sessionStorage: session });
   page.runScripts({ success: true });
@@ -133,9 +134,9 @@ test("the existing Meta success flow still sends its Lead event", async () => {
 test("direct success visits, expired markers, and unrelated routes cannot initialise OpenAI", async () => {
   const cases = [
     ["/year-9-maths-request-received", null],
-    ["/year-9-maths-request-received", { version: 1, id: "expired", createdAt: Date.now() - 11 * 60 * 1000 }],
-    ["/year-9-maths-request-received", { version: 1, id: "invalid", createdAt: Date.now(), oppref: "bad&value" }],
-    ["/consultation-request-received", { version: 1, id: "unrelated", createdAt: Date.now() }],
+    ["/year-9-maths-request-received", { version: 1, id: "expired", createdAt: Date.now() - 11 * 60 * 1000, source: "openai" }],
+    ["/year-9-maths-request-received", { version: 1, id: "invalid", createdAt: Date.now(), oppref: "bad&value", source: "openai" }],
+    ["/consultation-request-received", { version: 1, id: "unrelated", createdAt: Date.now(), source: "openai" }],
   ];
   for (const [path, marker] of cases) {
     const page = createPage(path, { marketing: true, marker, search: "?oppref=untrusted" });
@@ -147,9 +148,24 @@ test("direct success visits, expired markers, and unrelated routes cannot initia
   }
 });
 
+test("Meta, unknown, and legacy Year 9 markers cannot initialise or send OpenAI conversions", async () => {
+  for (const source of ["meta", "unknown", undefined]) {
+    const marker = { version: 1, id: "non-openai", createdAt: Date.now(), oppref: "click_123" };
+    if (source) marker.source = source;
+    const page = createPage("/year-9-maths-request-received", {
+      marketing: true, marker, search: "?oppref=click_123",
+    });
+    page.runScripts({ success: true });
+    await settle();
+    assert.equal(page.window.oaiq, undefined, String(source));
+    assert.equal(page.scripts.filter((script) => script.dataset.jothiOpenAIPixel).length, 0);
+    assert.ok(page.session.getItem(CAMPAIGN_MARKER_KEY));
+  }
+});
+
 test("a fresh marker without consent cannot initialise the SDK or send a conversion", async () => {
   const page = createPage("/year-9-maths-request-received", {
-    marker: { version: 1, id: "no-consent", createdAt: Date.now(), oppref: "click_123" },
+    marker: { version: 1, id: "no-consent", createdAt: Date.now(), oppref: "click_123", source: "openai" },
     search: "?oppref=click_123",
   });
   page.runScripts({ success: true });
@@ -162,7 +178,7 @@ test("a fresh marker without consent cannot initialise the SDK or send a convers
 test("consent and a fresh marker expose oppref to the SDK, then queue one minimal event and clean the URL", async () => {
   const local = createStorage();
   const session = createStorage({ [CAMPAIGN_MARKER_KEY]: JSON.stringify({
-    version: 1, id: "test-year9-event-id", createdAt: Date.now(), oppref: "click_123",
+    version: 1, id: "test-year9-event-id", createdAt: Date.now(), oppref: "click_123", source: "openai",
   }) });
   const page = createPage("/year-9-maths-request-received", {
     localStorage: local, sessionStorage: session, search: "?oppref=click_123",
@@ -199,7 +215,7 @@ test("the campaign marker restores only approved oppref if Bigin omits or adds q
   for (const search of ["", "?oppref=untrusted&student=Ada"]) {
     const page = createPage("/year-9-maths-request-received", {
       marketing: true,
-      marker: { version: 1, id: "fallback", createdAt: Date.now(), oppref: "click+123/=" },
+      marker: { version: 1, id: "fallback", createdAt: Date.now(), oppref: "click+123/=", source: "openai" },
       search,
     });
     page.runScripts({ success: true });
@@ -215,7 +231,7 @@ test("the campaign marker restores only approved oppref if Bigin omits or adds q
 
 test("revoking consent during SDK loading prevents measurement and propagates denial", async () => {
   const page = createPage("/year-9-maths-request-received", {
-    marker: { version: 1, id: "revoked", createdAt: Date.now(), oppref: "click_123" },
+    marker: { version: 1, id: "revoked", createdAt: Date.now(), oppref: "click_123", source: "openai" },
   });
   page.runScripts({ success: true });
   page.controls["[data-cookie-accept]"].trigger("click");

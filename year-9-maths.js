@@ -5,16 +5,10 @@
   const CAMPAIGN_MARKER_KEY = "jothi_year9_maths_pending_enquiry_v1";
   const SUCCESS_URL = "https://jothi.uk/year-9-maths-request-received";
   const ATTRIBUTION_KEYS = ["utm_source", "utm_medium", "utm_campaign", "oppref"];
-  const CAMPAIGN_ATTRIBUTION_LINES = [
-    "marketing_platform=OpenAI Ads",
-    "campaign_name=Year 9 Maths Admissions - 2026 Test 1",
-    "ad_group=Year 9 Maths - AQA Edexcel OCR",
-    "ad_name=Year 9 Maths Tuition - Parent Consultation",
-    "landing_page=/year-9-maths",
-  ];
   const form = document.forms[FORM_NAME];
   if (!form) return;
 
+  const crmSource = document.getElementById("year9-crm-source");
   const crmNotes = document.getElementById("year9-crm-notes");
   const returnUrl = document.getElementById("year9-return-url");
   const mainConcern = document.getElementById("year9-main-concern");
@@ -40,19 +34,28 @@
     }, []);
   }
 
+  function classifySource() {
+    const source = new URLSearchParams(window.location.search).get("utm_source")?.trim().toLowerCase();
+    return source === "meta" || source === "openai" ? source : "unknown";
+  }
+
   function getSafeOppref() {
     const value = new URLSearchParams(window.location.search).get("oppref");
     return value && /^[A-Za-z0-9._~+/=-]{1,200}$/.test(value) ? value : "";
   }
 
-  function buildCrmNotes() {
+  function buildCrmNotes(source) {
     const concern = cleanValue(mainConcern.value, 2000);
     const additionalDetail = cleanValue(parentMessage.value, 2000);
     const qualification = ["Main Maths concern: " + concern];
     if (concern === "Other" && additionalDetail) {
       qualification.push("Additional detail: " + additionalDetail);
     }
-    const attribution = CAMPAIGN_ATTRIBUTION_LINES.concat(getAttributionLines());
+    const platform = source === "meta" ? "Meta" : source === "openai" ? "OpenAI Ads" : "";
+    crmSource.value = source === "openai" ? "OpenAI Ads" : "";
+    const attribution = (platform ? ["marketing_platform=" + platform] : []).concat(
+      ["landing_page=/year-9-maths"], getAttributionLines()
+    );
     const sections = [qualification.join("\n")];
 
     sections.push(["Campaign attribution"].concat(attribution).join("\n"));
@@ -67,7 +70,7 @@
     if (!isOther) parentMessage.value = "";
   }
 
-  function createCampaignMarker(oppref) {
+  function createCampaignMarker(oppref, source) {
     const marker = {
       version: 1,
       id:
@@ -76,6 +79,7 @@
           : String(Date.now()) + "-" + Math.random().toString(36).slice(2),
       createdAt: Date.now(),
       oppref: oppref || null,
+      source,
     };
     try {
       window.sessionStorage.setItem(CAMPAIGN_MARKER_KEY, JSON.stringify(marker));
@@ -93,11 +97,12 @@
     }
 
     const oppref = getSafeOppref();
+    const source = classifySource();
     if (returnUrl) {
       returnUrl.value = SUCCESS_URL + (oppref ? "?oppref=" + encodeURIComponent(oppref) : "");
     }
-    buildCrmNotes();
-    createCampaignMarker(oppref);
+    buildCrmNotes(source);
+    createCampaignMarker(oppref, source);
     submitButton.disabled = true;
     submitButton.textContent = "Sending enquiry...";
     return true;

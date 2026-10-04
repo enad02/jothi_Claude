@@ -26,6 +26,7 @@
 
     const marker = readJson(window.sessionStorage, CAMPAIGN_MARKER_KEY);
     if (!marker || marker.version !== 1 || typeof marker.id !== "string" || typeof marker.createdAt !== "number") return null;
+    if (marker.source !== "openai") return null;
     if (marker.oppref != null && (typeof marker.oppref !== "string" || !/^[A-Za-z0-9._~+/=-]{1,200}$/.test(marker.oppref))) return null;
 
     const age = Date.now() - marker.createdAt;
