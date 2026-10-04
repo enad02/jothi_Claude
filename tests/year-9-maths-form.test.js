@@ -17,25 +17,40 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.match(html, /name="POTENTIALCF12" value="OpenAI Ads"/);
   assert.doesNotMatch(html, /name="Contacts\.Description"/);
   assert.match(returnUrlMarkup, /name="returnURL"/);
+  assert.doesNotMatch(html, /id="year9-exam-board"/);
+  assert.doesNotMatch(html, /id="year9-availability"/);
+  assert.doesNotMatch(html, /Optional short message/);
+  assert.match(html, /What would you like help with in Maths\?/);
+  assert.match(html, /value="Other">Other/);
+  assert.match(html, /id="year9-privacy-consent" required/);
 
   const potentialName = { name: "Potential Name", value: "YearNineRetest", disabled: false };
   const yearGroup = { name: "POTENTIALCF4", value: "Year 9", disabled: false };
   const hearAbout = { name: "POTENTIALCF12", value: "OpenAI Ads", disabled: false };
   const description = { name: "Description", value: "", disabled: false };
   const returnUrl = { name: "returnURL", value: "https://jothi.uk/year-9-maths-request-received", disabled: false };
+  const listeners = {};
+  const mainConcern = {
+    value: "Confidence with Maths",
+    addEventListener: (type, handler) => { listeners[type] = handler; },
+  };
+  const parentMessage = { value: "", required: false };
+  const parentMessageField = {
+    hidden: true,
+    setAttribute: (name, value) => { parentMessageField[name] = value; },
+  };
   const elements = {
     "year9-crm-notes": description,
     "year9-return-url": returnUrl,
-    "year9-exam-board": { value: "Not sure" },
-    "year9-availability": { value: "Either" },
-    "year9-main-concern": { value: "Controlled CRM mapping test" },
-    "year9-parent-message": { value: "TEST LEAD ONLY" },
+    "year9-main-concern": mainConcern,
+    "year9-parent-message": parentMessage,
+    "year9-parent-message-field": parentMessageField,
     "year9-form-error": { hidden: false },
     formsubmit: { disabled: false, textContent: "Request a consultation" },
   };
   const form = {
     elements: [potentialName, yearGroup, hearAbout, description, returnUrl],
-    checkValidity: () => true,
+    checkValidity: () => mainConcern.value !== "" && (!parentMessage.required || parentMessage.value.trim() !== ""),
     reportValidity: () => {},
     addEventListener: () => {},
   };
@@ -57,6 +72,9 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   };
 
   vm.runInNewContext(script, { document, URLSearchParams, window });
+  assert.equal(parentMessageField.hidden, true);
+  assert.equal(parentMessage.required, false);
+  assert.equal(typeof listeners.change, "function");
   assert.equal(window.checkMandatory985999000000548437(), true);
 
   const outgoingPayload = new URLSearchParams(
@@ -65,13 +83,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
       .map((field) => [field.name, field.value]),
   );
   const expectedDescription = [
-    "Campaign qualification data",
-    "Exam board: Not sure",
-    "Availability: Either",
-    "Main Maths concern: Controlled CRM mapping test",
-    "",
-    "Parent message",
-    "TEST LEAD ONLY",
+    "Main Maths concern: Confidence with Maths",
     "",
     "Campaign attribution",
     "marketing_platform=OpenAI Ads",
@@ -89,6 +101,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.equal(outgoingPayload.get("POTENTIALCF4"), "Year 9");
   assert.equal(outgoingPayload.get("POTENTIALCF12"), "OpenAI Ads");
   assert.equal(outgoingPayload.get("Description"), expectedDescription);
+  assert.doesNotMatch(outgoingPayload.get("Description"), /Additional detail/);
   assert.equal(outgoingPayload.get("returnURL"), "https://jothi.uk/year-9-maths-request-received?oppref=controlled_retest_20260930");
   assert.equal(outgoingPayload.has("Contacts.Description"), false);
   assert.equal(outgoingPayload.get("Description").includes("ignored"), false);
@@ -99,7 +112,31 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.equal(returnUrl.value, "https://jothi.uk/year-9-maths-request-received?oppref=click%2B123%2F%3D");
   assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).oppref, "click+123/=");
 
+  mainConcern.value = "Other";
+  listeners.change();
+  assert.equal(parentMessageField.hidden, false);
+  assert.equal(parentMessageField["aria-hidden"], "false");
+  assert.equal(parentMessage.required, true);
+  parentMessage.value = "Needs help with problem-solving questions.";
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.match(description.value, /Main Maths concern: Other\nAdditional detail: Needs help with problem-solving questions\./);
+
+  mainConcern.value = "Confidence with Maths";
+  listeners.change();
+  assert.equal(parentMessageField.hidden, true);
+  assert.equal(parentMessageField["aria-hidden"], "true");
+  assert.equal(parentMessage.required, false);
+  assert.equal(parentMessage.value, "");
+  assert.equal(window.checkMandatory985999000000548437(), true);
+  assert.doesNotMatch(description.value, /Additional detail/);
+
+  mainConcern.value = "";
+  listeners.change();
+  assert.equal(window.checkMandatory985999000000548437(), false);
+
   window.location.search = "?oppref=bad%26extra";
+  mainConcern.value = "Confidence with Maths";
+  listeners.change();
   assert.equal(window.checkMandatory985999000000548437(), true);
   assert.equal(returnUrl.value, "https://jothi.uk/year-9-maths-request-received");
   assert.equal(JSON.parse(storage.get("jothi_year9_maths_pending_enquiry_v1")).oppref, null);

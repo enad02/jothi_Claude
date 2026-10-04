@@ -17,10 +17,9 @@
 
   const crmNotes = document.getElementById("year9-crm-notes");
   const returnUrl = document.getElementById("year9-return-url");
-  const examBoard = document.getElementById("year9-exam-board");
-  const availability = document.getElementById("year9-availability");
   const mainConcern = document.getElementById("year9-main-concern");
   const parentMessage = document.getElementById("year9-parent-message");
+  const parentMessageField = document.getElementById("year9-parent-message-field");
   const errorMessage = document.getElementById("year9-form-error");
   const submitButton = document.getElementById("formsubmit");
 
@@ -47,19 +46,25 @@
   }
 
   function buildCrmNotes() {
-    const qualification = [
-      "Campaign qualification data",
-      "Exam board: " + cleanValue(examBoard.value, 50),
-      "Availability: " + cleanValue(availability.value, 80),
-      "Main Maths concern: " + cleanValue(mainConcern.value, 2000),
-    ];
-    const message = cleanValue(parentMessage.value, 2000);
+    const concern = cleanValue(mainConcern.value, 2000);
+    const additionalDetail = cleanValue(parentMessage.value, 2000);
+    const qualification = ["Main Maths concern: " + concern];
+    if (concern === "Other" && additionalDetail) {
+      qualification.push("Additional detail: " + additionalDetail);
+    }
     const attribution = CAMPAIGN_ATTRIBUTION_LINES.concat(getAttributionLines());
     const sections = [qualification.join("\n")];
 
-    sections.push("Parent message\n" + (message || "No additional message provided."));
     sections.push(["Campaign attribution"].concat(attribution).join("\n"));
     crmNotes.value = sections.join("\n\n");
+  }
+
+  function syncOtherDetail() {
+    const isOther = mainConcern.value === "Other";
+    parentMessageField.hidden = !isOther;
+    parentMessageField.setAttribute("aria-hidden", String(!isOther));
+    parentMessage.required = isOther;
+    if (!isOther) parentMessage.value = "";
   }
 
   function createCampaignMarker(oppref) {
@@ -101,6 +106,9 @@
   form.addEventListener("input", function () {
     errorMessage.hidden = true;
   });
+
+  mainConcern.addEventListener("change", syncOtherDetail);
+  syncOtherDetail();
 })();
 
 (function () {
@@ -112,7 +120,6 @@
   const slides = Array.from(carousel.querySelectorAll("[data-year9-proof-slide]"));
   const panels = Array.from(carousel.querySelectorAll("[data-year9-proof-panel]"));
   const steppers = Array.from(carousel.querySelectorAll("[data-year9-proof-step]"));
-  const status = carousel.querySelector("[data-year9-proof-status]");
   let current = 0;
 
   function showSlide(index) {
@@ -127,7 +134,6 @@
       panel.classList.toggle("is-active", isActive);
       panel.hidden = !isActive;
     });
-    if (status) status.textContent = String(current + 1) + " of " + String(slides.length);
   }
 
   steppers.forEach(function (button) {
