@@ -107,6 +107,7 @@
 .year9-form-frame { padding: 32px; border: 1px solid rgba(16, 35, 63, 0.12); border-radius: 8px; background: var(--white); box-shadow: var(--shadow-card); }
 .year9-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
 .year9-form label:not(.year9-consent) { display: grid; gap: 8px; }
+.year9-form [hidden] { display: none !important; }
 .year9-form label > span:first-child { color: var(--navy-900); font-size: 0.94rem; font-weight: 700; }
 .year9-form input:not([type="checkbox"]), .year9-form select, .year9-form textarea { width: 100%; min-height: 50px; padding: 12px 13px; border: 1px solid rgba(16, 35, 63, 0.24); border-radius: 6px; background: var(--white); color: var(--navy-950); }
 .year9-form textarea { min-height: 116px; resize: vertical; }

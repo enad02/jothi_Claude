@@ -5,6 +5,14 @@ import vm from "node:vm";
 
 const FORM_NAME = "BiginWebToRecordForm985999000000548437";
 
+test("Year 9 conditional detail is hidden by default in markup and CSS", () => {
+  const html = readFileSync(new URL("../year-9-maths.html", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../year-9-maths.css", import.meta.url), "utf8");
+
+  assert.match(html, /<label[^>]*id="year9-parent-message-field"[^>]*\shidden(?:\s|>)/);
+  assert.match(css, /\.year9-form\s+\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
+});
+
 test("Year 9 form prepares the approved Bigin payload before submission", () => {
   const html = readFileSync(new URL("../year-9-maths.html", import.meta.url), "utf8");
   const script = readFileSync(new URL("../year-9-maths.js", import.meta.url), "utf8");
