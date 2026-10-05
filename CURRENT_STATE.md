@@ -1,6 +1,6 @@
 # Current State - Jothi Learning Website
 
-Last updated: 21 May 2026
+Last updated: 05 October 2026
 
 This file is the live working snapshot for future website work.
 
@@ -24,7 +24,7 @@ Older Claude-specific references should not control current implementation if th
 - Legal pages and gateway pages remain `noindex,follow`.
 - Production is hosted on Cloudflare Pages.
 - Vercel is historical/non-production only.
-- The contact form is a static Web3Forms setup.
+- The Year 9 Maths and contact enquiry forms use the generated Bigin webform. The controlled Year 9 record verified the generated field aliases against the Admissions Pipeline; do not replace `POTENTIALCF` aliases on the basis of the earlier display-only concern.
 - Safe metadata improvements have been added, including Open Graph/Twitter basics and one `EducationalOrganization` JSON-LD block on the homepage.
 - Accessibility and mobile polish have been applied to navigation, focus states, form messaging, and small-screen behaviour.
 - WhatsApp green is now reserved for WhatsApp UI only.
@@ -33,6 +33,15 @@ Older Claude-specific references should not control current implementation if th
 - The Programmes page follows a parent decision flow: stage, pathway, group tuition rate, joining route.
 - The student and tutor gateway pages have been visually polished but remain practical access pages rather than marketing pages.
 - The About page now includes a Vision / Mission / Purpose section, but its final placement and visual prominence still need review during the full premium About page pass.
+
+## Year 9 Maths and Meta 2.0 — current authoritative state (05 October 2026)
+
+- Current offer: free initial diagnostic; £25/hour online Maths teaching in a four-student group; four one-hour lessons prepaid for £100 only after a suitable group and lesson dates are confirmed. Review progress and group fit after four lessons. If both sides are happy, continuation is £25/hour or an explicitly agreed fixed monthly arrangement. There is no automatic monthly conversion or renewal; unused prepaid lessons are refunded if the family stops. AQA, Edexcel and OCR are supported; places depend on group fit. A-Level admissions are closed. Historical £1,045, £95/month, 11 × £95 and £100/month assumptions are not the current Year 9 entry offer.
+- Meta ad account **Jothi Learning**, ID **1125417884988493** (ending **8493**, not the earlier incorrect 8849). Campaign `META2 | Y9 Maths | Website Leads | Oct 2026` was published on 05 October with one published ad set and three published ads. Immediately after publication, campaign and ad set were **Scheduled** and all three ads were **In review**. Delivery was scheduled for **07:00 UK local time**, at **£30/day** at ad-set level, with no end date; immediate spend was **£0**. No other drafts were published. An unrelated unchecked ad displayed an error but was untouched and is unrelated to Meta 2.0.
+- The website is the sole intended lead-completion destination: `https://jothi.uk/year-9-maths`. Production measurement baseline is `9ab8edc0fd5884bbbac501cb4dc160410ff70b21`. Creative identifiers are `foundations_static`, `maths_confidence` and `parent_proof`; see `docs/meta2/META2_YEAR9_GROWTH_FOUNDATION.md` for published ad names, URLs, settings and accepted platform behaviour.
+- Controlled Bigin record `985999000000658089` proved the generated aliases populate the operational Admissions Pipeline fields, including Parent Name, Parent Mobile, Parent Email, Year Group, Subject, Lead Source, Stage and Description with `utm_content=foundations_static`. It is synthetic and excluded from reporting. `Contact_Name=null` is a non-blocking P2 item; it does not negate the populated parent contact fields. The Year 9 acknowledgement workflow is active and routes by Year Group, Subject and landing-page Description evidence, not advertising source. The active generic workflow handles other enquiries without duplicate acknowledgement.
+- Post-launch verification: check A/B/C approval and active delivery, spend only after start/review approval, the first genuine Meta Bigin enquiry and its source/creative/parent fields, and exactly one Year 9 acknowledgement. Do not change creatives from the first few hours. Daily delivery safety, twice-weekly creative, weekly commercial and later cohort/retention reviews follow the monitoring manual.
+- Non-blocking P2 work: null `Contact_Name` lookup, absent `form_start` event, 1024px footer spacing, consideration of redundant visible Year Group and Preferred Contact Method inputs, future CRM architecture, absent native 1.91:1 asset, and formal payment/teaching systems of record.
 
 ## Current production and deployment
 

@@ -1,12 +1,12 @@
 # Meta 2.0 Year 9 Maths Growth Foundation
 
-Status: Draft operating foundation for founder review. The campaign and ads are unpublished. This document authorises no live change.
+Status: Current launch-state record as of 05 October 2026. Strategy and metric guidance below remains subject to its stated decision boundaries; historical review figures are retained as historical evidence.
 
 ## 1. Purpose
 
 Meta 2.0 exists to produce **REGISTERED, CONTINUING YEAR 9 MATHS STUDENTS AT SUSTAINABLE CAC**. Maximum clicks and maximum leads are not the objective. CTR, CPC and CPL help diagnose the funnel; even a paid £100 starter is an intermediate result. Continuation, retained revenue, delivery capacity and acquisition economics determine whether growth is sustainable.
 
-This document uses the current Year 9 public entry route in `SOURCE_OF_TRUTH.md` and `year-9-maths.html`, plus the explicitly supplied Meta 2.0 draft. Campaign settings have not been verified in Ads Manager. The proposed operating and decision rules below need Prakash's approval before becoming standing policy.
+This document uses the current Year 9 public entry route in `SOURCE_OF_TRUTH.md` and `year-9-maths.html` and records the final authorised Meta 2.0 publication state supplied on 05 October 2026. The earlier draft and 02 October commercial-review assumptions are historical, not current campaign or commercial policy. Unapproved scaling thresholds and metric definitions remain proposals where labelled.
 
 ## 2. Why Meta 2.0 Exists
 
@@ -27,7 +27,7 @@ The reviewed Meta period, approximately 24 September–1 October 2026, produced 
 
 Measure each transition. Broken follow-up, no capacity, poor scheduling, group mismatch or weak teaching must not be diagnosed as a Meta delivery failure. Equally, weak or misleading creative can attract the wrong parents even when the page works.
 
-The current public offer is **Year 9 Maths only**: a free initial diagnostic; online small-group teaching at **£25/hour** with **four students**; a **£100 prepaid starter for four complete one-hour lessons** after suitability, a place and lesson dates are confirmed; review of progress and fit after those lessons; then £25/hour continuation or an explicitly agreed fixed monthly arrangement. There is no automatic monthly conversion. Unused prepaid teaching is refunded if the family stops. AQA, Edexcel and OCR are supported. Places depend on a suitable group match. The £100 starter is not a promise of a place or a long-term commitment.
+The current public offer is **Year 9 Maths only**: a free initial diagnostic; online small-group teaching at **£25/hour** with **four students**; a **£100 prepaid starter for four complete one-hour lessons** after suitability, a place and lesson dates are confirmed; review of progress and fit after those lessons; then £25/hour continuation or an explicitly agreed fixed monthly arrangement. There is no automatic monthly conversion or renewal into a monthly arrangement. Unused prepaid teaching is refunded if the family stops. AQA, Edexcel and OCR are supported. Places depend on a suitable group match. The £100 starter is not a promise of a place or a long-term commitment.
 
 ## 4. North-Star Metrics
 
@@ -35,8 +35,8 @@ The current public offer is **Year 9 Maths only**: a free initial diagnostic; on
 |---|---|---|
 | Long-term north star | **Media cost per retained/continuing Year 9 student**, alongside collected and retained revenue and ultimately fully loaded CAC | Shows whether acquisition becomes sustainable teaching revenue. The retention horizon is **UNRESOLVED — PRAKASH DECISION REQUIRED**. |
 | Near-term commercial proxy | **Media CAC per paid £100 starter** | Earlier indicator while the four lessons and continuation have not matured. |
-| Quality indicators | Cost per qualified enquiry; cost per attended consultation; starter conversion rate | Show whether attention becomes suitable demand and payment. |
-| Top-funnel diagnostics | CPM; outbound CTR; outbound CPC; click-to-landing-page-view rate; CPL | Locate delivery or page friction, never choose a winner on their own. |
+| Quality indicators | Cost per qualified enquiry; cost per attended consultation; starter conversion rate; continuation | Show whether attention becomes suitable demand, payment and sustained teaching. |
+| Top-funnel diagnostics | Spend; impressions; CPM; outbound clicks; outbound CTR; outbound CPC; LPVs; click-to-LPV rate; enquiries; CPL | Locate delivery or page friction, never choose a winner on their own. |
 
 Use `META2_METRICS_MONITORING_SYSTEM.md` for exact denominators, sources and cohort rules. A creative with a higher CPC can win if it produces better qualified parents, starters and continuation at an acceptable CAC.
 
@@ -115,19 +115,48 @@ The previous independent review suggested approximately **8–10 paid admissions
 
 Every Meta 2.0 destination URL **MUST** contain `utm_source=meta`. The supplied URL standard is `utm_source=meta&utm_medium=paid_social&utm_campaign=meta2_y9_maths_oct26&utm_content=<creative_identifier>`.
 
-In `year-9-maths.js`, `utm_source=meta` classifies the enquiry marker as `meta`; `utm_source=openai` classifies it as `openai`; absent or other values become `unknown`. The form writes `marketing_platform=Meta` and the currently listed UTMs into Bigin Description for Meta traffic, and leaves `POTENTIALCF12` blank. For OpenAI traffic it writes `POTENTIALCF12=OpenAI Ads`; `year-9-maths-success.js` gates OpenAI `lead_created` on `marker.source=openai`. Unknown traffic fails closed for platform classification. Do not infer a Meta or OpenAI source without explicit evidence.
+In `year-9-maths.js`, `utm_source=meta` classifies the enquiry marker as `meta`; `utm_source=openai` classifies it as `openai`; absent or other values become `unknown`. The form writes `marketing_platform=Meta` and the currently listed UTMs into Bigin Description for Meta traffic, and leaves `POTENTIALCF12` blank. For OpenAI traffic it writes `POTENTIALCF12=OpenAI Ads`; `year-9-maths-success.js` gates OpenAI `lead_created` on `marker.source=openai`. Unknown traffic fails closed for platform classification. Meta traffic cannot fire the OpenAI `lead_created` path. Do not infer a Meta or OpenAI source without explicit evidence.
 
-The local form attribution list now includes `utm_source`, `utm_medium`, `utm_campaign`, `utm_content` and `oppref`. A supplied `utm_content` is added to the existing Bigin Description payload using the same 200-character, whitespace-normalising sanitisation as the other UTMs. Use non-personal creative identifiers; do not put parent or student information in destination UTMs. Live Bigin receipt and downstream record linkage still require verification, and Meta campaign/ad/ad-set IDs are not separately captured. `script.js` sends a consent-gated Meta browser `Lead` on the Year 9 success route from its own pending-enquiry marker; the reviewed code does not source-gate that Meta event. Do not equate a Meta-reported Lead with a verified Bigin Meta enquiry.
+The local form attribution list now includes `utm_source`, `utm_medium`, `utm_campaign`, `utm_content` and `oppref`. A supplied `utm_content` is added to the existing Bigin Description payload using the same 200-character, whitespace-normalising sanitisation as the other UTMs. Use non-personal creative identifiers; do not put parent or student information in destination UTMs. A controlled Bigin record verified receipt of Meta attribution and `utm_content=foundations_static`; first genuine lead receipt and downstream record linkage remain to verify. Meta campaign/ad/ad-set IDs are not separately captured. `script.js` sends a consent-gated Meta browser `Lead` on the Year 9 success route from its own pending-enquiry marker; the reviewed code does not source-gate that Meta event. Do not equate a Meta-reported Lead with a verified Bigin Meta enquiry.
 
-## 13. Current Pre-Publish Checklist
+## 13. Published Meta 2.0 launch state — 05 October 2026
 
-- [ ] Verify the current public Year 9 website and form in production, including mobile and the current starter terms.
-- [ ] Verify the Meta attribution route end to end, including consent, the new `utm_content` line in an actual Bigin Description, source classification, successful enquiry and event reconciliation before creative-level decisions rely on it.
-- [ ] Check every destination URL for `utm_source=meta`, `utm_medium=paid_social`, `utm_campaign=meta2_y9_maths_oct26` and a distinct `utm_content` identifier.
-- [ ] Approve the three final A/B/C creatives and their claims, proof and permissions.
-- [ ] **Pre-publish housekeeping:** the existing draft Ad B shell is named `B | Groups of Four | Draft` and uses `utm_content=groups_of_four`. Reconcile both with the final **B — Maths Confidence** concept; the preferred final identifier is `utm_content=maths_confidence`. No Meta change is made by this document.
-- [ ] Confirm compatible Year 9 places, teacher and timetable capacity.
-- [ ] Confirm admissions follow-up owner, response standard and consultation/diagnostic handoff.
-- [ ] Prepare metric capture, source reconciliation and a dated experiment log.
-- [ ] Review the supplied unpublished draft in the live Meta account: `META2 | Y9 Maths | Website Leads | Oct 2026`; Leads objective, Website location, `Y9 Maths | England | Broad | Website`, dataset `Jothi Learning | jothi.uk`, Lead optimisation, £30/day at ad-set level, England, broad/default audience, no interests/custom/lookalikes/customer lists, Advantage+ automatic placements, Auction, standard attribution, highest volume, Advantage+ Leads enabled, A/B test off and no Special Ad Category. These are draft settings, not live settings verified here.
-- [ ] Obtain explicit publish approval. The £30/day draft is not an approved spend authorisation by virtue of this document.
+**Account:** Jothi Learning, ad account ID `1125417884988493` (ending **8493**; an earlier 8849 reference was incorrect). **Campaign:** `META2 | Y9 Maths | Website Leads | Oct 2026`, published. **Ad set:** `Y9 Maths | England | Broad | Website`, published. Immediately after publication both were **Scheduled**. The scheduled start was **05 October 2026 at 07:00 UK local time**, with no end date. Budget is **£30/day at ad-set level**. Objective: Leads; buying: Auction; bid strategy: highest volume; conversion location: Website only; dataset/pixel: `Jothi Learning | jothi.uk`, pixel ID `1497091182452721`; optimisation event: Lead. Audience: England, broad/default, without interests, custom audiences, lookalikes or customer lists. Placements: Advantage+ automatic. Attribution: standard. Special Ad Category: none. A/B test: off.
+
+| Published ad name (retain `| Draft` in the actual name) | Creative identifier | Parent concern | Immediate review state |
+|---|---|---|---|
+| `A | Foundations Before GCSE | Draft` | `foundations_static` | Prevent small Maths gaps becoming GCSE problems. | In review |
+| `B | Maths Confidence | Draft` | `maths_confidence` | Maths confidence slipping before GCSE. | In review |
+| `C | Parent Proof | Draft` | `parent_proof` | Permissioned parent proof. | In review |
+
+The exact published destinations are:
+
+```text
+https://jothi.uk/year-9-maths?utm_source=meta&utm_medium=paid_social&utm_campaign=meta2_y9_maths_oct26&utm_content=foundations_static
+https://jothi.uk/year-9-maths?utm_source=meta&utm_medium=paid_social&utm_campaign=meta2_y9_maths_oct26&utm_content=maths_confidence
+https://jothi.uk/year-9-maths?utm_source=meta&utm_medium=paid_social&utm_campaign=meta2_y9_maths_oct26&utm_content=parent_proof
+```
+
+Ad C uses parent **MANOJ PARAMESWARAN** and the approved quote **“They acted as mentors, not just tutors.”** `NOT JUST TUTORS` may appear uppercase in artwork; omitting the visual terminal period is accepted stylistic treatment. The ad names include `| Draft` because those were the names at publication; the ads themselves were published.
+
+The website is the sole intended lead-completion destination. Browser add-on: none on A/B/C; Meta Instant Forms: removed/not attached; WhatsApp add-on: off. AI-generated media, generated backgrounds, visual touch-ups, automatic overlays and music: off/not used. Translation: not applied. Meta may append `fbclid`; this is acceptable. Ad A has “Optimise text per person” **off**. Meta still reports it **Enabled** for B and C; this is **ACCEPTED META PLATFORM BEHAVIOUR**, not a launch blocker. Generated alternate primary-text/headline variants were removed; only approved copy remains; no AI-generated variants or translation remain; no other enhancements are active; the editor exposed no writable control for that remaining label.
+
+Publication succeeded: **one campaign, one ad set, three ads**. Initial spend was **£0**. No other drafts were published. An unrelated unchecked ad showed an Ads Manager error but was not selected, changed or published and is unrelated to Meta 2.0. Production measurement release: `9ab8edc0fd5884bbbac501cb4dc160410ff70b21` — `feat: add Meta 2.0 measurement and creative attribution`.
+
+## 14. Verified Bigin route and acknowledgement
+
+The controlled Bigin verification proved that existing website-generated `POTENTIALCF` aliases map to the canonical Admissions Pipeline fields. **Do not replace these aliases.** Layout ID: `985999000000543847`. Relevant canonical fields: `Deal_Name`, `Parent_Name`, `Parent_Mobile`, `Parent_Email`, `Year_Group`, `Subject`, `Preferred_Contact_Method`, `Description`, `Lead_Source`.
+
+Synthetic controlled record `985999000000658089` contained Parent Name `META2 ATTRIBUTION TEST`, Parent Mobile `07985588975`, Parent Email `admissions@jothi.uk`, Year Group `Year 9`, Subject `Maths`, Lead Source `Website Contact Form`, Stage `New Enquiry`, and Description with Meta attribution and `utm_content=foundations_static`. `Contact_Name` was null; that lookup is a non-blocking P2 item because the operational parent contact and enquiry fields were populated. **Exclude the test record from reporting.**
+
+`Year 9 Maths Acknowledgement Email` is active. It triggers immediately on **Admission Created** when Year Group = Year 9 **and** Subject = Maths **and** Description contains `landing_page=/year-9-maths`. It sends `Year 9 Maths Enquiry Acknowledgement` to Parent Email from/reply-to Jothi Learning Admissions, using `${Admissions Pipeline.Parent Name}` for the parent-name merge. `Parent Acknowledgement Email - General Enquiries` is the active generic workflow, using `Parent Enquiry Acknowledgement`. The original generic workflow is inactive to prevent duplicates. Dedicated Year 9 Maths enquiries receive the Year 9 acknowledgement; other/general enquiries receive the generic acknowledgement. Do not route acknowledgement copy by Meta/OpenAI source.
+
+## 15. Post-launch checks and non-blocking P2 items
+
+At/after launch, confirm A/B/C approval and active delivery; spend only after the scheduled start and review approval; the first genuine Meta lead in Bigin with `utm_source=meta`, correct `utm_content`, Parent Name/Email/Mobile, Year 9 and Maths; and exactly one Year 9 acknowledgement. Do not change creatives from the first few hours. Follow the daily safety/delivery, twice-weekly creative, weekly commercial and later cohort/continuation/retention reviews in the monitoring manual.
+
+Non-blocking P2: null `Contact_Name` lookup; unimplemented `form_start`; 1024px footer spacing; consideration of redundant visible Year Group and Preferred Contact Method inputs; future downstream CRM architecture; no native 1.91:1 creative asset; and formalisation of payment and teaching systems of record. These are not launch failures.
+
+## 16. Historical review boundary
+
+The 02 October paid-acquisition commercial review is a **historical review, not current commercial policy**. Its £100/month working assumption, £1,045/£95 pricing inconsistency, and questions about Year 9 price, group cap, diagnostic, website-first route, Meta test architecture and initial budget were resolved before this launch. Preserve its calculations as historical analysis. Use `SOURCE_OF_TRUTH.md`, `CURRENT_STATE.md` and this foundation for the current approved state. The named review file is not present in this repository at this update.

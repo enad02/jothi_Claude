@@ -1,6 +1,6 @@
 # Jothi Learning - Handover Brief
 
-Last updated: 12 September 2026
+Last updated: 05 October 2026
 
 This document supersedes the earlier April handover notes.
 For locked facts, pricing, CTA hierarchy, proof numbers, and public-copy rules, use `SOURCE_OF_TRUTH.md`.
@@ -37,7 +37,7 @@ Public group tuition rates:
 
 Do not present the group rates as one-to-one pricing or as ad-hoc tutoring. Do not advertise an A-Level hourly offer or the former programme price as an active acquisition price.
 
-The initial diagnostic remains free and separate from the paid lessons. It consumes no teaching credit and no payment is required to receive it. After four attended teaching lessons, suitability is reviewed and the next step is agreed explicitly. There is no automatic renewal or move to monthly payments; unused prepaid teaching is refunded if the family stops.
+For the current Year 9 Maths entry offer, the initial diagnostic is free and separate from teaching credit. A suitable group and dates are confirmed before £100 is taken for four one-hour online lessons at £25/hour in a group of four. After four lessons, progress and group fit are reviewed. If both sides are happy, continuation is at £25/hour or under an explicitly agreed fixed monthly arrangement. There is no automatic monthly conversion or renewal; unused prepaid lessons are refunded if the family stops. AQA, Edexcel and OCR are supported, subject to a suitable group match.
 
 Internal/historical programme references — not current public acquisition prices:
 - KS2 Years 5-6: £825 per subject; standard instalments 11 × £75
@@ -55,6 +55,10 @@ The Programmes page now works as a parent decision flow:
 stage -> pathway -> group tuition rate -> joining route.
 
 The homepage pricing summary uses the current public group tuition rates and keeps A-Level Maths marked as admissions closed. Internal programme/monthly references remain out of the primary public price proposition.
+
+## Meta 2.0 and admissions handover — 05 October 2026
+
+The Meta 2.0 Year 9 Maths campaign was published in Jothi Learning ad account `1125417884988493` on 05 October: one campaign, one ad set and three ads, with £30/day at ad-set level and a 07:00 UK start. Immediately after publish, campaign and ad set were Scheduled, A/B/C were In review, and spend was £0. The live measurement code baseline is `9ab8edc0fd5884bbbac501cb4dc160410ff70b21`. The controlled Bigin test confirmed parent contact, Year 9, Maths and Meta creative attribution in the Admissions Pipeline; exclude that synthetic record from reporting. The active Year 9 acknowledgement and active generic acknowledgement route by enquiry type, not Meta/OpenAI source. Full published settings, ad URLs and monitoring boundaries are in `docs/meta2/META2_YEAR9_GROWTH_FOUNDATION.md` and `docs/meta2/META2_METRICS_MONITORING_SYSTEM.md`.
 
 ## Operating reminder
 

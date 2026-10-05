@@ -1,6 +1,6 @@
 # Source of Truth - Jothi Learning Website
 
-Last updated: 12 September 2026
+Last updated: 05 October 2026
 
 This file holds locked facts and decisions for the website build.
 It should contain only stable decisions, not working-state notes.
@@ -88,10 +88,12 @@ For the scoped Year 9 Maths new-parent entry pilot only, the public route starts
 - Public entry rate: &pound;25/hr for online small-group teaching with 4 students.
 - Starting payment: &pound;100 paid before the first teaching lesson for four complete 60-minute teaching lessons.
 - We confirm suitability, an actual available place and lesson dates before requesting payment.
-- After four attended teaching lessons, the included suitability review is distinct from the initial diagnostic. Continuing hourly tuition or an appropriate monthly arrangement is agreed explicitly; there is no automatic renewal, debit, programme purchase or monthly conversion.
+- After four attended teaching lessons, progress and group fit are reviewed. If both sides are happy, the family may continue at £25/hour or move to an explicitly agreed fixed monthly arrangement; there is no automatic monthly conversion or renewal into a monthly arrangement, debit or programme purchase.
 - A family can stop immediately. Unused prepaid teaching is refunded without a notice-period attendance requirement, cancellation penalty, diagnostic deduction, forced voucher, unapproved expiry or newly implied no-show charge. Statutory rights take precedence.
 - Refund illustrations for the &pound;100 block are: zero attended teaching hours = &pound;100 unused; one = &pound;75; two = &pound;50; four = &pound;0. A completed free diagnostic changes none of these amounts.
 - Later assessments or exams are separately chargeable under the actual disclosed arrangement and must not replace a promised teaching lesson. The later assessment tariff is unresolved and is not approved here.
+
+This Year 9 Maths route supports AQA, Edexcel and OCR; places depend on a suitable group match. The free diagnostic, £25/hour rate, four one-hour lessons prepaid for £100, four-student group and confirmed place/dates before payment are the current authorised offer. The historical £1,045 programme fee, £95/month or 11 × £95 instalments, and any £100/month working assumption are not the current Year 9 acquisition offer.
 
 This exception supersedes the earlier programme-first presentation only for this Year 9 new-parent pilot. It does not change existing family agreements, other subjects, Year 10 standard references, Year 11 group pricing, one-to-one pricing, or closed A-Level admissions.
 
@@ -243,7 +245,7 @@ Our public copy should reflect that our core academic offer is built around the 
 
 ## Locked launch/indexing rule
 
-- Public pages should remain `noindex,follow` until launch approval is explicitly given
+- The six launched public marketing pages are indexable. Legal and gateway pages remain `noindex,follow`. The earlier pre-launch noindex rule is superseded.
 
 ## Locked About-page rule
 

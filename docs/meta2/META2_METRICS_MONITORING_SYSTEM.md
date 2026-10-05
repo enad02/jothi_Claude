@@ -1,6 +1,6 @@
 # Meta 2.0 Metrics Monitoring System
 
-Status: Draft measurement manual for founder review. The Meta 2.0 campaign is unpublished. Proposed definitions and guardrails do not approve live changes.
+Status: Current measurement manual for the published Meta 2.0 Year 9 Maths campaign as of 05 October 2026. Proposed definitions, spend checkpoints and scaling guardrails remain proposals where labelled.
 
 ## 1. Purpose
 
@@ -8,9 +8,17 @@ This system must answer: Is Meta generating attention? Is each creative attracti
 
 The outcome is **REGISTERED, CONTINUING YEAR 9 MATHS STUDENTS AT SUSTAINABLE CAC**. Meta Ads Manager supplies media diagnostics; Bigin, payment/finance and teaching/operations evidence establish downstream outcomes. The exact operational owner or system for several later stages remains **SOURCE OF TRUTH TO BE CONFIRMED**.
 
+## Launch baseline and reporting boundary — 05 October 2026
+
+The Jothi Learning Meta ad account is `1125417884988493` (ending **8493**, correcting the earlier 8849 reference). `META2 | Y9 Maths | Website Leads | Oct 2026` and `Y9 Maths | England | Broad | Website` were published with ads A/B/C. Immediately after publication, campaign/ad set were **Scheduled**, all three ads were **In review**, scheduled delivery was **07:00 UK local time**, and spend was **£0**. Budget: **£30/day at ad-set level**; no end date. See `META2_YEAR9_GROWTH_FOUNDATION.md` for complete settings, published names, creative treatment and URLs. No other drafts were published.
+
+Use `utm_content` as the creative join key: A = `foundations_static`, B = `maths_confidence`, C = `parent_proof`. The controlled synthetic Bigin record `985999000000658089` verified the website-generated aliases and received Meta Description attribution, including `utm_content=foundations_static`. **Exclude this record from all enquiry and conversion totals.** The first genuine lead, ad approval, delivery and acknowledgement receipt remain post-launch checks. `Contact_Name=null` in that test is non-blocking because canonical `Parent_Name`, `Parent_Mobile`, `Parent_Email`, `Year_Group` and `Subject` were populated. Bigin Admissions Pipeline layout ID: `985999000000543847`.
+
+Full funnel: **spend → impressions → outbound clicks → LPVs → enquiries → reachable → qualified → consultations booked → consultations attended → diagnostics → suitable group → £100 starter → four-lesson completion → continuation → retained revenue**. Long-term north star: media cost per continuing/retained Year 9 student, with retained revenue and eventual fully loaded CAC. Near-term proxy: media CAC per £100 starter. Quality measures: cost per qualified enquiry, cost per attended consultation, starter conversion and continuation. Top-funnel diagnostics: spend, impressions, CPM, outbound clicks, outbound CTR/CPC, LPVs, click-to-LPV, enquiries and CPL.
+
 ## 2. Metric Dictionary
 
-Percentages below are ratios multiplied by 100. Rates and costs are `N/A` when their denominator is zero or unavailable. For cohort measures, use only eligible, sufficiently mature enquiries or starters and record the cohort window and report-as-of date. “Daily” means a safety/reconciliation check, not daily optimisation. “Twice weekly” and “weekly” are proposed review cadences.
+Percentages below are ratios multiplied by 100. Rates and costs are `N/A` when their denominator is zero or unavailable. For cohort measures, use only eligible, sufficiently mature enquiries or starters and record the cohort window and report-as-of date. “Daily” means a safety/reconciliation check, not daily optimisation. The operating cadence is daily safety/delivery, twice-weekly creative, weekly commercial funnel and later mature-cohort/retention review. Do not change creatives on the first few hours of data.
 
 | Metric | Definition | Formula | Primary source | Frequency | Stage | Diagnostic or commercial | Notes |
 |---|---|---|---|---|---|---|---|
@@ -93,14 +101,20 @@ The CSV template is a blank input/reporting scaffold, not a live integration or 
 
 | System | Authoritative for | Boundary |
 |---|---|---|
-| **Meta Ads Manager** | Spend, impressions, reach, frequency, outbound clicks, platform CPM/CTR/CPC and Meta-reported Lead | Meta Lead is a platform event count, not an actual qualified Bigin enquiry or student. Draft account settings require live review. |
+| **Meta Ads Manager** | Spend, impressions, reach, frequency, outbound clicks, platform CPM/CTR/CPC and Meta-reported Lead | Meta Lead is a platform event count, not an actual qualified Bigin enquiry or student. Campaign publication is confirmed; delivery and first genuine lead remain to verify. |
 | **Website / Pixel** | Landing-page behaviour where measured and the consent-gated browser `Lead` event | Exact live LPV measurement, event receipt and consent impact require verification. Browser event ≠ confirmed Bigin record. |
-| **Bigin** | Actual recorded enquiry, original source/UTM context captured by the current form, contactability, qualification and documented progression | Exact live fields/stages and workflow use must be checked. The local form now includes `utm_content` in Description when supplied. |
+| **Bigin** | Actual recorded enquiry, original source/UTM context captured by the current form, contactability, qualification and documented progression | The controlled test verified canonical parent contact, Year Group, Subject, Lead Source, Stage and Meta `utm_content` in Description. Verify first genuine lead and ongoing workflow delivery. |
 | **Payment / finance record** | £100 starter payment, collected revenue and refunds | **SOURCE OF TRUTH TO BE CONFIRMED** for the precise operational record; do not invent a payment integration. |
 | **Teaching / operations record** | Lessons started, four-lesson completion, group fit and continuation | **SOURCE OF TRUTH TO BE CONFIRMED** for the precise operational record and retention horizon. |
 | **Booking / academic / matching record** | Consultation attendance, diagnostic and suitable group decision where actually recorded | **SOURCE OF TRUTH TO BE CONFIRMED** for exact system, owner and status fields. |
 
-The current public starter is a free initial diagnostic followed, only after a suitable place and dates are confirmed, by £100 prepaid for four complete one-hour lessons at £25/hour in a four-student group. Continuation is explicitly agreed at £25/hour or under an agreed fixed monthly arrangement. There is no automatic monthly conversion. Unused prepaid teaching is refunded if the family stops.
+The current public starter is a free initial diagnostic followed, only after a suitable place and dates are confirmed, by £100 prepaid for four complete one-hour lessons at £25/hour in a four-student group. Progress and group fit are reviewed after four lessons. If both sides are happy, continuation is explicitly agreed at £25/hour or under a fixed monthly arrangement. There is no automatic monthly conversion or renewal. Unused prepaid teaching is refunded if the family stops. AQA, Edexcel and OCR are supported; places depend on a suitable group match. A-Level admissions are closed.
+
+### Bigin acknowledgement routing and remaining source-of-record work
+
+The active `Year 9 Maths Acknowledgement Email` runs immediately on Admission Created with Year Group = Year 9, Subject = Maths and Description containing `landing_page=/year-9-maths`. Template: `Year 9 Maths Enquiry Acknowledgement`; recipient: Parent Email; sender/reply-to: Jothi Learning Admissions; parent merge: `${Admissions Pipeline.Parent Name}`. `Parent Acknowledgement Email - General Enquiries` is active for other/general enquiries with template `Parent Enquiry Acknowledgement`. The original generic workflow is inactive to prevent a duplicate. Route by Year 9 funnel membership, never by Meta/OpenAI ad source. Check that the first genuine Year 9 enquiry gets exactly one acknowledgement.
+
+Payment/finance is authoritative for starter paid, collected revenue and refunds; teaching/operations for lesson start, four-lesson completion and continuation. The exact named systems and fields for these records remain to be formalised. Booking/diagnostic/matching record ownership also remains to be verified; do not infer a completed stage from an ad event.
 
 ## 5. Attribution Rules
 
@@ -113,15 +127,15 @@ utm_campaign=meta2_y9_maths_oct26
 utm_content=<creative_identifier>
 ```
 
-The current local Year 9 form classifies `meta`, `openai` or `unknown` from explicit `utm_source` evidence. For Meta website enquiries it writes `marketing_platform=Meta` into Bigin Description, leaves `POTENTIALCF12` blank, and places `source=meta` in the session marker. For OpenAI it writes `POTENTIALCF12=OpenAI Ads`; the OpenAI `lead_created` event requires `marker.source=openai`. Unknown traffic must not be assigned to either platform by inference. The form now writes supplied `utm_source`, `utm_medium`, `utm_campaign`, `utm_content` and `oppref` into Description using the existing UTM sanitisation. Use non-personal creative identifiers; destination UTMs must not carry parent or student information. Verify actual Bigin receipt before relying on creative-level counts.
+The current local Year 9 form classifies `meta`, `openai` or `unknown` from explicit `utm_source` evidence. For Meta website enquiries it writes `marketing_platform=Meta` into Bigin Description, leaves `POTENTIALCF12` blank, and places `source=meta` in the session marker. For OpenAI it writes `POTENTIALCF12=OpenAI Ads`; the OpenAI `lead_created` event requires `marker.source=openai`. Unknown traffic must not be assigned to either platform by inference. Meta traffic cannot fire the OpenAI `lead_created` path. The form now writes supplied `utm_source`, `utm_medium`, `utm_campaign`, `utm_content` and `oppref` into Description using the existing UTM sanitisation. Use non-personal creative identifiers; destination UTMs must not carry parent or student information. Controlled Bigin receipt was verified for `foundations_static`; verify genuine leads and cohort linkage before relying on creative-level outcomes.
 
-Preserve the original acquisition source for the cohort when a parent later emails, uses WhatsApp, returns directly or receives an admissions call. Do not overwrite historical source conventions. Confirm the actual Bigin Lead Source handling in the live system before making field claims or changes. Campaign/ad-set/ad IDs and structured creative attribution are desirable but not evidenced by the reviewed form.
+Preserve the original acquisition source for the cohort when a parent later emails, uses WhatsApp, returns directly or receives an admissions call. Do not overwrite historical source conventions. The controlled record confirmed `Lead_Source=Website Contact Form`; preserve raw Meta UTM evidence separately in Description. Campaign/ad-set/ad IDs and structured creative attribution are desirable but not evidenced by the reviewed form.
 
 ## 6. Creative-Level Reporting
 
 The intended trace is **campaign → ad set → concept A/B/C → `utm_content` → enquiry → downstream outcome**, with Meta campaign/ad-set/ad identifiers where practical. For each concept, compare spend, outbound clicks, LPVs, enquiries, qualified parents, consultations attended, starters, continuations and CAC. This is how creative can be judged by commercial cohort quality rather than surface CTR.
 
-**Pre-publish housekeeping:** the supplied draft Ad B shell is `B | Groups of Four | Draft` with `utm_content=groups_of_four`, while the final B concept is **B — Maths Confidence**. Reconcile both before publication; the preferred final identifier is `utm_content=maths_confidence`. The local form now includes `utm_content` in Bigin Description, allowing manual creative-cohort grouping once the live record is verified. Until that verification and downstream record linkage exist, label unsupported outcome splits **UNATTRIBUTED / INSUFFICIENT DATA**. Do not infer attribution from the parent's words, the ad name alone or Meta's aggregate conversion estimate.
+**Historical draft note:** the earlier Ad B shell used `B | Groups of Four | Draft` and `groups_of_four`. The published B ad is `B | Maths Confidence | Draft` with `utm_content=maths_confidence`. The local form includes `utm_content` in Bigin Description, and the controlled test verified creative attribution for A. Until a genuine lead and downstream record linkage are verified, label unsupported outcome splits **UNATTRIBUTED / INSUFFICIENT DATA**. Do not infer attribution from the parent's words, the ad name alone or Meta's aggregate conversion estimate.
 
 ## 7. Lead Status Definitions
 
@@ -166,7 +180,7 @@ Pause or investigate immediately for a broken form, missing CRM records, duplica
 
 The prior independent review proposed approximately **£140 spend** as a checkpoint if there are no qualified enquiries after reasonable contact time; approximately **£280 spend** as a pause-and-diagnose checkpoint if there are still no attended consultations after adequate follow-up; and **£420** as a proposed initial test maximum unless separately extended.
 
-**PROVISIONAL META 2.0 REVIEW GUARDRAILS — PRAKASH APPROVAL REQUIRED BEFORE TREATING AS STANDING POLICY.** They are not statistical laws and do not authorise spend. The supplied current draft is £30/day at ad-set level and remains unpublished. There are no arbitrary CTR/CPC pass marks.
+**PROVISIONAL META 2.0 REVIEW GUARDRAILS — PRAKASH APPROVAL REQUIRED BEFORE TREATING AS STANDING POLICY.** They are not statistical laws and do not authorise spend. The published campaign has a £30/day ad-set budget; these proposed review guardrails do not change or extend that authorisation. There are no arbitrary CTR/CPC pass marks.
 
 ## 12. Creative Decision Rules
 
