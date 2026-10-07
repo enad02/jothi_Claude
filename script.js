@@ -613,16 +613,20 @@ if (navToggle && siteNav) {
   function buildConsentInterface() {
     const container = document.createElement("div");
     container.className = "cookie-consent";
+    const isYear9Landing = document.body.classList.contains("year9-landing-page");
+    const bannerCopy = isYear9Landing
+      ? 'We use optional cookies to measure advertising and improve enquiries. The site still works if you reject them. <a href="/cookies.html">Cookies Notice</a>.'
+      : 'We use essential storage for your choices. With your permission, Meta and OpenAI advertising measurement help us understand visits and enquiries. The website and enquiry form still work if you reject it. Read our <a href="/cookies.html">Cookies Notice</a>.';
     container.innerHTML = `
       <button class="cookie-settings-trigger" type="button" data-cookie-settings-open${currentConsent ? "" : " hidden"}>Cookie settings</button>
       <section class="cookie-banner" data-cookie-banner aria-label="Cookie choices"${currentConsent ? " hidden" : ""}>
         <div>
           <h2>Optional cookies</h2>
-          <p>We use essential storage for your choices. With your permission, Meta and OpenAI advertising measurement help us understand visits and enquiries. The website and enquiry form still work if you reject it. Read our <a href="/cookies.html">Cookies Notice</a>.</p>
+          <p>${bannerCopy}</p>
         </div>
         <div class="cookie-banner-actions">
-          <button type="button" data-cookie-accept>Accept optional cookies</button>
-          <button type="button" data-cookie-reject>Reject optional cookies</button>
+          <button type="button" data-cookie-accept>${isYear9Landing ? "Accept" : "Accept optional cookies"}</button>
+          <button type="button" data-cookie-reject>${isYear9Landing ? "Reject" : "Reject optional cookies"}</button>
           <button type="button" data-cookie-settings-open>Cookie settings</button>
         </div>
       </section>

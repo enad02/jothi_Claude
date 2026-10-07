@@ -13,6 +13,26 @@ test("Year 9 conditional detail is hidden by default in markup and CSS", () => {
   assert.match(css, /\.year9-form\s+\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
 });
 
+test("V2.1 keeps required Bigin fields while removing visible Year 9 selection and pricing", () => {
+  const html = readFileSync(new URL("../year-9-maths.html", import.meta.url), "utf8");
+  const generatedForm = readFileSync(new URL("../contact.html", import.meta.url), "utf8");
+
+  assert.match(html, /Find the Maths gaps before GCSE pressure builds/);
+  assert.match(html, /Live Year 9 Maths teaching/);
+  assert.match(html, /Serious teaching\. Visible progress\./);
+  assert.match(html, /Lessons are taught live, in real time/);
+  assert.match(html, /Practice matters, but students also need clear explanation/);
+  assert.match(html, /year9-featured-proof/);
+  assert.doesNotMatch(html, /&pound;|£|Teaching and fees, if there is a suitable place|Meet our Maths teachers/);
+  assert.doesNotMatch(html, /year9-programme-detail|year9-team-section/);
+  assert.match(html, /<input type="hidden" name="POTENTIALCF4" value="Year 9"/);
+  assert.doesNotMatch(html, /<select name="POTENTIALCF4"/);
+  assert.match(html, /name="POTENTIALCF5" value="Maths"/);
+  assert.match(html, /name="Contacts\.Last Name"[^>]*required/);
+  assert.match(html, /name="POTENTIALCF11" required/);
+  assert.match(generatedForm, /mndFields985999000000548437=new Array\([^\n]*'Contacts\.Last Name'[^\n]*'POTENTIALCF4'[^\n]*'POTENTIALCF11'/);
+});
+
 test("Year 9 form prepares the approved Bigin payload before submission", () => {
   const html = readFileSync(new URL("../year-9-maths.html", import.meta.url), "utf8");
   const script = readFileSync(new URL("../year-9-maths.js", import.meta.url), "utf8");
@@ -28,7 +48,9 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.doesNotMatch(html, /id="year9-exam-board"/);
   assert.doesNotMatch(html, /id="year9-availability"/);
   assert.doesNotMatch(html, /Optional short message/);
-  assert.match(html, /What would you like help with in Maths\?/);
+  assert.match(html, /Main Maths concern/);
+  assert.match(html, /type="hidden" name="POTENTIALCF4" value="Year 9"/);
+  assert.match(html, /Please tell us briefly what you are concerned about/);
   assert.match(html, /value="Other">Other/);
   assert.match(html, /id="year9-privacy-consent" required/);
 
@@ -39,7 +61,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   const returnUrl = { name: "returnURL", value: "https://jothi.uk/year-9-maths-request-received", disabled: false };
   const listeners = {};
   const mainConcern = {
-    value: "Confidence with Maths",
+    value: "Low confidence in Maths",
     addEventListener: (type, handler) => { listeners[type] = handler; },
   };
   const parentMessage = { value: "", required: false };
@@ -93,7 +115,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
       .map((field) => [field.name, field.value]),
   );
   const expectedDescription = [
-    "Main Maths concern: Confidence with Maths",
+    "Main Maths concern: Low confidence in Maths",
     "",
     "Campaign attribution",
     "marketing_platform=OpenAI Ads",
@@ -183,11 +205,12 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.equal(parentMessageField.hidden, false);
   assert.equal(parentMessageField["aria-hidden"], "false");
   assert.equal(parentMessage.required, true);
+  assert.equal(window.checkMandatory985999000000548437(), false);
   parentMessage.value = "Needs help with problem-solving questions.";
   assert.equal(window.checkMandatory985999000000548437(), true);
   assert.match(description.value, /Main Maths concern: Other\nAdditional detail: Needs help with problem-solving questions\./);
 
-  mainConcern.value = "Confidence with Maths";
+  mainConcern.value = "Low confidence in Maths";
   listeners.change();
   assert.equal(parentMessageField.hidden, true);
   assert.equal(parentMessageField["aria-hidden"], "true");
@@ -201,7 +224,7 @@ test("Year 9 form prepares the approved Bigin payload before submission", () => 
   assert.equal(window.checkMandatory985999000000548437(), false);
 
   window.location.search = "?oppref=bad%26extra";
-  mainConcern.value = "Confidence with Maths";
+  mainConcern.value = "Low confidence in Maths";
   listeners.change();
   assert.equal(window.checkMandatory985999000000548437(), true);
   assert.equal(returnUrl.value, "https://jothi.uk/year-9-maths-request-received");

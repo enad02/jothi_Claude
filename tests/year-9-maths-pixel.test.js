@@ -68,7 +68,7 @@ function createPage(path, { marketing = null, marker = null, search = "", localS
   };
   const document = {
     readyState: "complete",
-    body: { appendChild: () => {}, classList: { add: () => {}, remove: () => {} } },
+    body: { appendChild: () => {}, classList: { add: () => {}, remove: () => {}, contains: (name) => path === "/year-9-maths" && name === "year9-landing-page" } },
     head: { appendChild: (script) => scripts.push(script) },
     createElement: (tag) => tag === "script" ? createElement() : container,
     addEventListener: () => {},
@@ -83,8 +83,23 @@ function createPage(path, { marketing = null, marker = null, search = "", localS
     if (success) vm.runInContext(successScript, context);
   }
 
-  return { window, scripts, controls, local, session, historyChanges, context, runScripts };
+  return { window, scripts, controls, container, local, session, historyChanges, context, runScripts };
 }
+
+test("the shorter landing cookie copy retains all choices and the Cookies Notice", () => {
+  const landing = createPage("/year-9-maths");
+  landing.runScripts();
+  assert.match(landing.container.innerHTML, /We use optional cookies to measure advertising and improve enquiries/);
+  assert.match(landing.container.innerHTML, /data-cookie-accept>Accept<\/button>/);
+  assert.match(landing.container.innerHTML, /data-cookie-reject>Reject<\/button>/);
+  assert.match(landing.container.innerHTML, /data-cookie-settings-open>Cookie settings/);
+  assert.match(landing.container.innerHTML, /href="\/cookies\.html">Cookies Notice/);
+  const success = createPage("/year-9-maths-request-received");
+  success.runScripts();
+  assert.match(success.container.innerHTML, /We use essential storage for your choices/);
+  assert.match(success.container.innerHTML, /data-cookie-accept>Accept optional cookies/);
+  assert.match(success.container.innerHTML, /data-cookie-reject>Reject optional cookies/);
+});
 
 function pixelCalls(page, command) {
   return Array.from(page.window.oaiq?.q || [])
