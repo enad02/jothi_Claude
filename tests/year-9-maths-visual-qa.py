@@ -1,4 +1,4 @@
-"""Local-only Year 9 V2.1 visual and interaction review; never submits the form."""
+"""Local-only Year 9 V2.2 visual and interaction review; never submits the form."""
 
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "qa" / "year9-v2-1"
+OUTPUT = ROOT / "qa" / "year9-v2-2"
 
 
 class RouteHandler(SimpleHTTPRequestHandler):
@@ -26,6 +26,16 @@ class RouteHandler(SimpleHTTPRequestHandler):
 
 def snapshot(page, name):
     page.screenshot(path=str(OUTPUT / name), animations="disabled")
+
+
+def assert_images_load(page):
+    for image in page.locator("img").all():
+        image.scroll_into_view_if_needed()
+        source = image.get_attribute("src")
+        page.wait_for_function(
+            "source => [...document.images].some(img => img.getAttribute('src') === source && img.complete && img.naturalWidth > 0)",
+            arg=source,
+        )
 
 
 def assert_cookie_controls(page):
@@ -83,9 +93,15 @@ def main():
                 assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth"), f"horizontal overflow at {width}px"
                 assert page.locator(".year9-featured-proof").bounding_box()["y"] < page.locator(".year9-difference").bounding_box()["y"]
                 assert page.locator(".year9-difference").bounding_box()["y"] < page.locator(".year9-diagnostic").bounding_box()["y"]
-                assert page.locator(".year9-programme-detail, .year9-team-section").count() == 0
+                assert page.locator(".year9-programme-detail").count() == 0
+                assert page.locator(".year9-team-section .tutor-strip-card").count() == 3
+                assert page.locator(".year9-reviews .year9-review-card").count() == 2
+                assert page.locator("#year9-consultation").bounding_box()["y"] < page.locator(".year9-team-section").bounding_box()["y"]
+                assert page.locator(".year9-team-section").bounding_box()["y"] < page.locator(".year9-reviews").bounding_box()["y"]
+                assert page.evaluate("getComputedStyle(document.querySelector('.year9-team-section')).paddingTop") == "62px"
+                assert page.evaluate("getComputedStyle(document.querySelector('.year9-reviews')).paddingTop") == "62px"
                 assert "£" not in page.locator("main").inner_text()
-                page.wait_for_function("[...document.images].every(img => img.complete && img.naturalWidth > 0)")
+                assert_images_load(page)
                 page.evaluate("window.scrollTo(0, 0)")
                 if width == 390:
                     page.locator("[data-cookie-banner]").screenshot(path=str(OUTPUT / "03_mobile_cookie_panel.png"))
@@ -108,6 +124,8 @@ def main():
                     page.locator(".year9-diagnostic").screenshot(path=str(OUTPUT / "06a_mobile_diagnostic.png"))
                     page.locator(".year9-process").screenshot(path=str(OUTPUT / "06b_mobile_three_steps.png"))
                     page.locator("#year9-consultation").screenshot(path=str(OUTPUT / "07_mobile_form.png"))
+                    page.locator(".year9-team-section").screenshot(path=str(OUTPUT / "11_mobile_teacher_cards.png"))
+                    page.locator(".year9-reviews").screenshot(path=str(OUTPUT / "12_mobile_google_reviews.png"))
                     assert page.locator("input[name='POTENTIALCF4']").get_attribute("type") == "hidden"
                     assert page.locator("input[name='POTENTIALCF4']").input_value() == "Year 9"
                     page.evaluate("window.scrollTo(0, 0)")
@@ -184,7 +202,7 @@ def main():
             assert_cookie_controls(page)
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
             page.locator("[data-cookie-reject]").click()
-            page.wait_for_function("[...document.images].every(img => img.complete && img.naturalWidth > 0)")
+            assert_images_load(page)
             page.evaluate("window.scrollTo(0, 0)")
             page.screenshot(path=str(OUTPUT / "10_desktop_overview.png"), full_page=True, animations="disabled")
             assert page.evaluate("document.documentElement.scrollWidth <= window.innerWidth")
@@ -194,7 +212,7 @@ def main():
         server.shutdown()
         server.server_close()
     assert not errors, f"JavaScript errors: {errors}"
-    print("PASS: local route, 360/390/430px layout, assets, pricing/gallery absence, consent choices/revisit, Bigin-safe fields, Other validation/keyboard, desktop overview")
+    print("PASS: local route, 360/390/430px layout, assets, original teacher/review cards after form, pricing absence, consent choices/revisit, Bigin-safe fields, Other validation/keyboard, desktop overview")
     print(f"Screenshots: {OUTPUT}")
 
 

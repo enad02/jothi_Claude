@@ -258,7 +258,7 @@
   .year9-page h1 { font-size: clamp(2rem, 8vw, 2.35rem); }
   .year9-hero-inner { padding-top: 34px; padding-bottom: 38px; }
   .year9-featured-proof { padding: 38px 0; }
-  .year9-section { padding-top: 48px; padding-bottom: 48px; }
+  .year9-section:not(.year9-team-section):not(.year9-reviews) { padding-top: 48px; padding-bottom: 48px; }
   .year9-difference { padding-top: 40px; padding-bottom: 40px; }
   .year9-difference h2 { margin-bottom: 18px; }
   .year9-difference-list { grid-template-columns: 1fr; }

@@ -13,7 +13,7 @@ test("Year 9 conditional detail is hidden by default in markup and CSS", () => {
   assert.match(css, /\.year9-form\s+\[hidden\]\s*\{\s*display:\s*none\s*!important;\s*\}/);
 });
 
-test("V2.1 keeps required Bigin fields while removing visible Year 9 selection and pricing", () => {
+test("V2.2 restores trust sections while retaining V2.1 fields and no pricing", () => {
   const html = readFileSync(new URL("../year-9-maths.html", import.meta.url), "utf8");
   const generatedForm = readFileSync(new URL("../contact.html", import.meta.url), "utf8");
 
@@ -23,8 +23,16 @@ test("V2.1 keeps required Bigin fields while removing visible Year 9 selection a
   assert.match(html, /Lessons are taught live, in real time/);
   assert.match(html, /Practice matters, but students also need clear explanation/);
   assert.match(html, /year9-featured-proof/);
-  assert.doesNotMatch(html, /&pound;|£|Teaching and fees, if there is a suitable place|Meet our Maths teachers/);
-  assert.doesNotMatch(html, /year9-programme-detail|year9-team-section/);
+  assert.doesNotMatch(html, /&pound;|£|Teaching and fees, if there is a suitable place/);
+  assert.doesNotMatch(html, /year9-programme-detail/);
+  assert.match(html, /<section class="year9-section year9-team-section" aria-labelledby="year9-team-heading">/);
+  assert.match(html, /<section class="year9-section year9-reviews" aria-labelledby="reviews-heading">/);
+  assert.ok(html.indexOf('id="year9-consultation"') < html.indexOf('class="year9-section year9-team-section"'));
+  assert.ok(html.indexOf('class="year9-section year9-team-section"') < html.indexOf('class="year9-section year9-reviews"'));
+  assert.match(html, /Meet our Maths teachers/);
+  assert.match(html, /What parents say about Jothi/);
+  assert.equal((html.match(/class="tutor-strip-card"/g) || []).length, 3);
+  assert.equal((html.match(/class="review-card google-review-card results-review-card year9-review-card"/g) || []).length, 2);
   assert.match(html, /<input type="hidden" name="POTENTIALCF4" value="Year 9"/);
   assert.doesNotMatch(html, /<select name="POTENTIALCF4"/);
   assert.match(html, /name="POTENTIALCF5" value="Maths"/);
