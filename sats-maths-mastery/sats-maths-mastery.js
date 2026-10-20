@@ -38,15 +38,6 @@
     show(0, false);
   }
 
-  const prototypeButton = document.querySelector("[data-sats-prototype-submit]");
-  const prototypeMessage = document.querySelector("[data-sats-prototype-message]");
-  if (prototypeButton && prototypeMessage) {
-    prototypeButton.addEventListener("click", () => {
-      prototypeMessage.hidden = false;
-      prototypeMessage.textContent = "This local prototype does not submit or store information.";
-    });
-  }
-
   const parentStories = document.getElementById("satsParentStoriesStage");
   if (parentStories) {
     const cards = Array.from(parentStories.querySelectorAll("[data-sats-parent-story]"));
