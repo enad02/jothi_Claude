@@ -90,14 +90,23 @@
   const enquiry = document.getElementById("sats-enquiry");
   if (floatingWhatsApp && "IntersectionObserver" in window) {
     const mobileQuery = window.matchMedia("(max-width: 600px)");
-    let heroVisible = false;
+    let heroVisible = mobileQuery.matches;
     let enquiryVisible = false;
     const syncFloatingWhatsApp = () => { floatingWhatsApp.hidden = enquiryVisible || (mobileQuery.matches && heroVisible); };
-    if (hero) new IntersectionObserver((entries) => { heroVisible = entries.some((entry) => entry.isIntersecting); syncFloatingWhatsApp(); }, { threshold: 0.08 }).observe(hero);
+    if (hero) new IntersectionObserver((entries) => { heroVisible = entries.some((entry) => entry.isIntersecting); syncFloatingWhatsApp(); }, { threshold: 0 }).observe(hero);
     if (enquiry) new IntersectionObserver((entries) => { enquiryVisible = entries.some((entry) => entry.isIntersecting); syncFloatingWhatsApp(); }, { threshold: 0.08 }).observe(enquiry);
     if (typeof mobileQuery.addEventListener === "function") mobileQuery.addEventListener("change", syncFloatingWhatsApp);
     else if (typeof mobileQuery.addListener === "function") mobileQuery.addListener(syncFloatingWhatsApp);
     syncFloatingWhatsApp();
+  } else if (floatingWhatsApp) {
+    const syncFloatingWhatsAppFallback = () => {
+      const heroVisible = hero && hero.getBoundingClientRect().bottom > 0 && hero.getBoundingClientRect().top < window.innerHeight;
+      const enquiryVisible = enquiry && enquiry.getBoundingClientRect().bottom > 0 && enquiry.getBoundingClientRect().top < window.innerHeight;
+      floatingWhatsApp.hidden = Boolean(enquiryVisible || (window.matchMedia("(max-width: 600px)").matches && heroVisible));
+    };
+    window.addEventListener("scroll", syncFloatingWhatsAppFallback, { passive: true });
+    window.addEventListener("resize", syncFloatingWhatsAppFallback);
+    syncFloatingWhatsAppFallback();
   }
 
   const navToggle = document.querySelector(".sats-nav-toggle");
