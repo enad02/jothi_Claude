@@ -9,7 +9,7 @@
 | Repository | `D:\Jothi\WEB\Live site\Jothi_2026_Live` |
 | Review branch | `review/sats-maths-roadmap-academic` |
 | Reviewed roadmap commit | `b1483acf3a3973e254a942cb0092bc2958ebbc47` — `feat(sats-roadmap): prepare 60-topic roadmap for academic review` |
-| Remote push | Pending at record creation |
+| Remote push | Pushed to `origin/review/sats-maths-roadmap-academic` |
 | Merge to `main` | Not performed |
 | Production deployment | Not performed |
 
@@ -37,7 +37,7 @@
 | Status | State |
 | --- | --- |
 | COMMITTED | Yes — reviewed baseline commit recorded above |
-| PUSHED | Pending at record creation |
+| PUSHED | Yes — `origin/review/sats-maths-roadmap-academic` |
 | PREVIEW DEPLOYED | No |
 | PREVIEW VERIFIED | No |
 | ACADEMICALLY APPROVED | No — Sruthi and Radhika review pending |
