@@ -1,0 +1,13 @@
+# Strand 6 Asset Record — Measurement and money
+
+Original sources remain unchanged at the strand root. Descriptive copies are retained in `working/`; `final-approved/` remains empty. Local integration is not founder visual approval or tutor academic approval.
+
+| Topic ID | Topic | Original / working source | Website-ready WebP | Source → output dimensions / size | Mathematical QA and integration | Approval status |
+|---|---|---|---|---|---|---|
+| `SAT-MATH-S06-T01` | Measurements and units | `SAT-MATH-S06-T01-measurements-and-units.png` → `sats-roadmap-strand-06-topic-01-measurements-units-source-provided.png` | `sats-roadmap-strand-06-topic-01-measurements-units-v1.webp` | 1440×1200, 103,279 B → 1440×1200, 84,810 B | Ruler starts at zero and reads 7 cm; unit categories and labels are appropriate. Mapped. | Founder visual and tutor academic review open. |
+| `SAT-MATH-S06-T02` | Converting metric units and time | `SAT-MATH-S06-T02-converting-metric-units-and-time.png` → `sats-roadmap-strand-06-topic-02-converting-metric-units-time-source-provided.png` | `sats-roadmap-strand-06-topic-02-converting-metric-units-time-v1.webp` | 1440×1200, 120,386 B → 1440×1200, 102,624 B | Metric and time equivalences plus `2.5 m × 100 = 250 cm` verified. Mapped. | Founder visual and tutor academic review open. |
+| `SAT-MATH-S06-T03` | Miles, kilometres and approximate imperial comparisons | `ChatGPT Image Oct 23, 2026, 03_16_21 PM.png` → `sats-roadmap-strand-06-topic-03-miles-kilometres-source-chatgpt.png` | `sats-roadmap-strand-06-topic-03-miles-kilometres-v1.webp` | 1374×1145, 1,724,237 B → 1440×1200, 221,638 B | `1 mile ≈ 1.6 km`; 5 miles ≈ 8 km and 10 miles ≈ 16 km, explicitly marked approximate. Mapped. | Founder visual and tutor academic review open. |
+| `SAT-MATH-S06-T04` | Temperature and changes across zero | `SAT-MATH-S06-T04-temperature-changes-across-zero.png` → `sats-roadmap-strand-06-topic-04-temperature-across-zero-source-provided.png` | `sats-roadmap-strand-06-topic-04-temperature-across-zero-v1.webp` | 1440×1200, 93,683 B → 1440×1200, 67,776 B | Equal scale intervals; −4°C to 0°C is 4° and 0°C to +6°C is 6°, giving a 10°C rise. Mapped. | Founder visual and tutor academic review open. |
+| `SAT-MATH-S06-T05` | Money calculations | `ChatGPT Image Oct 23, 2026, 03_16_37 PM.png` → `sats-roadmap-strand-06-topic-05-money-calculations-source-chatgpt.png` | `sats-roadmap-strand-06-topic-05-money-calculations-v1.webp` | 1374×1145, 1,691,309 B → 1440×1200, 209,492 B | £2.40 + £1.25 + £0.85 = £4.50; £5.00 − £4.50 = £0.50 verified. Mapped. | Founder visual and tutor academic review open. |
+
+Workflow remains **ChatGPT Generate → GPT Markup/Edit → Codex Integrate → Tutor Validate**.
