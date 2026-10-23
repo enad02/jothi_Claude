@@ -10,8 +10,10 @@
 | Review branch | `review/sats-maths-roadmap-academic` |
 | Reviewed roadmap commit | `b1483acf3a3973e254a942cb0092bc2958ebbc47` — `feat(sats-roadmap): prepare 60-topic roadmap for academic review` |
 | Remote push | Pushed to `origin/review/sats-maths-roadmap-academic` |
-| Merge to `main` | Not performed |
-| Production deployment | Not performed |
+| Public release commit | `b5530148ca9c034f569cb2d481cf44f10f294af3` |
+| Merge to `main` | Completed through PR #13 as `a508f5e71f66dfcba3810f9e0bc6d45ca377f4b5` |
+| Production deployment | Cloudflare Pages passed |
+| Public URL | `https://jothi.uk/sats-maths-learning-roadmap/` |
 
 ## Baseline and technical status
 
@@ -19,7 +21,7 @@
 - Canonical topic records: 60 unique IDs.
 - Active illustration mappings: 60; mapping validator passed.
 - Deployable active images: 61 unique files, 5,685,947 bytes (60 topic illustrations plus one additional strand thumbnail; seven other thumbnails reuse mapped topic images).
-- Metadata: `noindex,follow` remains present in `index.html`.
+- Public metadata: `index,follow`, self-referencing canonical URL, Open Graph and Twitter metadata are present.
 - Teacher-resource privacy: no public teacher-resource URL is included in the roadmap implementation.
 - Static JavaScript syntax check: passed.
 
@@ -38,18 +40,19 @@
 | --- | --- |
 | COMMITTED | Yes — reviewed baseline commit recorded above |
 | PUSHED | Yes — `origin/review/sats-maths-roadmap-academic` |
-| PREVIEW DEPLOYED | No |
-| PREVIEW VERIFIED | No |
+| PREVIEW DEPLOYED | Not applicable — founder approved public publication |
+| PREVIEW VERIFIED | Not applicable |
 | ACADEMICALLY APPROVED | No — Sruthi and Radhika review pending |
-| PUBLICLY RELEASED | No |
+| PUBLICLY RELEASED | Yes — Cloudflare Pages production deployment passed |
 
-The repository documents Cloudflare Pages production deployment from `main`, but contains no documented protected preview workflow or access-control configuration for this branch. A publicly reachable branch preview would not satisfy the required protection merely because it is unlisted or `noindex`. No deployment was created.
+The founder withdrew the protected-preview requirement and approved public publication. The public deployment remains an educational resource only; it does not state or imply independent academic approval.
 
 ## QA status
 
 - Local technical validation completed: mapping integrity and JavaScript syntax.
-- Hosted browser QA remains outstanding because no protected HTTPS review environment has been authorised or created.
-- Real hosted checks still required: all eight strands, all 60 topic/image pairings, desktop split card, Mobile Stable Reader V2, keyboard interaction, responsive widths, fonts, assets, privacy boundaries and reference links.
+- Hosted HTTP verification completed: the public page returns HTTP 200 with the required title, canonical URL and `index,follow`; all 61 active image URLs return HTTP 200 and decode as image assets.
+- Representative internal-record, QA and source-download paths return the static HTML fallback rather than internal file content.
+- Interactive browser QA remains outstanding: all eight strands, all 60 topic/image pairings, desktop split card, Mobile Stable Reader V2, keyboard interaction, responsive widths, fonts, assets, privacy boundaries and reference links.
 
 ## Academic review instructions
 
@@ -62,10 +65,8 @@ Priority review items carried forward:
 - `SAT-MATH-S02-T05` — short-division exchange notation.
 - Overall Year 5/6 curriculum coverage and topic classifications.
 
-## Outstanding publication gates
+## Outstanding academic-review gates
 
-1. Founder approval of an authorised, access-controlled HTTPS review environment.
-2. Hosted preview deployment and recorded browser QA.
-3. Independent tutor feedback, recorded per topic.
-4. Resolution of any academic corrections without changing the approved review baseline until agreed.
-5. Explicit founder approval before any merge, noindex change or public production release.
+1. Independent tutor feedback, recorded per topic.
+2. Resolution of any academic corrections against the existing canonical topic IDs.
+3. Founder review of real browser behaviour at desktop, tablet and mobile widths.
