@@ -333,6 +333,29 @@ h3 {
   color: #fff;
 }
 
+.nav-dropdown-memories {
+  display: block;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.nav-dropdown-memories-label {
+  display: block;
+  padding: 0 20px 4px;
+  color: var(--gold-500);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.nav-dropdown-memories a {
+  line-height: 1.35;
+  white-space: normal;
+}
+
 .nav-dropdown:hover .nav-dropdown-panel,
 .nav-dropdown-label:focus + .nav-dropdown-panel,
 .nav-dropdown-panel:hover {
@@ -5676,6 +5699,75 @@ body.cookie-dialog-open {
 
 .gateway-card-help {
   grid-column: 1 / -1;
+}
+
+/* Tutor Portal resource cards */
+.tutor-resource-grid {
+  grid-auto-rows: 1fr;
+}
+
+.tutor-resource-card {
+  display: grid;
+  grid-template-rows: 52px minmax(58px, auto) 1fr;
+  align-items: start;
+  min-height: 236px;
+  padding: 28px 32px;
+}
+
+.tutor-resource-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  margin-bottom: 14px;
+  border: 1px solid rgba(194, 163, 95, 0.42);
+  border-radius: 50%;
+  background: rgba(194, 163, 95, 0.08);
+  color: var(--gold-500);
+}
+
+.tutor-resource-logo {
+  display: flex;
+  width: 150px;
+  height: 52px;
+  align-items: center;
+}
+
+.tutor-resource-logo img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 38px;
+}
+
+.tutor-resource-logo--ayotree img {
+  width: 125px;
+  max-width: 125px;
+  height: 32px;
+  max-height: 32px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+.tutor-resource-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.tutor-resource-icon--math {
+  font-family: var(--font-serif-current);
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tutor-resource-card .gateway-card-title {
+  min-height: 2.7em;
+}
+
+.tutor-resource-card .gateway-note {
+  margin-bottom: 0;
 }
 
 @media (max-width: 560px) {
