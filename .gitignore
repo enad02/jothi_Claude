@@ -15,6 +15,9 @@ desktop.ini
 .env.local
 .dev.vars
 
+# Private staff media: retained locally and deployed only from a separately protected project.
+/Jothi_Private_Albums/
+
 # Node (if ever used locally)
 node_modules/
 .wrangler/
