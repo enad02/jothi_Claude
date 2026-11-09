@@ -28,9 +28,13 @@ h1 { margin: 0; font-size: clamp(1.8rem, 4.3vw, 3rem); line-height: 1.08; }
 .cover { display: grid; place-content: center; padding: 12%; color: #fff; text-align: center; background: linear-gradient(145deg, #102d4f 0%, #081c33 65%, #173a61 100%); }
 .cover::before, .cover::after { position: absolute; inset: 1rem; border: 1px solid rgba(224, 194, 123, .65); content: ''; pointer-events: none; }
 .cover::after { inset: 1.45rem; border-color: rgba(224, 194, 123, .22); }
-.cover-mark { z-index: 1; display: grid; place-items: center; width: 3.35rem; height: 3.35rem; margin: 0 auto 1.35rem; border: 1px solid var(--gold); border-radius: 50%; color: #f5dfaa; font-family: Georgia, serif; font-size: 1.75rem; }
-.cover p, .cover h2, .cover span { position: relative; z-index: 1; }
-.cover p { margin: 0 0 1rem; color: #f4dfae; font-size: .74rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.cover-logo { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .8rem; margin: 0 auto 1.35rem; text-align: left; }
+.cover-logo-panel { display: grid; width: 4.35rem; height: 4.35rem; place-items: center; padding: .3rem; border: 1px solid rgba(224, 194, 123, .72); border-radius: .3rem; background: #fffdf8; box-shadow: 0 .5rem 1.2rem rgba(0, 0, 0, .2); }
+.cover-logo-panel img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.cover-logo-wordmark { display: grid; gap: .12rem; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-weight: 700; letter-spacing: .12em; line-height: 1; }
+.cover-logo-wordmark span:first-child { font-size: 1.25rem; }
+.cover-logo-wordmark span:last-child { color: #f4dfae; font-family: Lato, Arial, sans-serif; font-size: .56rem; letter-spacing: .28em; }
+.cover h2, .cover > span { position: relative; z-index: 1; }
 .cover h2 { margin: 0; font-size: clamp(2.1rem, 6vw, 4.25rem); line-height: 1.07; }
 .cover span { margin-top: 1.35rem; color: #f8e8bf; font-size: .98rem; }
 .photo-page { display: grid; place-items: center; background: #101010; }
