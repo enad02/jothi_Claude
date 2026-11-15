@@ -16,6 +16,19 @@ This file is the main workflow instruction file for coding agents. It is agent-n
 
 If documents conflict, follow the order above. If pricing, proof numbers, names, permissions, testimonials, or claims are unclear, ask before changing them.
 
+## Approval, Git and Deployment Boundaries
+
+- Editing files, committing, pushing and deploying each require separate explicit user approval for that action and scope. One user message may explicitly approve multiple actions.
+- Approval for one action does not authorise another. In particular, approval to edit does not authorise committing, and approval to commit does not authorise pushing.
+- Do not push to `main` without explicit user approval to push to `main`.
+- A push to `main` triggers Cloudflare Pages production deployment. Before that push, obtain explicit approval for both the push and the resulting production deployment.
+- Before any Git operation, verify the current working directory and intended repository using read-only checks. Confirm the repository root before proceeding; before a push, also confirm the target remote and branch.
+- Git development must use an approved local checkout, including C:\Jothi\Repos\jothi_Claude on the laptop and D:\Jothi\WEB\Live site\Jothi_2026_Live on the desktop. Do not use cloud-synchronised folders as active Git working directories without explicit approval.
+- Never initialise Git inside Zoho WorkDrive `Z:` or any directory beneath it.
+- Changing Cloudflare Pages settings or configuration requires explicit user approval for the specific change, including dashboard settings and repository configuration files. Successful build and preview QA do not themselves authorise those changes.
+- These approval requirements supersede legacy or general workflow instructions that imply automatic commits, pushes or deployments. All existing source-of-truth, business, CTA, deployment, indexing and asset protections remain in force.
+- If approval scope or deployment boundaries are unclear, stop and ask before taking the affected action.
+
 ## Public Copy Rules
 
 - Keep visible public copy tool-agnostic.
